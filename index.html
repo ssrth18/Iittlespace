@@ -40,6 +40,12 @@ header{display:flex;align-items:center;gap:10px;padding:0 16px}
 .chip.on{background:var(--ac);color:var(--on);font-weight:600;box-shadow:0 2px 8px color-mix(in srgb,var(--ac) 35%,transparent)}
 .chip.on b{opacity:.75}
 .chip.s{padding:5px 11px;font-size:13px}
+#tags .chip{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.orow{display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:.5px solid var(--sep)}
+.orow span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px}
+.orow button{width:40px;height:36px;border-radius:10px;background:var(--fill);color:var(--ac);font-size:14px}
+.orow button:disabled{opacity:.3}
+#rsug .chip.on{background:var(--rd);color:#fff;box-shadow:none}
 h2{font-size:20px;font-weight:700;letter-spacing:-.022em;margin:22px 2px 12px}
 main>h2:first-child{margin-top:14px}
 .grid{display:grid;grid-template-columns:var(--gc,repeat(auto-fill,minmax(62px,1fr)));gap:var(--gap) 2px}
@@ -57,9 +63,9 @@ main>h2:first-child{margin-top:14px}
 .nonames .grid .t{display:none}
 .pin{position:absolute;top:-4px;left:50%;margin-left:calc(var(--tile)/2 - 11px);width:17px;height:17px;border-radius:50%;background:var(--ac);color:var(--on);box-shadow:0 0 0 2px var(--bg);display:grid;place-items:center;font-style:normal}
 .pin::before{content:"\2605";font-size:9px;line-height:1}
-.more{position:absolute;top:-4px;left:50%;margin-left:calc(var(--tile)/-2 - 6px);width:22px;height:22px;border-radius:50%;background:var(--sf);box-shadow:0 1px 4px rgba(0,0,0,.25);font-size:14px;line-height:1;display:grid;place-items:center;opacity:0;transition:opacity .15s}
+.more{position:absolute;top:2px;right:2px;left:auto;margin:0;width:28px;height:28px;border-radius:10px;background:var(--sf);border:1px solid var(--bd);box-shadow:0 2px 7px rgba(0,0,0,.08);font-size:18px;line-height:1;display:grid;place-items:center;opacity:0;transition:opacity .15s;color:var(--tx)}
 @media(hover:hover){.card:hover .more,.more:focus-visible{opacity:1}}
-@media(hover:none){.grid .more{display:none}}
+@media(hover:none){.grid .more{display:grid;opacity:.92;width:28px;height:28px;top:1px;right:1px}}
 .manual .card{cursor:grab}
 .card.lift{opacity:.3}
 .dragghost{position:fixed!important;z-index:100;pointer-events:none;margin:0;padding:6px 0;background:color-mix(in srgb,var(--sf) 80%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-radius:20px;transform:scale(1.08)!important;box-shadow:0 18px 40px rgba(0,0,0,.3),0 0 0 .5px var(--bd);transition:none!important}
@@ -138,8 +144,8 @@ dialog input[type=file]{width:100%;font-size:14px}
 .selecting .pin{display:none}
 .list.selecting .card::after{top:50%;left:auto;right:44px;margin:-11px 0 0}
 #sb{position:fixed;left:0;right:0;margin:0 auto;width:max-content;max-width:calc(100vw - 24px);bottom:calc(18px + env(safe-area-inset-bottom));z-index:9;display:flex;align-items:center;gap:2px;padding:6px 8px 6px 16px;border-radius:99px;background:color-mix(in srgb,var(--sf) 78%,transparent);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);box-shadow:0 0 0 .5px var(--bd),0 12px 32px rgba(0,0,0,.25);animation:mpop .35s var(--sp);white-space:nowrap}
-#sn{font-weight:600;font-size:14px;margin-right:6px;min-width:76px}
-#sb button{padding:8px 11px;border-radius:99px;font-size:14px;font-weight:600;color:var(--ac)}
+#sn{font-weight:600;font-size:14px;margin-right:4px;min-width:68px}
+#sb button{padding:8px 9px;border-radius:99px;font-size:14px;font-weight:600;color:var(--ac)}
 #sb button:active{background:var(--fill)}
 #sb .x{color:var(--rd)}
 #sb button:disabled{opacity:.35}
@@ -170,7 +176,7 @@ dialog{border-radius:26px;border:1px solid var(--bd);box-shadow:0 24px 80px rgba
 
 /* Advanced cozy appearance controls */
 .custom-section{margin-top:20px;padding:16px;border:1px solid var(--bd);border-radius:20px;background:color-mix(in srgb,var(--sf) 88%,transparent)}
-.custom-section h4{font-size:16px;letter-spacing:-.02em;margin-bottom:12px}
+.custom-section h4{font-size:16px;letter-spacing:-.02em;margin:0}.custom-section>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;list-style:none}.custom-section>summary::-webkit-details-marker{display:none}.custom-section>summary::after{content:"＋";color:var(--ac);font-size:18px}.custom-section[open]>summary{margin-bottom:14px}.custom-section[open]>summary::after{content:"−"}.custom-section>summary span{font-size:11px;color:var(--mu);text-align:right}
 .custom-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .custom-grid label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--mu)}
 .custom-grid select,.custom-grid input[type=color]{width:100%;min-width:0;height:42px;border:1px solid var(--bd);border-radius:12px;padding:8px;background:var(--sf);color:var(--tx)}
@@ -189,6 +195,34 @@ body[data-shape="square"] .ic{border-radius:12%!important}
 @keyframes cozyEnter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:480px){.custom-grid{grid-template-columns:1fr 1fr}.custom-section{padding:12px}}
 @media(prefers-reduced-motion:reduce){body[data-motion] .card,body[data-motion] .ic{animation:none!important}}
+
+/* UX refinement: clearer hierarchy, touch actions, and shorter forms */
+.advanced-fields{margin-top:14px;border:1px solid var(--bd);border-radius:14px;background:color-mix(in srgb,var(--sf) 72%,var(--bg));overflow:hidden}
+.advanced-fields summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:46px;padding:0 13px;cursor:pointer;list-style:none;font-size:14px;font-weight:600}
+.advanced-fields summary::-webkit-details-marker{display:none}
+.advanced-fields summary::after{content:"＋";font-size:18px;color:var(--ac);font-weight:400}
+.advanced-fields[open] summary::after{content:"−"}
+.advanced-fields summary span{margin-left:auto;color:var(--mu);font-size:12px;font-weight:500}
+.advanced-fields-body{padding:0 12px 12px;border-top:1px solid var(--bd)}
+.advanced-fields-body label{margin-top:12px}
+.advanced-fields-body input[type=file]{margin-top:2px}
+.search{min-height:44px}
+.chip{min-height:36px;display:inline-flex;align-items:center}
+.btn,.cta{min-height:44px}
+.card .more{z-index:2}
+.list .more{position:static;opacity:1;width:36px;height:36px;border:0}
+@media(max-width:600px){
+ body{padding-bottom:calc(100px + env(safe-area-inset-bottom))}
+ .grid{grid-template-columns:repeat(auto-fill,minmax(68px,1fr));gap:14px 4px}
+ .card{min-height:96px}
+ .more{width:30px;height:30px}
+ .welcome{padding:18px 18px!important;margin-top:12px!important}
+ .welcome-art{opacity:.28}
+ dialog{width:min(94vw,440px);padding:18px;max-height:90dvh}
+ .row{gap:7px}
+ .btn{padding:0 10px}
+}
+
 
 
 /* fixes */
@@ -210,6 +244,124 @@ body[data-motion=off] .card,body[data-motion=off] .ic{animation:none!important}
 .custom-grid label{margin:0}.custom-grid label:first-child{grid-column:1/-1}
 .custom-grid select{-webkit-appearance:none;appearance:none;padding:8px 28px 8px 10px;font-size:14px;background-color:var(--bg);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Cpath d='M1.5 5.5 5 2l3.5 3.5M1.5 10.5 5 14l3.5-3.5' fill='none' stroke='%238e8e93' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:9px 14px}
 @media(max-width:600px){.welcome,[data-t=dark] .welcome{padding:20px 20px}.welcome h1{font-size:30px}}
+
+/* Premium polish pass: restrained gloss, cleaner hierarchy, no dots over bookmark icons */
+:root{
+  --bg:#f3efe7;
+  --sf:#fffdf9;
+  --sf2:#f0e9df;
+  --fill:#eee7dc;
+  --fill2:#e5dacb;
+  --tx:#292d27;
+  --mu:#7d8176;
+  --ac:#627b58;
+  --on:#fffdf8;
+  --rd:#b75d50;
+  --bd:rgba(66,73,56,.12);
+  --sep:rgba(66,73,56,.11);
+  --sh:0 2px 5px rgba(44,48,37,.035),0 12px 28px rgba(44,48,37,.065);
+}
+[data-t=dark]{
+  --bg:#171b17;--sf:#222821;--sf2:#2c342b;--fill:#2c342b;--fill2:#394236;
+  --tx:#f1f0e8;--mu:#a9b0a1;--ac:#a8bd99;--on:#1c251a;
+  --rd:#e18a7b;--bd:rgba(226,232,214,.12);--sep:rgba(226,232,214,.1);
+  --sh:0 2px 6px rgba(0,0,0,.2),0 14px 32px rgba(0,0,0,.18);
+}
+body{max-width:1120px}
+.top{
+  background:color-mix(in srgb,var(--bg) 86%,transparent);
+  -webkit-backdrop-filter:blur(24px) saturate(160%);
+  backdrop-filter:blur(24px) saturate(160%);
+}
+.logo{
+  border-radius:15px;
+  background:linear-gradient(145deg,#9dad91 0%,#718765 48%,#4e6548 100%);
+  box-shadow:0 7px 18px rgba(72,94,62,.24),inset 0 1px 0 rgba(255,255,255,.55),inset 0 -1px 0 rgba(31,54,28,.12);
+}
+.search{
+  background:color-mix(in srgb,var(--sf) 92%,transparent);
+  border:1px solid color-mix(in srgb,var(--bd) 80%,transparent);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.68),0 4px 12px rgba(49,47,37,.035);
+}
+.ib{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.65),0 3px 10px rgba(49,47,37,.045);
+}
+.welcome{
+  border:1px solid color-mix(in srgb,var(--bd) 70%,white);
+  box-shadow:0 16px 42px rgba(66,73,52,.07),inset 0 1px 0 rgba(255,255,255,.68);
+  background:linear-gradient(118deg,
+    color-mix(in srgb,var(--ac) 13%,var(--sf)) 0%,
+    color-mix(in srgb,#e8d8bd 42%,var(--sf)) 56%,
+    color-mix(in srgb,var(--ac) 7%,var(--bg)) 100%);
+}
+[data-t=dark] .welcome{
+  border-color:rgba(255,255,255,.08);
+  box-shadow:0 18px 42px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.035);
+}
+.welcome h1{letter-spacing:-.06em}
+.date-pill{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 2px 6px rgba(60,55,42,.035);
+  border-color:var(--bd);
+}
+.stat{
+  box-shadow:0 6px 18px rgba(51,51,39,.035),inset 0 1px 0 rgba(255,255,255,.72);
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.stat-icon{box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.grid{gap:19px 9px}
+.card{border:1px solid transparent;border-radius:20px; padding:9px 4px 11px}
+@media(hover:hover){
+  .card:hover{background:color-mix(in srgb,var(--sf) 72%,transparent);border-color:var(--bd)}
+  .card:hover .ic{transform:translateY(-3px) scale(1.025);box-shadow:0 12px 24px rgba(43,49,36,.13),inset 0 1px 0 rgba(255,255,255,.4)}
+  .stat:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(51,51,39,.06)}
+}
+/* Do not overlay menu dots on app icons. Grid actions remain available via long-press/right-click. */
+.grid .more{display:none!important}
+.list .more{display:grid!important;opacity:1;border-radius:12px;color:var(--tx)}
+.ic{
+  box-shadow:0 7px 16px rgba(43,49,36,.10),0 2px 4px rgba(43,49,36,.06),inset 0 1px 0 rgba(255,255,255,.24);
+  outline:1px solid rgba(255,255,255,.42);
+  outline-offset:-1px;
+}
+.pin{box-shadow:0 0 0 3px var(--bg),0 4px 10px rgba(68,61,42,.16)}
+.chip{border-color:color-mix(in srgb,var(--bd) 85%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.58)}
+.chip.on{box-shadow:0 5px 14px color-mix(in srgb,var(--ac) 22%,transparent),inset 0 1px 0 rgba(255,255,255,.16)}
+.fab{
+  border-radius:20px;
+  background:linear-gradient(150deg,#9cac8e 0%,#748b68 48%,#526c4b 100%);
+  box-shadow:0 12px 26px rgba(70,91,59,.28),inset 0 1px 0 rgba(255,255,255,.55),inset 0 -1px 0 rgba(35,59,31,.14);
+}
+.btn,.cta{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.56);
+  transition:transform .18s ease,filter .18s ease,box-shadow .18s ease;
+}
+.btn.p,.cta{
+  background:linear-gradient(145deg,color-mix(in srgb,var(--ac) 78%,white),var(--ac) 72%);
+  box-shadow:0 5px 13px color-mix(in srgb,var(--ac) 18%,transparent),inset 0 1px 0 rgba(255,255,255,.34);
+}
+dialog{
+  background:color-mix(in srgb,var(--sf) 97%,transparent);
+  box-shadow:0 30px 90px rgba(26,29,23,.28),inset 0 1px 0 rgba(255,255,255,.62);
+}
+.advanced-fields,.custom-section{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55);
+}
+.mnp{
+  background:color-mix(in srgb,var(--sf) 91%,transparent);
+  border:1px solid var(--bd);
+  box-shadow:0 22px 58px rgba(24,29,22,.24),inset 0 1px 0 rgba(255,255,255,.6);
+}
+@media(max-width:600px){
+  .welcome{border-radius:24px}
+  .grid{gap:13px 3px}
+  .card{padding:6px 1px 8px}
+  .ic{box-shadow:0 6px 14px rgba(43,49,36,.09),0 2px 4px rgba(43,49,36,.05),inset 0 1px 0 rgba(255,255,255,.24)}
+  .fab{width:56px;height:56px}
+}
+@media(prefers-reduced-motion:reduce){
+  .stat,.card,.ic,.btn,.cta{transition:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -231,19 +383,40 @@ body[data-motion=off] .card,body[data-motion=off] .ic{animation:none!important}
  <label for="fu">Link</label><input id="fu" type="text" inputmode="url" autocapitalize="off" placeholder="example.com" required>
  <label for="ft">Name</label><input id="ft" maxlength="80" placeholder="Site name">
  <label for="fg">Tags</label><input id="fg" placeholder="work, reading, tools"><div class="sg" id="sug"></div>
- <label for="fi">Custom icon link (optional)</label><input id="fi" type="text" inputmode="url" autocapitalize="off" placeholder="https://site.com/logo.png">
- <label for="fe">Emoji icon (optional)</label><input id="fe" maxlength="8" placeholder="🌐">
- <label for="fim">Icon image from your device (optional)</label><input id="fim" type="file" accept="image/*"><button class="btn" id="rimg" type="button" style="margin-top:8px;width:100%">Remove image</button>
+ <details class="advanced-fields">
+  <summary>Icon options <span>Optional</span></summary>
+  <div class="advanced-fields-body">
+   <label for="fi">Custom icon URL</label><input id="fi" type="text" inputmode="url" autocapitalize="off" placeholder="https://site.com/logo.png">
+   <label for="fe">Emoji icon</label><input id="fe" maxlength="8" placeholder="🌐">
+   <label for="fim">Upload icon image</label><input id="fim" type="file" accept="image/*"><button class="btn" id="rimg" type="button" style="margin-top:8px;width:100%">Remove image</button>
+  </div>
+ </details>
  <label class="chk"><input type="checkbox" id="fp"> Pin to top</label>
  <div class="err" id="err" role="alert"></div>
  <div class="row"><button class="btn d" type="button" id="del" hidden>Delete</button><button class="btn" type="button" id="x1">Cancel</button><button class="btn p" type="submit">Save</button></div>
 </form></dialog>
 
+<dialog id="tdlg"><form id="tf" autocomplete="off">
+ <h3 id="tt">Add tags</h3>
+ <label for="tg">Tags</label><input id="tg" placeholder="work, reading, tools"><div class="sg" id="tsug"></div>
+ <label id="rml" hidden>Remove from selected (tap to mark)</label><div class="sg" id="rsug"></div>
+ <p class="hint">New tags are added to each selected bookmark. Marked tags are removed from them.</p>
+ <div class="err" id="terr" role="alert"></div>
+ <div class="row"><button class="btn" type="button" id="x5">Cancel</button><button class="btn p" type="submit">Add tags</button></div>
+</form></dialog>
+
+<dialog id="odlg">
+ <h3>Reorder tags</h3>
+ <p class="hint" style="margin-top:6px">Use the arrows to move a tab. "All" and "★ Pinned" can go anywhere, too.</p>
+ <div id="olist" style="margin-top:8px"></div>
+ <div class="row"><button class="btn" type="button" id="orst">Reset order</button><button class="btn p" type="button" id="x6">Done</button></div>
+</dialog>
+
 <dialog id="sdlg">
  <h3>Settings</h3>
  <div class="ctl" id="ctl"></div>
-<div class="custom-section" id="advancedLooks">
-    <h4>✨ Personalize the vibe</h4>
+<details class="custom-section" id="advancedLooks">
+    <summary><h4>✨ Personalize the vibe</h4><span>Colors, motion & layout</span></summary>
     <div class="custom-grid">
       <label>Color preset<select id="lookPreset">
         <option value="cozy">Cozy Garden</option><option value="rose">Rosewater</option>
@@ -263,8 +436,9 @@ body[data-motion=off] .card,body[data-motion=off] .ic{animation:none!important}
     </div>
     <div class="custom-actions"><button type="button" class="btn" id="resetLooks">Reset appearance</button></div>
     <p class="hint">These are visual-only settings. Your bookmarks and database are not changed by appearance customization.</p>
-  </div>
- <button class="btn" id="rst" style="width:100%;margin-top:14px">Reset layout</button>
+  </details>
+ <button class="btn" id="tord" style="width:100%;margin-top:14px">Reorder tags</button>
+ <button class="btn" id="rst" style="width:100%;margin-top:8px">Reset layout</button>
  <div class="row col1">
   <button class="btn p" id="sync">Sync across devices</button>
   <button class="btn" id="conn">Database connection</button>
@@ -273,7 +447,7 @@ body[data-motion=off] .card,body[data-motion=off] .ic{animation:none!important}
   <button class="btn p" id="x2">Done</button>
  </div>
  <input type="file" id="file" accept=".html,.htm" hidden>
- <p class="hint">On a phone: press and hold an icon to move it, or let go without moving to open its menu. Swipe left or right to change tag. On a computer: drag to move, right-click for the menu.</p>
+ <p class="hint">On a phone: press and hold an icon to move it, or let go without moving to open its menu. Swipe left or right to change tag. On a computer: drag to move, right-click for the menu. To delete a tag everywhere, press and hold its tag at the top (right-click on a computer).</p>
 </dialog>
 
 <dialog id="cdlg"><form id="cf" autocomplete="off">
@@ -381,7 +555,7 @@ const keep=d=>{S={access_token:d.access_token,refresh_token:d.refresh_token,expi
 async function ensure(){if(S&&S.expires_at-60>Date.now()/1e3)return;if(S){try{keep(await auth("token?grant_type=refresh_token",{refresh_token:S.refresh_token}));return}catch(e){if(!navigator.onLine)throw e}}throw Error("Please sign in again (Settings, then Sync across devices).")}
 async function db(path,o={}){await ensure();const r=await fetch(`${C.url}/rest/v1/${path}`,{method:o.m||"GET",headers:{apikey:C.key,Authorization:"Bearer "+S.access_token,"Content-Type":"application/json",Prefer:o.p||"return=representation"},body:o.b===undefined?undefined:JSON.stringify(o.b)});const t=await r.text();let d=null;try{d=t?JSON.parse(t):null}catch{}if(!r.ok)throw Error(d?.message||`Request failed (${r.status})`);return d}
 const cache=()=>ls.lp_cache=JSON.stringify({B,cfg});
-async function load(){try{B=await db("lp_bookmarks?select=*&order=created_at.desc");const s=await db("lp_settings?select=data");if(s[0]?.data){const d=s[0].data,r=renew(d);cfg={...cfg,...r};if(r!==d)saveCfg()}loaded=true;cache();theme();draw();if(B.length>2&&!ls.lp_tip){ls.lp_tip=1;toast("Tip: press and hold an icon for its menu.")}}catch(e){loaded=true;draw();toast(navigator.onLine?e.message:"Offline. Showing saved bookmarks.")}}
+async function load(){try{B=await db("lp_bookmarks?select=*&order=created_at.desc");const s=await db("lp_settings?select=data");if(s[0]?.data){const d=s[0].data,r=renew(d);cfg={...cfg,...r};if(r!==d)saveCfg()}loaded=true;cache();theme();initTag();draw();if(B.length>2&&!ls.lp_tip){ls.lp_tip=1;toast("Tip: press and hold an icon for its menu.")}}catch(e){loaded=true;draw();toast(navigator.onLine?e.message:"Offline. Showing saved bookmarks.")}}
 let sv;const saveCfg=()=>{cache();clearTimeout(sv);sv=setTimeout(()=>db("lp_settings?on_conflict=user_id",{m:"POST",b:{data:cfg},p:"resolution=merge-duplicates,return=minimal"}).catch(e=>toast(e.message)),600)};
 
 /* ---- grid size (saved in your settings JSON, no DB change) ---- */
@@ -419,10 +593,14 @@ function icon(b){const h=hue(b.title||"?"),l=((b.title||"").match(/[A-Za-z0-9]/)
 function card(b,i=0){return `<a class="card${sel?.has(b.id)?" sel":""}" style="--i:${i}" draggable="false" href="${esc(b.url)}" target="_blank" rel="noopener noreferrer" data-id="${b.id}">${icon(b)}${b.pinned?'<i class="pin"></i>':""}<div class="col"><div class="t">${esc(b.title)}</div><div class="h">${esc(host(b.url))}</div></div><button class="more" data-edit="${b.id}" aria-label="Edit ${esc(b.title)}">⋯</button></a>`}
 function sorted(a){const f={manual:(x,y)=>(x.position||0)-(y.position||0)||y.created_at.localeCompare(x.created_at),recent:(x,y)=>y.created_at.localeCompare(x.created_at),popular:(x,y)=>(y.open_count||0)-(x.open_count||0)||x.title.localeCompare(y.title),az:(x,y)=>x.title.localeCompare(y.title)}[cfg.sort]||(()=>0);return a.slice().sort(f)}
 function visible(){const q=$("#q").value.trim().toLowerCase();return B.filter(b=>(tag==="all"||(tag==="★"?b.pinned:(b.tags||[]).includes(tag)))&&(!q||b.title.toLowerCase().includes(q)||b.url.toLowerCase().includes(q)||(b.tags||[]).some(t=>t.includes(q))))}
+let userPicked=false;
+function initTag(){if(userPicked)return;const tg=allTags().map(x=>x[0]),pins=B.some(b=>b.pinned);tag=tordKeys().find(k=>k==="all"||(k==="★"&&pins)||tg.includes(k))||"all"}
+function tordKeys(){const tg=allTags().map(x=>x[0]);return[...new Set([...(cfg.tord||[]),"all","★",...tg])].filter(k=>k==="all"||k==="★"||tg.includes(k))}
 function draw(){
  const tg=allTags(),pins=B.some(b=>b.pinned);
  if(tag!=="all"&&tag!=="★"&&!tg.some(t=>t[0]===tag))tag="all";
- const tb=$("#tags"),sl=tb.scrollLeft;tb.innerHTML=B.length?`<button class="chip ${tag==="all"?"on":""}" data-tag="all">All<b>${B.length}</b></button>`+(pins?`<button class="chip ${tag==="★"?"on":""}" data-tag="★">★ Pinned</button>`:"")+tg.map(([t,n])=>`<button class="chip ${tag===t?"on":""}" data-tag="${esc(t)}">${esc(t)}<b>${n}</b></button>`).join(""):"";tb.scrollLeft=sl;
+ const tb=$("#tags"),sl=tb.scrollLeft;const chips=new Map([["all",`<button class="chip ${tag==="all"?"on":""}" data-tag="all">All<b>${B.length}</b></button>`]]);if(pins)chips.set("★",`<button class="chip ${tag==="★"?"on":""}" data-tag="★">★ Pinned</button>`);tg.forEach(([t,n])=>chips.set(t,`<button class="chip ${tag===t?"on":""}" data-tag="${esc(t)}">${esc(t)}<b>${n}</b></button>`));
+ tb.innerHTML=B.length?tordKeys().filter(k=>chips.has(k)).map(k=>chips.get(k)).join(""):"";tb.scrollLeft=sl;
  const m=$("#main");m.className=(cfg.view==="list"?"list ":"")+(canDrag()?"manual":"")+(sel?" selecting":"");
  if(C.url.startsWith("YOUR_")){m.innerHTML='<div class="empty"><h3>Connect your database</h3>Add your Supabase project URL and key to start saving bookmarks.<br><button class="cta" data-setup>Set up</button></div>';return}
  if(!loaded&&!B.length){m.innerHTML='<div class="grid">'+'<div class="sk"></div>'.repeat(15)+"</div>";return}
@@ -450,7 +628,7 @@ $("#rimg").onclick=()=>{tmpImg="";$("#fim").value="";pv()};
 /* ---- swipe left/right to change tag ---- */
 let sx=0,sy=0,sok=false;
 document.addEventListener("touchstart",e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY;sok=!e.target.closest("#tags,dialog,input,select,.top")},{passive:true});
-document.addEventListener("touchend",e=>{if(!sok||dg?.on||justDragged)return;const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)<70||Math.abs(dx)<Math.abs(dy)*1.6)return;const ks=[...document.querySelectorAll("#tags .chip")].map(b=>b.dataset.tag),i=ks.indexOf(tag)+(dx<0?1:-1);if(i<0||i>=ks.length)return;tag=ks[i];anim=true;draw();document.querySelector("#tags .chip.on")?.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"})});
+document.addEventListener("touchend",e=>{if(!sok||dg?.on||justDragged)return;const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)<70||Math.abs(dx)<Math.abs(dy)*1.6)return;const ks=[...document.querySelectorAll("#tags .chip")].map(b=>b.dataset.tag),i=ks.indexOf(tag)+(dx<0?1:-1);if(i<0||i>=ks.length)return;userPicked=true;tag=ks[i];anim=true;draw();document.querySelector("#tags .chip.on")?.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"})});
 /* ---- drag to reorder (mouse: drag; touch: press and hold) ---- */
 let dg=null,justDragged=false;
 const canDrag=()=>tag==="all"&&!sel&&!$("#q").value.trim();
@@ -469,7 +647,7 @@ async function commit(c){const ids=[...c.parentElement.children].map(k=>k.datase
 /* ---- open tracking ---- */
 function opened(id){const b=B.find(x=>x.id===id);if(!b)return;b.open_count=(b.open_count||0)+1;b.last_opened_at=new Date().toISOString();cache();db(`lp_bookmarks?id=eq.${id}`,{m:"PATCH",b:{open_count:b.open_count,last_opened_at:b.last_opened_at},p:"return=minimal"}).catch(()=>{})}
 $("#main").onclick=e=>{if(justDragged){e.preventDefault();return}if(sel){e.preventDefault();const c=e.target.closest(".card");if(c)tog(c.dataset.id);return}const ed=e.target.closest("[data-edit]");if(ed){e.preventDefault();menu(ed.dataset.edit,ed.closest(".card"));return}const c=e.target.closest(".card");if(c)opened(c.dataset.id)};
-$("#tags").onclick=e=>{const t=e.target.closest("[data-tag]");if(t){navigator.vibrate?.(8);tag=t.dataset.tag;anim=true;draw()}};
+$("#tags").onclick=e=>{const t=e.target.closest("[data-tag]");if(t){navigator.vibrate?.(8);userPicked=true;tag=t.dataset.tag;anim=true;draw()}};
 $("#q").oninput=draw;
 
 /* ---- hold / right-click menu ---- */
@@ -490,11 +668,44 @@ function menu(id,el){const b=B.find(x=>x.id===id);if(!b)return;const p=mn.firstC
   else if(a==="pin"){const v=!b.pinned;b.pinned=v;cache();draw();try{await db(`lp_bookmarks?id=eq.${id}`,{m:"PATCH",b:{pinned:v},p:"return=minimal"})}catch(er){b.pinned=!v;cache();draw();toast(er.message)}}
   else if(a==="del"){if(!confirm("Delete this bookmark?"))return;try{await db(`lp_bookmarks?id=eq.${id}`,{m:"DELETE",p:"return=minimal"});B=B.filter(x=>x.id!==id);cache();draw();toast("Deleted")}catch(er){toast(er.message)}}}}
 /* ---- select several ---- */
-const bar=document.createElement("div");bar.id="sb";bar.hidden=true;bar.innerHTML='<span id="sn"></span><button data-a="all">Select all</button><button data-a="del" class="x">Delete</button><button data-a="done">Done</button>';document.body.appendChild(bar);
-function selUI(){$("#sn").textContent=sel?sel.size+" selected":"";bar.querySelector("[data-a=del]").disabled=!sel||!sel.size}
+const bar=document.createElement("div");bar.id="sb";bar.hidden=true;bar.innerHTML='<span id="sn"></span><button data-a="all">Select all</button><button data-a="tag">Tag</button><button data-a="del" class="x">Delete</button><button data-a="done">Done</button>';document.body.appendChild(bar);
+function selUI(){$("#sn").textContent=sel?sel.size+" selected":"";bar.querySelector("[data-a=del]").disabled=!sel||!sel.size;bar.querySelector("[data-a=tag]").disabled=!sel||!sel.size}
 function selMode(on,id){sel=on?new Set(id?[id]:[]):null;bar.hidden=!on;$("#add").hidden=on;selUI();draw()}
 function tog(id){sel.has(id)?sel.delete(id):sel.add(id);document.querySelectorAll(`.card[data-id="${id}"]`).forEach(c=>c.classList.toggle("sel",sel.has(id)));selUI()}
 bar.onclick=async e=>{const a=e.target.dataset.a;if(a==="done")selMode(false);else if(a==="all"){const v=visible(),all=v.every(b=>sel.has(b.id));v.forEach(b=>all?sel.delete(b.id):sel.add(b.id));draw();selUI()}else if(a==="del"&&sel.size){if(!confirm(`Delete ${sel.size} bookmark${sel.size>1?"s":""}? This can't be undone.`))return;const ids=[...sel];try{for(let i=0;i<ids.length;i+=50)await db(`lp_bookmarks?id=in.(${ids.slice(i,i+50).join(",")})`,{m:"DELETE",p:"return=minimal"});B=B.filter(b=>!sel.has(b.id));cache();toast("Deleted");selMode(false)}catch(er){toast(er.message);load()}}};
+/* ---- tag several at once (add / remove) ---- */
+let rm=new Set();
+function openTag(){if(!sel||!sel.size)return;rm=new Set();$("#tt").textContent=`Tag ${sel.size} bookmark${sel.size>1?"s":""}`;$("#tg").value="";$("#terr").textContent="";tsug();rsug();$("#tdlg").showModal();$("#tg").focus()}
+function tsug(){const cur=parse($("#tg").value);$("#tsug").innerHTML=allTags().filter(([t])=>!cur.includes(t)).slice(0,12).map(([t])=>`<button type="button" class="chip s" data-t="${esc(t)}">${esc(t)}</button>`).join("")}
+function rsug(){const m={};[...sel].forEach(id=>(B.find(x=>x.id===id)?.tags||[]).forEach(t=>m[t]=(m[t]||0)+1));const e=Object.entries(m).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));$("#rml").hidden=!e.length;$("#rsug").innerHTML=e.map(([t,n])=>`<button type="button" class="chip s${rm.has(t)?" on":""}" data-r="${esc(t)}">${esc(t)}<b>${n}</b></button>`).join("")}
+bar.addEventListener("click",e=>{if(e.target.dataset.a==="tag")openTag()});
+$("#tg").oninput=tsug;
+$("#tsug").onclick=e=>{const t=e.target.closest("[data-t]");if(!t)return;const v=$("#tg").value.trim().replace(/,+$/,"");$("#tg").value=(v?v+", ":"")+t.dataset.t;tsug();$("#tg").focus()};
+$("#rsug").onclick=e=>{const t=e.target.closest("[data-r]");if(!t)return;const k=t.dataset.r;rm.has(k)?rm.delete(k):rm.add(k);rsug()};
+$("#x5").onclick=()=>$("#tdlg").close();
+$("#tf").onsubmit=async e=>{e.preventDefault();const add=parse($("#tg").value);if(!add.length&&!rm.size){$("#terr").textContent="Add a tag, or tap a tag to remove.";return}
+ const btn=e.submitter;btn.disabled=true;$("#terr").textContent="";
+ const jobs=[...sel].map(id=>B.find(x=>x.id===id)).filter(Boolean).map(b=>({b,tags:[...new Set([...(b.tags||[]).filter(t=>!rm.has(t)||add.includes(t)),...add])].slice(0,12)})).filter(j=>j.tags.join()!==(j.b.tags||[]).join());
+ try{for(let i=0;i<jobs.length;i+=8)await Promise.all(jobs.slice(i,i+8).map(j=>db(`lp_bookmarks?id=eq.${j.b.id}`,{m:"PATCH",b:{tags:j.tags,updated_at:new Date().toISOString()},p:"return=minimal"})));
+  jobs.forEach(j=>j.b.tags=j.tags);if(tag!=="all"&&tag!=="★"&&!B.some(b=>(b.tags||[]).includes(tag)))tag="all";cache();$("#tdlg").close();toast(`Updated ${sel.size} bookmark${sel.size>1?"s":""}`);selMode(false)}
+ catch(er){$("#terr").textContent=er.message==="Failed to fetch"?"No connection. Try again.":er.message;load()}
+ btn.disabled=false};
+
+/* ---- delete a tag everywhere: long-press (phone) or right-click (computer) a tag chip ---- */
+let lpT,lpd=false;const tagsEl=$("#tags"),realTag=c=>c&&!["all","★"].includes(c.dataset.tag);
+async function delTag(t){const hit=B.filter(b=>(b.tags||[]).includes(t));if(!hit.length)return;if(!confirm(`Delete the tag "${t}" from ${hit.length} bookmark${hit.length>1?"s":""}? The bookmarks themselves stay.`))return;
+ try{for(let i=0;i<hit.length;i+=8)await Promise.all(hit.slice(i,i+8).map(b=>db(`lp_bookmarks?id=eq.${b.id}`,{m:"PATCH",b:{tags:b.tags.filter(x=>x!==t),updated_at:new Date().toISOString()},p:"return=minimal"})));
+  hit.forEach(b=>b.tags=b.tags.filter(x=>x!==t));if(tag===t)tag="all";cache();draw();toast("Tag deleted")}catch(er){toast(er.message);load()}}
+tagsEl.addEventListener("pointerdown",e=>{lpd=false;const c=e.target.closest("[data-tag]");if(!realTag(c))return;clearTimeout(lpT);lpT=setTimeout(()=>{lpd=true;navigator.vibrate?.(12);delTag(c.dataset.tag)},600)});
+["pointerup","pointercancel","pointerleave"].forEach(ev=>tagsEl.addEventListener(ev,()=>clearTimeout(lpT)));
+tagsEl.addEventListener("contextmenu",e=>{const c=e.target.closest("[data-tag]");if(!realTag(c))return;e.preventDefault();clearTimeout(lpT);lpd=true;delTag(c.dataset.tag)});
+tagsEl.addEventListener("click",e=>{if(lpd){lpd=false;e.stopImmediatePropagation();e.preventDefault()}},true);
+/* ---- reorder tag tabs (saved in your settings JSON, no DB change) ---- */
+function oList(){const ks=tordKeys();$("#olist").innerHTML=ks.map((k,i)=>`<div class="orow"><span>${k==="all"?"All":k==="★"?"★ Pinned":esc(k)}</span><button type="button" data-o="${i}" data-d="-1" aria-label="Move up"${i?"":" disabled"}>▲</button><button type="button" data-o="${i}" data-d="1" aria-label="Move down"${i<ks.length-1?"":" disabled"}>▼</button></div>`).join("")}
+$("#olist").onclick=e=>{const b=e.target.closest("[data-o]");if(!b||b.disabled)return;const ks=tordKeys(),i=+b.dataset.o,j=i+ +b.dataset.d;if(j<0||j>=ks.length)return;[ks[i],ks[j]]=[ks[j],ks[i]];cfg.tord=ks;saveCfg();draw();oList()};
+$("#tord").onclick=()=>{$("#sdlg").close();oList();$("#odlg").showModal()};
+$("#orst").onclick=()=>{delete cfg.tord;saveCfg();draw();oList()};
+$("#x6").onclick=()=>$("#odlg").close();
 /* ---- settings ---- */
 function mark(id,v){document.querySelectorAll(`#${id} button`).forEach(b=>b.classList.toggle("on",b.dataset.v===v))}
 /* ---- customize ---- */
@@ -555,7 +766,7 @@ addEventListener("online",()=>S&&load());
 
 /* ---- boot: paint cache instantly, then sync ---- */
 try{const c=JSON.parse(ls.lp_cache||"null");if(c){B=c.B||[];cfg={...cfg,...renew(c.cfg)};loaded=true}}catch{}
-addEventListener("scroll",()=>$(".top").classList.toggle("sc",scrollY>6),{passive:true});theme();document.body.classList.add("boot");setTimeout(()=>document.body.classList.remove("boot"),1200);draw();
+addEventListener("scroll",()=>$(".top").classList.toggle("sc",scrollY>6),{passive:true});theme();document.body.classList.add("boot");setTimeout(()=>document.body.classList.remove("boot"),1200);initTag();draw();
 if(C.url.startsWith("YOUR_"))setTimeout(openSetup,400);else if(S)load();else{loaded=true;draw();setTimeout(openSync,400)}
 
 
