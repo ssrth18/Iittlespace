@@ -362,6 +362,33 @@ dialog{
   .stat,.card,.ic,.btn,.cta{transition:none!important}
 }
 
+/* ---- Personalization v2: accent-aware chrome, tab styles, widths, icon tones ---- */
+.logo{background:linear-gradient(145deg,color-mix(in srgb,var(--ac) 62%,white),var(--ac) 55%,color-mix(in srgb,var(--ac) 82%,black));box-shadow:0 7px 18px color-mix(in srgb,var(--ac) 28%,transparent),inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(0,0,0,.1)}
+.fab{background:linear-gradient(150deg,color-mix(in srgb,var(--ac) 62%,white),var(--ac) 55%,color-mix(in srgb,var(--ac) 82%,black));box-shadow:0 12px 26px color-mix(in srgb,var(--ac) 30%,transparent),inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(0,0,0,.1)}
+.card .pin,.pin{background:var(--ac)!important;color:var(--on)}
+body[data-width=narrow]{max-width:760px}body[data-width=wide]{max-width:1480px}
+body[data-fab=left] .fab{right:auto;left:calc(24px + env(safe-area-inset-left))}
+body[data-fab=center] .fab{right:auto;left:50%;translate:-50% 0}
+body[data-ictone=soft]{--isat:.5}body[data-ictone=mono]{--isat:0}
+body[data-ictone=accent] .ic[style*="linear-gradient"]{background:linear-gradient(160deg,color-mix(in srgb,var(--ac) 68%,white),var(--ac))!important}
+body[data-counts=hide] #tags .chip b{display:none}
+body[data-heads=hide] main h2{display:none}
+body[data-tabs=underline] #tags{gap:2px}
+body[data-tabs=underline] #tags .chip{background:transparent;border-radius:0;box-shadow:none;border-color:transparent;border-bottom:2px solid transparent;padding:6px 9px;min-height:38px}
+body[data-tabs=underline] #tags .chip.on{background:transparent;color:var(--tx);box-shadow:none;border-bottom-color:var(--ac)}
+body[data-tabs=underline] #tags .chip.on b{color:var(--mu);opacity:1}
+body[data-tabs=minimal] #tags .chip{background:transparent;box-shadow:none;border-color:transparent;color:var(--mu)}
+body[data-tabs=minimal] #tags .chip.on{background:var(--fill);color:var(--tx);box-shadow:none}
+body[data-tabs=minimal] #tags .chip.on b{color:var(--mu);opacity:1}
+.shead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:4px}
+.shead h3{margin:0}.shead h3:focus{outline:none}.shead .btn{min-height:38px;padding:0 18px}
+.custom-section+.custom-section,.custom-section+.row{margin-top:12px}
+.custom-section>.ctl{margin-top:0}
+.custom-section .custom-actions{margin-top:12px}
+.custom-section>summary b{font-size:16px;letter-spacing:-.02em;white-space:nowrap}
+.shead .btn{flex:none;width:auto}
+body[data-heads=hide] main .grid+h2+.grid{margin-top:var(--gap,18px)}
+@media(max-width:480px){.custom-section>summary span{display:none}.custom-section>summary{min-height:30px}}
 </style>
 </head>
 <body>
@@ -413,41 +440,58 @@ dialog{
 </dialog>
 
 <dialog id="sdlg">
- <h3>Settings</h3>
- <div class="ctl" id="ctl"></div>
-<details class="custom-section" id="advancedLooks">
-    <summary><h4>✨ Personalize the vibe</h4><span>Colors, motion & layout</span></summary>
-    <div class="custom-grid">
-      <label>Color preset<select id="lookPreset">
-        <option value="cozy">Cozy Garden</option><option value="rose">Rosewater</option>
-        <option value="ocean">Quiet Ocean</option><option value="mono">Soft Monochrome</option>
-        <option value="sunset">Golden Hour</option><option value="berry">Berry Milk</option>
-        <option value="mint">Mint &amp; Cream</option><option value="custom">Custom colors</option>
-      </select></label>
-      <label>Accent color<input id="customAccent" type="color" value="#b47758"></label>
-      <label>Background tint<input id="customBg" type="color" value="#f7f1e8"></label>
-      <label>Surface color<input id="customSurface" type="color" value="#fffaf2"></label>
-      <label>Animation style<select id="motionStyle"><option value="soft">Soft & subtle</option><option value="float">Floating</option><option value="spring">Bouncy</option><option value="glow">Glow & shimmer</option><option value="off">Off</option></select></label>
-      <label>Animation intensity<input id="motionLevel" type="range" min="0" max="100" value="55"></label>
-      <label>Background effect<select id="bgEffect"><option value="aurora">Soft aurora</option><option value="glow">Ambient glow</option><option value="grain">Paper texture</option><option value="plain">Plain</option></select></label>
-      <label>Interface density<select id="density"><option value="comfortable">Comfortable</option><option value="compact">Compact</option><option value="airy">Airy</option></select></label>
-      <label>Card depth<select id="cardDepth"><option value="soft">Soft shadow</option><option value="flat">Flat</option><option value="lifted">Lifted</option></select></label>
-      <label>Icon shape<select id="iconShape"><option value="rounded">Rounded</option><option value="circle">Circle</option><option value="squircle">Squircle</option><option value="square">Soft square</option></select></label>
-    </div>
-    <div class="custom-actions"><button type="button" class="btn" id="resetLooks">Reset appearance</button></div>
-    <p class="hint">These are visual-only settings. Your bookmarks and database are not changed by appearance customization.</p>
-  </details>
- <button class="btn" id="tord" style="width:100%;margin-top:14px">Reorder tags</button>
- <button class="btn" id="rst" style="width:100%;margin-top:8px">Reset layout</button>
- <div class="row col1">
-  <button class="btn p" id="sync">Sync across devices</button>
-  <button class="btn" id="conn">Database connection</button>
-  <button class="btn" id="imp">Import browser bookmarks</button>
-  <button class="btn" id="exp">Export backup (.json)</button>
-  <button class="btn p" id="x2">Done</button>
- </div>
+ <div class="shead"><h3 tabindex="-1" autofocus>Settings</h3><button class="btn p" id="x2" type="button">Done</button></div>
+ <details class="custom-section" open>
+  <summary><b>Display</b><span>Layout, size &amp; text</span></summary>
+  <div class="ctl" id="ctl"></div>
+  <div class="custom-actions"><button class="btn" id="rst" type="button">Reset display</button></div>
+ </details>
+ <details class="custom-section" id="advancedLooks">
+  <summary><b>✨ Appearance</b><span>Colors, icons &amp; motion</span></summary>
+  <div class="custom-grid">
+   <label>Color preset<select id="lookPreset">
+    <option value="cozy">Cozy Garden</option><option value="rose">Rosewater</option>
+    <option value="ocean">Quiet Ocean</option><option value="mono">Soft Monochrome</option>
+    <option value="sunset">Golden Hour</option><option value="berry">Berry Milk</option>
+    <option value="mint">Mint &amp; Cream</option><option value="custom">Custom colors</option>
+   </select></label>
+   <label>Accent color<input id="customAccent" type="color" value="#62745b"></label>
+   <label>Background tint<input id="customBg" type="color" value="#f5f1e9"></label>
+   <label>Surface color<input id="customSurface" type="color" value="#fffdf8"></label>
+   <label>Icon colors<select id="ictone"><option value="vivid">Vivid</option><option value="soft">Soft</option><option value="accent">Match accent</option><option value="mono">Monochrome</option></select></label>
+   <label>Icon shape<select id="iconShape"><option value="rounded">Rounded</option><option value="circle">Circle</option><option value="squircle">Squircle</option><option value="square">Soft square</option></select></label>
+   <label>Card depth<select id="cardDepth"><option value="soft">Soft shadow</option><option value="flat">Flat</option><option value="lifted">Lifted</option></select></label>
+   <label>Interface density<select id="density"><option value="comfortable">Comfortable</option><option value="compact">Compact</option><option value="airy">Airy</option></select></label>
+   <label>Page width<select id="layoutWidth"><option value="narrow">Narrow</option><option value="normal">Normal</option><option value="wide">Wide</option></select></label>
+   <label>Add button<select id="fabPos"><option value="right">Bottom right</option><option value="center">Bottom center</option><option value="left">Bottom left</option></select></label>
+   <label>Background effect<select id="bgEffect"><option value="aurora">Soft aurora</option><option value="glow">Ambient glow</option><option value="grain">Paper texture</option><option value="plain">Plain</option></select></label>
+   <label>Animation style<select id="motionStyle"><option value="soft">Soft &amp; subtle</option><option value="float">Floating</option><option value="spring">Bouncy</option><option value="glow">Glow &amp; shimmer</option><option value="off">Off</option></select></label>
+   <label style="grid-column:1/-1">Animation intensity<input id="motionLevel" type="range" min="0" max="100" value="55"></label>
+  </div>
+  <div class="custom-actions"><button type="button" class="btn" id="resetLooks">Reset appearance</button></div>
+  <p class="hint">Appearance is visual only. It syncs with your other devices and never changes your bookmarks.</p>
+ </details>
+ <details class="custom-section">
+  <summary><b>Tabs &amp; behavior</b><span>Tag bar, links, startup</span></summary>
+  <div class="custom-grid">
+   <label>Tab style<select id="tabStyle"><option value="pills">Pills</option><option value="underline">Underline</option><option value="minimal">Minimal</option></select></label>
+   <label>Tab counts<select id="tabCounts"><option value="show">Show</option><option value="hide">Hide</option></select></label>
+   <label>Section titles<select id="sectionHeads"><option value="show">Show</option><option value="hide">Hide</option></select></label>
+  </div>
+  <div class="ctl" id="ctl2" style="margin-top:12px"></div>
+  <button class="btn" id="tord" type="button" style="width:100%;margin-top:12px">Reorder tags</button>
+ </details>
+ <details class="custom-section">
+  <summary><b>Data &amp; sync</b><span>Backup, import, devices</span></summary>
+  <div class="row col1" style="margin-top:0">
+   <button class="btn p" id="sync">Sync across devices</button>
+   <button class="btn" id="conn">Database connection</button>
+   <button class="btn" id="imp">Import browser bookmarks</button>
+   <button class="btn" id="exp">Export backup (.json)</button>
+  </div>
+ </details>
  <input type="file" id="file" accept=".html,.htm" hidden>
- <p class="hint">On a phone: press and hold an icon to move it, or let go without moving to open its menu. Swipe left or right to change tag. On a computer: drag to move, right-click for the menu. To delete a tag everywhere, press and hold its tag at the top (right-click on a computer).</p>
+ <p class="hint">Press and hold an icon to move it, or let go without moving to open its menu. Swipe left or right to change tag. Press and hold a tag to delete it everywhere. On a computer: drag to move, right-click for menus.</p>
 </dialog>
 
 <dialog id="cdlg"><form id="cf" autocomplete="off">
@@ -555,21 +599,21 @@ const keep=d=>{S={access_token:d.access_token,refresh_token:d.refresh_token,expi
 async function ensure(){if(S&&S.expires_at-60>Date.now()/1e3)return;if(S){try{keep(await auth("token?grant_type=refresh_token",{refresh_token:S.refresh_token}));return}catch(e){if(!navigator.onLine)throw e}}throw Error("Please sign in again (Settings, then Sync across devices).")}
 async function db(path,o={}){await ensure();const r=await fetch(`${C.url}/rest/v1/${path}`,{method:o.m||"GET",headers:{apikey:C.key,Authorization:"Bearer "+S.access_token,"Content-Type":"application/json",Prefer:o.p||"return=representation"},body:o.b===undefined?undefined:JSON.stringify(o.b)});const t=await r.text();let d=null;try{d=t?JSON.parse(t):null}catch{}if(!r.ok)throw Error(d?.message||`Request failed (${r.status})`);return d}
 const cache=()=>ls.lp_cache=JSON.stringify({B,cfg});
-async function load(){try{B=await db("lp_bookmarks?select=*&order=created_at.desc");const s=await db("lp_settings?select=data");if(s[0]?.data){const d=s[0].data,r=renew(d);cfg={...cfg,...r};if(r!==d)saveCfg()}loaded=true;cache();theme();initTag();draw();if(B.length>2&&!ls.lp_tip){ls.lp_tip=1;toast("Tip: press and hold an icon for its menu.")}}catch(e){loaded=true;draw();toast(navigator.onLine?e.message:"Offline. Showing saved bookmarks.")}}
+async function load(){try{B=await db("lp_bookmarks?select=*&order=created_at.desc");const s=await db("lp_settings?select=data");if(s[0]?.data){const d=s[0].data,r=renew(d);cfg={...cfg,...r};if(r!==d)saveCfg();if(cfg.looks){looks={...LD,...cfg.looks};try{ls.little_space_looks=JSON.stringify(looks)}catch{}}else if(ls.little_space_looks){cfg.looks={...looks};saveCfg()}}loaded=true;cache();theme();initTag();draw();if(B.length>2&&!ls.lp_tip){ls.lp_tip=1;toast("Tip: press and hold an icon for its menu.")}}catch(e){loaded=true;draw();toast(navigator.onLine?e.message:"Offline. Showing saved bookmarks.")}}
 let sv;const saveCfg=()=>{cache();clearTimeout(sv);sv=setTimeout(()=>db("lp_settings?on_conflict=user_id",{m:"POST",b:{data:cfg},p:"resolution=merge-duplicates,return=minimal"}).catch(e=>toast(e.message)),600)};
 
 /* ---- grid size (saved in your settings JSON, no DB change) ---- */
-function applyGrid(){const r=document.documentElement.style,T=gv("tile");r.setProperty("--gc",gv("cols")?`repeat(${gv("cols")},1fr)`:`repeat(auto-fill,minmax(${T+6}px,1fr))`);r.setProperty("--tile",T+"px");r.setProperty("--gap",gv("gap")+"px");r.setProperty("--rad",gv("rad")+"%");r.setProperty("--fs",gv("fs")+"px");r.setProperty("--lc",gv("lines")||1);r.setProperty("--ff",FF[gv("ff")]);document.body.classList.toggle("nonames",gv("lines")===0)}
+function applyGrid(){const r=document.documentElement.style,T=gv("tile");r.setProperty("--gc",gv("cols")?`repeat(${gv("cols")},1fr)`:`repeat(auto-fill,minmax(${T+16}px,1fr))`);r.setProperty("--tile",T+"px");r.setProperty("--gap",gv("gap")+"px");r.setProperty("--rad",gv("rad")+"%");r.setProperty("--fs",gv("fs")+"px");r.setProperty("--lc",gv("lines")||1);r.setProperty("--ff",FF[gv("ff")]);document.body.classList.toggle("nonames",gv("lines")===0)}
 /* ---- theme ---- */
 const mq=matchMedia("(prefers-color-scheme:dark)");
 const dk=()=>cfg.theme==="dark"||(cfg.theme!=="light"&&mq.matches);
 const PRESETS={cozy:["#62745b","#f5f1e9","#fffdf8"],rose:["#c47791","#f8edf1","#fff9fb"],ocean:["#528c9a","#edf5f6","#fbffff"],mono:["#737373","#f1f1ef","#ffffff"],sunset:["#d58a45","#fbf0df","#fffaf0"],berry:["#9364a8","#f3edf8","#fffaff"],mint:["#578d78","#edf5ef","#fbfff9"]};
-const LD={preset:"cozy",accent:"#62745b",bg:"#f5f1e9",surface:"#fffdf8",motion:"soft",level:55,bgfx:"aurora",density:"comfortable",depth:"soft",shape:"rounded"};
+const LD={preset:"cozy",accent:"#62745b",bg:"#f5f1e9",surface:"#fffdf8",motion:"soft",level:55,bgfx:"aurora",density:"comfortable",depth:"soft",shape:"rounded",ictone:"vivid",width:"normal",fab:"right",tabs:"pills",counts:"show",heads:"show"};
 let looks={...LD};try{looks={...LD,...JSON.parse(ls.little_space_looks||"{}")}}catch{}
 if(looks.preset==="cozy"&&looks.accent==="#b47758")Object.assign(looks,{accent:LD.accent,bg:LD.bg,surface:LD.surface});
 const mix=(a,b,t)=>{const p=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)),x=p(a),y=p(b);return"#"+x.map((c,i)=>Math.round(c+(y[i]-c)*t).toString(16).padStart(2,"0")).join("")};
-const LK={lookPreset:"preset",customAccent:"accent",customBg:"bg",customSurface:"surface",motionStyle:"motion",motionLevel:"level",bgEffect:"bgfx",density:"density",cardDepth:"depth",iconShape:"shape"};
-const saveLooks=()=>{try{ls.little_space_looks=JSON.stringify(looks)}catch{}};
+const LK={lookPreset:"preset",customAccent:"accent",customBg:"bg",customSurface:"surface",motionStyle:"motion",motionLevel:"level",bgEffect:"bgfx",density:"density",cardDepth:"depth",iconShape:"shape",ictone:"ictone",layoutWidth:"width",fabPos:"fab",tabStyle:"tabs",tabCounts:"counts",sectionHeads:"heads"};
+const saveLooks=()=>{try{ls.little_space_looks=JSON.stringify(looks)}catch{}cfg.looks={...looks};saveCfg()};
 function theme(){const d=document.documentElement,b=document.body,dark=dk(),L=looks,v=(k,x)=>d.style.setProperty(k,x);let ac=L.accent,bg=L.bg,sf=L.surface;
  if(dark){bg=mix("#131513",ac,.07);sf=mix("#1d201d",ac,.1);ac=mix(ac,"#ffffff",.32)}
  const w=dark?"255,255,255":"88,78,58",lv=Number(L.level)||0;
@@ -578,7 +622,7 @@ function theme(){const d=document.documentElement,b=document.body,dark=dk(),L=lo
  v("--bd",dark?"rgba(255,255,255,.12)":"rgba(79,67,50,.11)");v("--sep",dark?"rgba(255,255,255,.12)":"rgba(79,67,50,.12)");
  v("--tx",dark?"#f1eee6":"#302d28");v("--mu",dark?"#b0b4a7":"#7b7266");
  v("--motion-duration",`${4.5-lv/100*3.5}s`);v("--motion-intensity",String(lv/100));
- b.dataset.motion=lv===0?"off":L.motion;b.dataset.bgfx=L.bgfx;b.dataset.density=L.density;b.dataset.depth=L.depth;b.dataset.shape=L.shape;
+ b.dataset.motion=lv===0?"off":L.motion;b.dataset.bgfx=L.bgfx;b.dataset.density=L.density;b.dataset.depth=L.depth;b.dataset.shape=L.shape;b.dataset.ictone=L.ictone;b.dataset.width=L.width;b.dataset.fab=L.fab;b.dataset.tabs=L.tabs;b.dataset.counts=L.counts;b.dataset.heads=L.heads;
  document.querySelector("meta[name=theme-color]").content=bg;applyGrid();
  for(const id in LK){const el=document.getElementById(id);if(el)el.value=L[LK[id]]}}
 mq.addEventListener("change",theme);
@@ -589,12 +633,13 @@ $("#resetLooks").onclick=()=>{looks={...LD};theme();saveLooks()};
 const allTags=()=>{const m={};B.forEach(b=>(b.tags||[]).forEach(t=>m[t]=(m[t]||0)+1));return Object.entries(m).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]))};
 const hue=s=>{let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))%360;return h};
 function icErr(i){const d=i.parentNode;d.classList.remove("f");d.style.background=i.dataset.g;d.textContent=i.dataset.fb}
-function icon(b){const h=hue(b.title||"?"),l=((b.title||"").match(/[A-Za-z0-9]/)||["?"])[0].toUpperCase(),g=`linear-gradient(160deg,hsl(${h} 78% 62%),hsl(${(h+30)%360} 80% 48%))`,fb=b.emoji?esc(b.emoji):l;if(!b.icon_url&&b.emoji)return `<div class="ic" style="background:${g}">${fb}</div>`;const src=b.icon_url||`https://www.google.com/s2/favicons?domain=${encodeURIComponent(host(b.url))}&sz=128`;return `<div class="${b.icon_url?"ic":"ic f"}"><img src="${esc(src)}" alt="" loading="lazy" referrerpolicy="no-referrer" data-fb="${esc(fb)}" data-g="${esc(g)}" onerror="icErr(this)"></div>`}
-function card(b,i=0){return `<a class="card${sel?.has(b.id)?" sel":""}" style="--i:${i}" draggable="false" href="${esc(b.url)}" target="_blank" rel="noopener noreferrer" data-id="${b.id}">${icon(b)}${b.pinned?'<i class="pin"></i>':""}<div class="col"><div class="t">${esc(b.title)}</div><div class="h">${esc(host(b.url))}</div></div><button class="more" data-edit="${b.id}" aria-label="Edit ${esc(b.title)}">⋯</button></a>`}
+const openLink=u=>{cfg.open==="same"?(location.href=u):window.open(u,"_blank","noopener,noreferrer")};
+function icon(b){const h=hue(b.title||"?"),l=((b.title||"").match(/[A-Za-z0-9]/)||["?"])[0].toUpperCase(),g=`linear-gradient(160deg,hsl(${h} calc(78% * var(--isat,1)) 62%),hsl(${(h+30)%360} calc(80% * var(--isat,1)) 48%))`,fb=b.emoji?esc(b.emoji):l;if(!b.icon_url&&b.emoji)return `<div class="ic" style="background:${g}">${fb}</div>`;const src=b.icon_url||`https://www.google.com/s2/favicons?domain=${encodeURIComponent(host(b.url))}&sz=128`;return `<div class="${b.icon_url?"ic":"ic f"}"><img src="${esc(src)}" alt="" loading="lazy" referrerpolicy="no-referrer" data-fb="${esc(fb)}" data-g="${esc(g)}" onerror="icErr(this)"></div>`}
+function card(b,i=0){return `<a class="card${sel?.has(b.id)?" sel":""}" style="--i:${i}" draggable="false" href="${esc(b.url)}" ${cfg.open==="same"?"":'target="_blank" '}rel="noopener noreferrer" data-id="${b.id}">${icon(b)}${b.pinned?'<i class="pin"></i>':""}<div class="col"><div class="t">${esc(b.title)}</div><div class="h">${esc(host(b.url))}</div></div><button class="more" data-edit="${b.id}" aria-label="Edit ${esc(b.title)}">⋯</button></a>`}
 function sorted(a){const f={manual:(x,y)=>(x.position||0)-(y.position||0)||y.created_at.localeCompare(x.created_at),recent:(x,y)=>y.created_at.localeCompare(x.created_at),popular:(x,y)=>(y.open_count||0)-(x.open_count||0)||x.title.localeCompare(y.title),az:(x,y)=>x.title.localeCompare(y.title)}[cfg.sort]||(()=>0);return a.slice().sort(f)}
 function visible(){const q=$("#q").value.trim().toLowerCase();return B.filter(b=>(tag==="all"||(tag==="★"?b.pinned:(b.tags||[]).includes(tag)))&&(!q||b.title.toLowerCase().includes(q)||b.url.toLowerCase().includes(q)||(b.tags||[]).some(t=>t.includes(q))))}
 let userPicked=false;
-function initTag(){if(userPicked)return;const tg=allTags().map(x=>x[0]),pins=B.some(b=>b.pinned);tag=tordKeys().find(k=>k==="all"||(k==="★"&&pins)||tg.includes(k))||"all"}
+function initTag(){if(userPicked)return;const tg=allTags().map(x=>x[0]),pins=B.some(b=>b.pinned);tag=(cfg.start==="last"&&ls.lp_lasttag&&(ls.lp_lasttag==="all"||(ls.lp_lasttag==="★"&&pins)||tg.includes(ls.lp_lasttag))?ls.lp_lasttag:null)||tordKeys().find(k=>k==="all"||(k==="★"&&pins)||tg.includes(k))||"all"}
 function tordKeys(){const tg=allTags().map(x=>x[0]);return[...new Set([...(cfg.tord||[]),"all","★",...tg])].filter(k=>k==="all"||k==="★"||tg.includes(k))}
 function draw(){
  const tg=allTags(),pins=B.some(b=>b.pinned);
@@ -628,7 +673,7 @@ $("#rimg").onclick=()=>{tmpImg="";$("#fim").value="";pv()};
 /* ---- swipe left/right to change tag ---- */
 let sx=0,sy=0,sok=false;
 document.addEventListener("touchstart",e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY;sok=!e.target.closest("#tags,dialog,input,select,.top")},{passive:true});
-document.addEventListener("touchend",e=>{if(!sok||dg?.on||justDragged)return;const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)<70||Math.abs(dx)<Math.abs(dy)*1.6)return;const ks=[...document.querySelectorAll("#tags .chip")].map(b=>b.dataset.tag),i=ks.indexOf(tag)+(dx<0?1:-1);if(i<0||i>=ks.length)return;userPicked=true;tag=ks[i];anim=true;draw();document.querySelector("#tags .chip.on")?.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"})});
+document.addEventListener("touchend",e=>{if(!sok||dg?.on||justDragged)return;const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)<70||Math.abs(dx)<Math.abs(dy)*1.6)return;const ks=[...document.querySelectorAll("#tags .chip")].map(b=>b.dataset.tag),i=ks.indexOf(tag)+(dx<0?1:-1);if(i<0||i>=ks.length)return;userPicked=true;tag=ls.lp_lasttag=ks[i];anim=true;draw();document.querySelector("#tags .chip.on")?.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"})});
 /* ---- drag to reorder (mouse: drag; touch: press and hold) ---- */
 let dg=null,justDragged=false;
 const canDrag=()=>tag==="all"&&!sel&&!$("#q").value.trim();
@@ -647,7 +692,7 @@ async function commit(c){const ids=[...c.parentElement.children].map(k=>k.datase
 /* ---- open tracking ---- */
 function opened(id){const b=B.find(x=>x.id===id);if(!b)return;b.open_count=(b.open_count||0)+1;b.last_opened_at=new Date().toISOString();cache();db(`lp_bookmarks?id=eq.${id}`,{m:"PATCH",b:{open_count:b.open_count,last_opened_at:b.last_opened_at},p:"return=minimal"}).catch(()=>{})}
 $("#main").onclick=e=>{if(justDragged){e.preventDefault();return}if(sel){e.preventDefault();const c=e.target.closest(".card");if(c)tog(c.dataset.id);return}const ed=e.target.closest("[data-edit]");if(ed){e.preventDefault();menu(ed.dataset.edit,ed.closest(".card"));return}const c=e.target.closest(".card");if(c)opened(c.dataset.id)};
-$("#tags").onclick=e=>{const t=e.target.closest("[data-tag]");if(t){navigator.vibrate?.(8);userPicked=true;tag=t.dataset.tag;anim=true;draw()}};
+$("#tags").onclick=e=>{const t=e.target.closest("[data-tag]");if(t){navigator.vibrate?.(8);userPicked=true;tag=ls.lp_lasttag=t.dataset.tag;anim=true;draw()}};
 $("#q").oninput=draw;
 
 /* ---- hold / right-click menu ---- */
@@ -661,7 +706,7 @@ function menu(id,el){const b=B.find(x=>x.id===id);if(!b)return;const p=mn.firstC
  mna=false;mn.hidden=false;const r=(el||document.querySelector(`.card[data-id="${id}"]`)).getBoundingClientRect(),w=p.offsetWidth,h=p.offsetHeight,L=Math.max(10,Math.min(innerWidth-w-10,r.left+r.width/2-w/2));let T=r.bottom+8,up=false;if(T+h>innerHeight-10){T=Math.max(10,r.top-8-h);up=true}
  p.style.cssText=`left:${L}px;top:${T}px;transform-origin:${r.left+r.width/2-L}px ${up?"100%":"0"}`;
  p.onclick=async e=>{const a=e.target.dataset.a;if(!a)return;mnx();
-  if(a==="open"){window.open(b.url,"_blank","noopener,noreferrer");opened(id)}
+  if(a==="open"){openLink(b.url);opened(id)}
   else if(a==="edit")openForm(id);
   else if(a==="sel")selMode(true,id);
   else if(a==="copy"){try{await navigator.clipboard.writeText(b.url);toast("Link copied")}catch{toast("Couldn't copy the link")}}
@@ -709,12 +754,13 @@ $("#x6").onclick=()=>$("#odlg").close();
 /* ---- settings ---- */
 function mark(id,v){document.querySelectorAll(`#${id} button`).forEach(b=>b.classList.toggle("on",b.dataset.v===v))}
 /* ---- customize ---- */
-const D={cols:0,tile:60,gap:18,rad:24,fs:12,lines:2,ff:0},gv=k=>cfg[k]??D[k];
+const D={cols:0,tile:60,gap:18,rad:24,fs:12,lines:2,ff:0,open:"new",start:"first"},gv=k=>cfg[k]??D[k];
 const FF=["'Bricolage Grotesque',system-ui,sans-serif","-apple-system,BlinkMacSystemFont,'SF Pro Text',Inter,system-ui,sans-serif","Georgia,serif","ui-monospace,Menlo,monospace"];
-const CT=[["theme","Theme","sel",[["auto","Auto"],["light","Light"],["dark","Dark"]]],["view","Layout","sel",[["grid","Grid"],["list","List"]]],["sort","Sort by","sel",[["manual","Custom"],["recent","Newest"],["popular","Most used"],["az","A–Z"]]],["cols","Columns","sel",[[0,"Auto"],[3,3],[4,4],[5,5],[6,6],[8,8]]],["tile","Icon size","rng",44,96],["gap","Spacing","rng",8,40],["rad","Corners","rng",0,50],["fs","Text size","rng",10,18],["lines","Text lines","sel",[[0,"Hidden"],[1,"1 line"],[2,"2 lines"],[3,"3 lines"]]],["ff","Font","sel",[[1,"Apple system"],[0,"Bricolage"],[2,"Serif"],[3,"Mono"]]]];
+const CT=[["theme","Theme","sel",[["auto","Auto"],["light","Light"],["dark","Dark"]]],["view","Layout","sel",[["grid","Grid"],["list","List"]]],["sort","Sort by","sel",[["manual","Custom"],["recent","Newest"],["popular","Most used"],["az","A–Z"]]],["cols","Columns","sel",[[0,"Auto"],[3,3],[4,4],[5,5],[6,6],[8,8]]],["tile","Icon size","rng",44,96],["gap","Spacing","rng",8,40],["rad","Corners","rng",0,50],["fs","Text size","rng",10,18],["lines","Text lines","sel",[[0,"Hidden"],[1,"1 line"],[2,"2 lines"],[3,"3 lines"]]],["ff","Font","sel",[[1,"Apple system"],[0,"Bricolage"],[2,"Serif"],[3,"Mono"]]],["open","Open links","sel",[["new","New tab"],["same","Same tab"]]],["start","Open on","sel",[["first","First tab"],["last","Last used tab"]]]];
 $("#ctl").innerHTML=CT.map(([k,n,t,a,b])=>`<div><label for="c-${k}">${n}${t==="rng"?` <b id="v-${k}"></b>`:""}</label>`+(t==="sel"?`<select id="c-${k}">${a.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join("")}</select>`:t==="rng"?`<input id="c-${k}" type="range" min="${a}" max="${b}">`:`<input id="c-${k}" type="color">`)+"</div>").join("");
+document.querySelectorAll("#ctl>div").forEach(el=>{if(/c-(open|start)$/.test(el.querySelector("select,input").id))$("#ctl2").appendChild(el)});
 function settingsUI(){for(const[k]of CT){const v=k==="ac"?(cfg.ac||(dk()?"#0a84ff":"#007aff")):(k in D?gv(k):cfg[k]);$("#c-"+k).value=v;const o=$("#v-"+k);if(o)o.textContent=v}}
-for(const[k]of CT)$("#c-"+k).oninput=e=>{const v=e.target.value;cfg[k]=typeof D[k]==="number"?+v:v;if(k==="theme"||k==="mood"||k==="ac")theme();applyGrid();if(k==="view"||k==="sort")draw();settingsUI();saveCfg()};
+for(const[k]of CT)$("#c-"+k).oninput=e=>{const v=e.target.value;cfg[k]=typeof D[k]==="number"?+v:v;if(k==="theme"||k==="mood"||k==="ac")theme();applyGrid();if(k==="view"||k==="sort"||k==="open")draw();settingsUI();saveCfg()};
 $("#rst").onclick=()=>{for(const k of[...Object.keys(D),"ac","mood"])delete cfg[k];theme();settingsUI();saveCfg();toast("Layout reset")};
 $("#cfg").onclick=()=>{settingsUI();$("#sdlg").showModal()};
 $("#x2").onclick=()=>$("#sdlg").close();$("#x1").onclick=()=>$("#dlg").close();
@@ -761,11 +807,11 @@ $("#yout").onclick=()=>{if(!confirm("Turn off sync on this device? Your bookmark
 $("#ynew").onclick=async e=>{const b=e.currentTarget;b.disabled=true;$("#yerr").textContent="";try{await joinSync([...crypto.getRandomValues(new Uint8Array(16))].map(x=>AL[x%32]).join(""),true);ySet();toast("Sync is on. Save your code.")}catch(er){yerr(er)}b.disabled=false};
 $("#yf").onsubmit=async e=>{e.preventDefault();const b=e.submitter,c=nc($("#yc").value);if(c.length!==16){$("#yerr").textContent="Enter the full 16-character code.";return}b.disabled=true;$("#yerr").textContent="";try{await joinSync(c,false);ySet();toast("Sync is on")}catch(er){yerr(er)}b.disabled=false};
 /* ---- keyboard ---- */
-addEventListener("keydown",e=>{const typing=/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName);if(e.key==="/"&&!typing&&!document.querySelector("dialog[open]")){e.preventDefault();$("#q").focus()}else if(e.key==="Enter"&&document.activeElement===$("#q")){const f=sorted(visible())[0];if(f){window.open(f.url,"_blank","noopener,noreferrer");opened(f.id)}}else if(e.key==="Escape"&&document.activeElement===$("#q")){$("#q").value="";$("#q").blur();draw()}});
+addEventListener("keydown",e=>{const typing=/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName);if(e.key==="/"&&!typing&&!document.querySelector("dialog[open]")){e.preventDefault();$("#q").focus()}else if(e.key==="Enter"&&document.activeElement===$("#q")){const f=sorted(visible())[0];if(f){openLink(f.url);opened(f.id)}}else if(e.key==="Escape"&&document.activeElement===$("#q")){$("#q").value="";$("#q").blur();draw()}});
 addEventListener("online",()=>S&&load());
 
 /* ---- boot: paint cache instantly, then sync ---- */
-try{const c=JSON.parse(ls.lp_cache||"null");if(c){B=c.B||[];cfg={...cfg,...renew(c.cfg)};loaded=true}}catch{}
+try{const c=JSON.parse(ls.lp_cache||"null");if(c){B=c.B||[];cfg={...cfg,...renew(c.cfg)};if(cfg.looks)looks={...LD,...cfg.looks};loaded=true}}catch{}
 addEventListener("scroll",()=>$(".top").classList.toggle("sc",scrollY>6),{passive:true});theme();document.body.classList.add("boot");setTimeout(()=>document.body.classList.remove("boot"),1200);initTag();draw();
 if(C.url.startsWith("YOUR_"))setTimeout(openSetup,400);else if(S)load();else{loaded=true;draw();setTimeout(openSync,400)}
 
