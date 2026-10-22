@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f2f2f7"><meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="Little Space: a fast, private launchpad for your bookmarks that syncs across devices."><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Little Space"><meta name="format-detection" content="telephone=no">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <title>Little Space — Bookmarks</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23007aff'/%3E%3Ccircle cx='32' cy='32' r='12' fill='none' stroke='white' stroke-width='6'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bricolage+Grotesque:wght@400;500;600;800&display=swap" rel="stylesheet">
@@ -447,15 +449,114 @@ body[data-hdr=solid] .top{background:var(--bg);-webkit-backdrop-filter:none;back
 .custom-grid label{justify-content:flex-end}
 dialog{transition:opacity .25s ease}
 dialog.peek,dialog.peek::backdrop{opacity:0;pointer-events:none;transition:opacity .2s ease}
+
+/* ---- Production hardening: layout stability ---- */
+html{overflow-x:hidden;scrollbar-gutter:stable;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{width:100%;overflow-wrap:anywhere}
+img,svg{max-width:100%}
+/* Icons never overflow their grid cell (fixes overlap with many columns / big icons) */
+.ic{width:min(var(--tile),100%);height:auto;aspect-ratio:1/1;margin-inline:auto}
+.sk{width:min(var(--tile),100%);height:auto;aspect-ratio:1/1}
+.list .ic{width:40px;height:40px;aspect-ratio:auto;margin:0}
+.grid{min-width:0}
+.card,.col,.t{min-width:0}
+/* Prevent iOS/Android auto-zoom on focus, which shifts and distorts the whole page */
+@media(hover:none),(pointer:coarse){input,select,textarea,.search input,.custom-grid select,dialog input,dialog select{font-size:16px!important}}
+/* Lock background scroll while a dialog is open so the page doesn't jump */
+body:has(dialog[open]){overflow:hidden}
+dialog{max-width:calc(100vw - 24px)}
+/* Softer flip so tab switching never skews the page */
+@keyframes swFlip{from{opacity:0;transform:translateX(calc(24px * var(--sd,1)))}to{opacity:1;transform:none}}
+/* Don't run endless animations on very small screens (battery + jank) */
+body[data-motion=float] .card:nth-child(n+31),body[data-motion=breathe] .card:nth-child(n+31),body[data-motion=glow] .card:nth-child(n+31) .ic{animation:none}
+#pvb{position:fixed;left:0;right:0;margin:0 auto;width:max-content;max-width:calc(100vw - 24px);bottom:calc(92px + env(safe-area-inset-bottom));z-index:50;display:flex;align-items:center;gap:2px;padding:6px 8px 6px 16px;border-radius:99px;background:color-mix(in srgb,var(--sf) 88%,transparent);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);box-shadow:0 0 0 .5px var(--bd),0 12px 32px rgba(0,0,0,.25);white-space:nowrap}
+#pvb span{font-weight:600;font-size:14px;margin-right:6px;color:var(--mu)}
+#pvb button{padding:10px 12px;border-radius:99px;font-size:14px;font-weight:600;color:var(--ac)}
+#pvb button:active{background:var(--fill)}
+/* Settings as a bottom sheet: page stays visible above, so changes show live */
+#sdlg{margin:auto auto 0;width:min(100vw,560px);max-width:100vw;max-height:56dvh;border-radius:26px 26px 0 0;padding-bottom:calc(20px + env(safe-area-inset-bottom));animation:sheetUp .3s cubic-bezier(.2,.9,.3,1)}
+#sdlg::backdrop{background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none}
+@keyframes sheetUp{from{transform:translateY(48px);opacity:0}}
+.shead{position:sticky;top:-20px;z-index:3;background:var(--sf);padding:6px 0 8px}
+.quick{display:grid;gap:14px;margin:8px 0 4px}
+.swt{display:flex;gap:11px;flex-wrap:wrap}
+.swt button{width:36px;height:36px;border-radius:50%;background:var(--c);box-shadow:inset 0 0 0 2px rgba(255,255,255,.55),0 2px 6px rgba(0,0,0,.15);transition:transform .25s var(--sp)}
+.swt button:active{transform:scale(.88)}
+.swt button.on{outline:3px solid var(--tx);outline-offset:2px}
+.seg{display:flex;background:var(--fill);border-radius:12px;padding:3px}
+.seg button{flex:1;min-height:38px;border-radius:10px;font-size:14px;font-weight:600;color:var(--mu)}
+.seg button.on{background:var(--sf);color:var(--tx);box-shadow:0 1px 4px rgba(0,0,0,.18)}
+/* Sheet handle + sticky top (replaces earlier .shead sticky) */
+#sdlg{padding-top:0}
+.stop{position:sticky;top:0;z-index:4;background:var(--sf);margin:0 -20px;padding:0 20px 4px}
+.grab{height:28px;display:grid;place-items:center;touch-action:none;cursor:ns-resize;outline-offset:-4px}
+.grab::before{content:"";width:44px;height:5px;border-radius:99px;background:var(--fill2)}
+.grab:hover::before,.grab:focus-visible::before{background:var(--ac)}
+.shead{position:static;padding:0 0 6px;background:none}
+.custom-actions .btn{white-space:nowrap;font-size:13px;padding:0 8px}
+/* Page width / density / header: make the settings actually visible, on phones too */
+body{--bp:22px;padding-left:var(--bp);padding-right:var(--bp)}
+.top{margin-left:calc(var(--bp)*-1);margin-right:calc(var(--bp)*-1)}
+header,.tabs{padding-left:var(--bp);padding-right:var(--bp)}
+@media(min-width:760px){body{--bp:30px}}
+@media(max-width:600px){body{--bp:15px}}
+@media(max-width:759px){body[data-width=narrow]{--bp:34px}body[data-width=wide]{--bp:6px}}
+.grid{row-gap:calc(var(--gap)*var(--dens,1));column-gap:calc(7px*var(--dens,1))}
+.card{padding:calc(9px*var(--dens,1)) 4px calc(11px*var(--dens,1))}
+.list .card{padding:calc(11px*var(--dens,1)) 13px}
+body[data-density=compact]{--dens:.5}body[data-density=comfortable]{--dens:1}body[data-density=airy]{--dens:1.6}
+body[data-hdr=blur] .top{background:color-mix(in srgb,var(--bg) 38%,transparent);-webkit-backdrop-filter:saturate(180%) blur(28px);backdrop-filter:saturate(180%) blur(28px);box-shadow:none}
+body[data-hdr=solid] .top{background:var(--sf);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:0 1px 0 var(--bd),0 10px 24px rgba(0,0,0,.08)}
+body[data-hdr=clear] .top{background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none}
+.rmb{display:flex;align-items:center;gap:10px;margin:6px 0 2px;padding:10px 12px;border-radius:14px;background:color-mix(in srgb,var(--ac) 14%,var(--sf));font-size:13px;line-height:1.35}.rmb[hidden]{display:none}.rmb span{flex:1}.rmb button{flex:none;padding:8px 12px;border-radius:99px;background:var(--ac);color:var(--on);font-weight:600;font-size:13px}
+/* ---- Watchlist ---- */
+.modes{display:flex;gap:4px;margin:10px var(--bp) 0;padding:3px;background:var(--fill);border-radius:14px}
+.modes button{flex:1;min-height:38px;border-radius:11px;font-size:14px;font-weight:600;color:var(--mu);display:flex;align-items:center;justify-content:center;gap:6px;transition:background .2s,color .2s}
+.modes button.on{background:var(--sf);color:var(--tx);box-shadow:0 1px 5px rgba(0,0,0,.14)}
+.modes b{font-weight:600;font-size:12px;opacity:.65}.modes b:empty{display:none}
+.wl{display:flex;flex-direction:column;gap:10px;max-width:760px;margin:6px auto 0}
+.wrow{display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--sf);border:1px solid var(--bd);border-radius:18px;box-shadow:0 4px 14px rgba(43,49,36,.04);--tile:44px}
+.wrow.done{opacity:.6}.wrow.done .wt{text-decoration:line-through}
+.wic{flex:none;display:block;text-decoration:none}
+.wrow .ic{width:44px;height:44px;aspect-ratio:auto;margin:0}
+.wbody{flex:1;min-width:0}
+.wt{display:block;font-weight:650;font-size:16px;line-height:1.3;color:var(--tx);text-decoration:none;overflow-wrap:anywhere}
+.wh{font-size:12px;color:var(--mu);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wn{margin-top:10px;padding:9px 11px;border-radius:12px;background:var(--fill)}
+.wn b{display:block;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ac);margin-bottom:3px}
+.wn p{font-size:14px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.wact{display:flex;flex-direction:column;align-items:center;gap:4px;flex:none}
+.wchk,.wmore{width:40px;height:40px;border-radius:50%;display:grid;place-items:center}
+.wchk::before{content:"";width:24px;height:24px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--mu);display:grid;place-items:center;color:var(--on);font-size:14px;font-weight:700;transition:background .2s,box-shadow .2s}
+.wchk[aria-pressed=true]::before{content:"\2713";background:var(--ac);box-shadow:none}
+.wmore{font-size:22px;line-height:1;color:var(--mu)}
+.wchk:active,.wmore:active{background:var(--fill)}
+.intro .wrow{animation:cozyEnter .45s ease-out backwards;animation-delay:calc(min(var(--i,0),14)*35ms)}
+.wsk{height:92px;border-radius:18px;background:linear-gradient(100deg,var(--fill) 30%,var(--fill2) 50%,var(--fill) 70%);background-size:220% 100%;animation:sh 1.3s linear infinite}
+dialog textarea{display:block;width:100%;min-height:84px;resize:vertical;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:13px;padding:10px 12px;font:inherit;font-size:16px;line-height:1.45;outline:none}
+dialog textarea:focus{box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 30%,transparent)}
+dialog .toast{bottom:auto;top:calc(14px + env(safe-area-inset-top))}
+/* ---- categories + simple settings ---- */
+.qrow{display:grid;gap:6px}.qrow>span{font-size:12.5px;font-weight:500;color:var(--mu);padding:0 2px}
+.seg button{white-space:nowrap;padding:0 6px}
+#adv{margin-top:16px}#adv .custom-section{background:none;box-shadow:none;margin-top:10px;padding:12px}
+h2.cg small{font:500 13px/1 Inter,system-ui,sans-serif;color:var(--mu);margin-left:8px;letter-spacing:0}
+body[data-heads=hide] main h2.cg{display:block}
+.chip.cat::before{content:"";width:7px;height:7px;border-radius:2px;background:var(--ac);margin-right:7px;flex:none}
+.chip.cat.on::before{background:var(--on)}
+body[data-tabs=underline] #tags .chip.cat.on::before{background:var(--ac)}
+noscript .ns{padding:40px 20px;text-align:center;font-family:system-ui,sans-serif}
 </style>
 </head>
 <body>
+<noscript><p class="ns">Little Space needs JavaScript to run. Please enable it and reload.</p></noscript>
 <div class="top">
 <header>
  <div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5.5"/></svg></div>
  <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="Search bookmarks" autocomplete="off" aria-label="Search bookmarks"><small id="cnt"></small></label>
  <button class="ib" id="cfg" aria-label="Settings"><svg viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></button>
 </header>
+<div class="modes" id="modes" role="tablist" aria-label="Section"><button type="button" role="tab" data-mode="books">Bookmarks</button><button type="button" role="tab" data-mode="watch">Watchlist<b id="wc"></b></button></div>
 <nav class="tabs" id="tags" aria-label="Filter by tag"></nav>
 </div>
 
@@ -467,6 +568,7 @@ dialog.peek,dialog.peek::backdrop{opacity:0;pointer-events:none;transition:opaci
  <div class="pv" id="pv"></div>
  <label for="fu">Link</label><input id="fu" type="text" inputmode="url" autocapitalize="off" placeholder="example.com" required>
  <label for="ft">Name</label><input id="ft" maxlength="80" placeholder="Site name">
+ <label for="fc">Category</label><input id="fc" maxlength="30" placeholder="Optional, e.g. Work"><div class="sg" id="csug"></div>
  <label for="fg">Tags</label><input id="fg" placeholder="work, reading, tools"><div class="sg" id="sug"></div>
  <details class="advanced-fields">
   <summary>Icon options <span>Optional</span></summary>
@@ -490,6 +592,31 @@ dialog.peek,dialog.peek::backdrop{opacity:0;pointer-events:none;transition:opaci
  <div class="row"><button class="btn" type="button" id="x5">Cancel</button><button class="btn p" type="submit">Add tags</button></div>
 </form></dialog>
 
+<dialog id="mdlg"><form id="mf" autocomplete="off">
+ <h3 id="mt">Move to category</h3>
+ <label for="mc">Category</label><input id="mc" maxlength="30" placeholder="e.g. Work"><div class="sg" id="msug"></div>
+ <p class="hint">Pick one above or type a new name. Leave it empty and tap Save to remove the category.</p>
+ <div class="err" id="merr" role="alert"></div>
+ <div class="row"><button class="btn" type="button" id="x7">Cancel</button><button class="btn p" type="submit">Save</button></div>
+</form></dialog>
+
+<dialog id="wdlg"><form id="wf" autocomplete="off">
+ <h3 id="wdt">Add to watchlist</h3>
+ <label for="wu">Link</label><input id="wu" type="text" inputmode="url" autocapitalize="off" placeholder="example.com/article" required>
+ <label for="wt">Title</label><input id="wt" maxlength="120" placeholder="Optional. Uses the website name if empty">
+ <label for="ww">Why I saved it</label><textarea id="ww" maxlength="600" rows="3" placeholder="What caught my attention?"></textarea>
+ <label for="wb">How it will help me</label><textarea id="wb" maxlength="600" rows="3" placeholder="What will I learn or do with it?"></textarea>
+ <div class="err" id="werr" role="alert"></div>
+ <div class="row"><button class="btn d" type="button" id="wdel" hidden>Delete</button><button class="btn" type="button" id="wx">Cancel</button><button class="btn p" type="submit">Save</button></div>
+</form></dialog>
+
+<dialog id="kdlg">
+ <h3 id="ktt">Copy this text</h3>
+ <p class="hint" style="margin-top:6px">Your browser blocked automatic copying. Tap the box, choose Select all, then Copy.</p>
+ <textarea id="kta" readonly rows="9" style="margin-top:10px;font-size:12px" aria-label="Text to copy"></textarea>
+ <div class="row"><button class="btn" type="button" id="kx">Close</button><button class="btn p" type="button" id="kcp">Select all</button></div>
+</dialog>
+
 <dialog id="odlg">
  <h3>Reorder tags</h3>
  <p class="hint" style="margin-top:6px">Use the arrows to move a tab. "All" and "★ Pinned" can go anywhere, too.</p>
@@ -497,9 +624,13 @@ dialog.peek,dialog.peek::backdrop{opacity:0;pointer-events:none;transition:opaci
  <div class="row"><button class="btn" type="button" id="orst">Reset order</button><button class="btn p" type="button" id="x6">Done</button></div>
 </dialog>
 
-<dialog id="sdlg">
- <div class="shead"><h3 tabindex="-1" autofocus>Settings</h3><button class="btn p" id="x2" type="button">Done</button></div>
- <details class="custom-section" open>
+<dialog id="sdlg"><div class="stop"><div class="grab" id="grab" role="separator" aria-orientation="horizontal" aria-label="Drag to resize settings" tabindex="0"></div>
+ <div class="shead"><h3 tabindex="-1" autofocus>Settings</h3><button class="btn p" id="x2" type="button">Done</button></div></div>
+ <div class="rmb" id="rmBanner" hidden><span>Your phone has "reduce motion" on, so animations are paused.</span><button type="button" id="rmPlay">Play anyway</button></div>
+ <div class="quick"><div class="swt" id="swatches" role="group" aria-label="Color"></div><div class="seg" id="themeSeg" role="group" aria-label="Theme"></div></div>
+ <div class="quick" id="qk"></div>
+ <details class="custom-section" id="adv"><summary><b>More options</b><span>Fine-tune everything</span></summary>
+ <details class="custom-section">
   <summary><b>Display</b><span>Layout, size &amp; text</span></summary>
   <div class="ctl" id="ctl"></div>
   <div class="custom-actions"><button class="btn" id="rst" type="button">Reset display</button></div>
@@ -526,7 +657,7 @@ dialog.peek,dialog.peek::backdrop{opacity:0;pointer-events:none;transition:opaci
    <label>Name weight<select id="labelWeight"><option value="regular">Regular</option><option value="medium">Medium</option><option value="bold">Bold</option></select></label>
    <label>Pinned marker<select id="pinStyle"><option value="badge">Star badge</option><option value="ring">Accent ring</option><option value="hidden">Hidden</option></select></label>
    <label>Icon outline<select id="iconRing"><option value="soft">Soft</option><option value="none">None</option><option value="accent">Accent ring</option></select></label>
-   <label>Header<select id="headerStyle"><option value="blur">Frosted glass</option><option value="solid">Solid</option></select></label>
+   <label>Header<select id="headerStyle"><option value="blur">Frosted glass</option><option value="solid">Solid bar</option><option value="clear">Clear</option></select></label>
    <label>Background effect<select id="bgEffect"><option value="aurora">Soft aurora</option><option value="glow">Ambient glow</option><option value="grain">Paper texture</option><option value="dots">Dot grid</option><option value="wash">Gradient wash</option><option value="plain">Plain</option></select></label>
    <label>Animation style<select id="motionStyle"><option value="soft">Soft &amp; subtle</option><option value="float">Floating</option><option value="spring">Bouncy</option><option value="glow">Glow &amp; shimmer</option><option value="breathe">Breathing</option><option value="cascade">Cascade</option><option value="zoom">Zoom in</option><option value="blur">Blur focus</option><option value="tilt">Tilt in</option><option value="off">Off</option></select></label>
    <label>Tab switch<select id="tabSwitch"><option value="slide">Slide</option><option value="fade">Fade up</option><option value="zoom">Zoom</option><option value="flip">Flip</option><option value="blur">Blur</option><option value="cards">Cards</option><option value="none">None</option></select></label>
@@ -535,9 +666,9 @@ dialog.peek,dialog.peek::backdrop{opacity:0;pointer-events:none;transition:opaci
    <label style="grid-column:1/-1">Entrance speed<input id="motionSpeed" type="range" min="50" max="200" value="100"></label>
    <label style="grid-column:1/-1">When my phone has "reduce motion" on<select id="motionSystem"><option value="follow">Follow my phone</option><option value="ignore">Always play</option></select></label>
    <p class="hint" id="rmNote" hidden style="grid-column:1/-1;margin:0">Your phone has reduce motion turned on, so animations are paused. Set the option above to "Always play" to see them.</p>
-   <p class="hint" style="grid-column:1/-1;margin:0">Animation style plays when the app opens. Tab switch plays when you change tab, and Tab scroll when you scroll the tab bar.</p>
+   <p class="hint" style="grid-column:1/-1;margin:0">Tap "Preview on page" to close this panel and see your choices live. Use Replay, switch tabs or scroll the tab bar to test, then tap Back to settings.</p>
   </div>
-  <div class="custom-actions"><button type="button" class="btn" id="playAnim">▶ Preview animations</button><button type="button" class="btn" id="resetLooks">Reset appearance</button></div>
+  <div class="custom-actions"><button type="button" class="btn" id="playAnim">▶ Preview on page</button><button type="button" class="btn" id="resetLooks">Reset appearance</button></div>
   <p class="hint">Appearance is visual only. It syncs with your other devices and never changes your bookmarks.</p>
  </details>
  <details class="custom-section">
@@ -549,7 +680,8 @@ dialog.peek,dialog.peek::backdrop{opacity:0;pointer-events:none;transition:opaci
    <label>Section titles<select id="sectionHeads"><option value="show">Show</option><option value="hide">Hide</option></select></label>
   </div>
   <div class="ctl" id="ctl2" style="margin-top:12px"></div>
-  <button class="btn" id="tord" type="button" style="width:100%;margin-top:12px">Reorder tags</button>
+  <button class="btn" id="tord" type="button" style="width:100%;margin-top:12px">Reorder tabs</button>
+ </details>
  </details>
  <details class="custom-section">
   <summary><b>Data &amp; sync</b><span>Backup, import, devices</span></summary>
@@ -652,28 +784,50 @@ language sql security invoker set search_path = public as $$
   where b.id = o.id and b.user_id = auth.uid();
 $$;
 grant execute on function public.lp_reorder(uuid[]) to authenticated;
+create table if not exists public.lp_watchlist (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null default auth.uid() references auth.users(id) on delete cascade,
+  url text not null,
+  title text not null,
+  why text not null default '',
+  benefit text not null default '',
+  done boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+create unique index if not exists lp_watchlist_user_url on public.lp_watchlist (user_id, url);
+alter table public.lp_watchlist enable row level security;
+drop policy if exists "own watchlist" on public.lp_watchlist;
+create policy "own watchlist" on public.lp_watchlist for all to authenticated
+  using (user_id = (select auth.uid())) with check (user_id = (select auth.uid()));
+grant select, insert, update, delete on public.lp_watchlist to authenticated;
 notify pgrst, 'reload schema';`;
 const $=s=>document.querySelector(s),ls=localStorage;
 const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 const lum=h=>{const n=parseInt(h.slice(1),16),f=v=>(v/=255)<=.03928?v/12.92:((v+.055)/1.055)**2.4;return .2126*f(n>>16)+.7152*f(n>>8&255)+.0722*f(n&255)};
-let S=JSON.parse(ls.lp_session||"null"),B=[],cfg={theme:"auto",accent:"blue",view:"grid",sort:"manual",v:2},tag="all",editing=null,loaded=false,anim=true,sel=null,swDir=0;
+let loadErr="",W=[],wf="all",wEd=null,wErr="",wBusy=true,mode=ls.lp_mode==="watch"?"watch":"books",S=(()=>{try{return JSON.parse(ls.lp_session||"null")}catch{return null}})(),B=[],cfg={theme:"auto",accent:"blue",view:"grid",sort:"manual",v:2},tag="all",editing=null,loaded=false,anim=true,sel=null,swDir=0;
 const LV=2,OLD=["tile","gap","rad","fs","lines","ff","cols"],renew=o=>{if(!o||o.v===LV)return o;const n={...o};OLD.forEach(k=>delete n[k]);n.v=LV;return n};
 const host=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch{return u}};
 const norm=v=>{v=v.trim();if(v&&!/^[a-z][a-z0-9+.-]*:/i.test(v))v="https://"+v;let u;try{u=new URL(v)}catch{throw Error("Enter a valid link.")}if(!/^https?:$/.test(u.protocol))throw Error("Only http and https links work.");return u.href};
 const parse=v=>[...new Set(v.split(/[,\n]/).map(x=>x.trim().toLowerCase()).filter(Boolean))].slice(0,12);
-let tt;const toast=m=>{const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),2600)};
+let tt;async function copyText(text,okMsg,title){let ok=false;
+ try{await navigator.clipboard.writeText(text);ok=true}
+ catch{try{const t=document.createElement("textarea");t.value=text;t.setAttribute("readonly","");t.style.cssText="position:fixed;top:0;left:0;width:1px;height:1px;opacity:0";(document.querySelector("dialog[open]")||document.body).appendChild(t);t.select();t.setSelectionRange(0,t.value.length);ok=document.execCommand("copy");t.remove()}catch{}}
+ if(ok){toast(okMsg);return true}
+ $("#ktt").textContent=title||"Copy this text";$("#kta").value=text;$("#kdlg").showModal();$("#kta").focus();$("#kta").select();return false}
+const toast=m=>{const t=$("#toast"),od=[...document.querySelectorAll("dialog[open]")].pop();(od||document.body).appendChild(t);t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),2600)};
 
 /* ---- Supabase: anonymous session (no login), raw REST, no libraries ---- */
 async function auth(p,b){const r=await fetch(`${C.url}/auth/v1/${p}`,{method:"POST",headers:{apikey:C.key,"Content-Type":"application/json"},body:JSON.stringify(b)});const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.msg||d.error_description||d.message||"Sign-in failed. Is anonymous sign-in enabled?");return d}
 const keep=d=>{S={access_token:d.access_token,refresh_token:d.refresh_token,expires_at:d.expires_at||Math.floor(Date.now()/1e3)+d.expires_in};ls.lp_session=JSON.stringify(S)};
 async function ensure(){if(S&&S.expires_at-60>Date.now()/1e3)return;if(S){try{keep(await auth("token?grant_type=refresh_token",{refresh_token:S.refresh_token}));return}catch(e){if(!navigator.onLine)throw e}}throw Error("Please sign in again (Settings, then Sync across devices).")}
 async function db(path,o={}){await ensure();const r=await fetch(`${C.url}/rest/v1/${path}`,{method:o.m||"GET",headers:{apikey:C.key,Authorization:"Bearer "+S.access_token,"Content-Type":"application/json",Prefer:o.p||"return=representation"},body:o.b===undefined?undefined:JSON.stringify(o.b)});const t=await r.text();let d=null;try{d=t?JSON.parse(t):null}catch{}if(!r.ok)throw Error(d?.message||`Request failed (${r.status})`);return d}
-const cache=()=>ls.lp_cache=JSON.stringify({B,cfg});
-async function load(){try{B=await db("lp_bookmarks?select=*&order=created_at.desc");const s=await db("lp_settings?select=data");if(s[0]?.data){const d=s[0].data,r=renew(d);cfg={...cfg,...r};if(r!==d)saveCfg();if(cfg.looks){looks={...LD,...cfg.looks};try{ls.little_space_looks=JSON.stringify(looks)}catch{}}else if(ls.little_space_looks){cfg.looks={...looks};saveCfg()}}loaded=true;cache();theme();initTag();draw();if(B.length>2&&!ls.lp_tip){ls.lp_tip=1;toast("Tip: press and hold an icon for its menu.")}}catch(e){loaded=true;draw();toast(navigator.onLine?e.message:"Offline. Showing saved bookmarks.")}}
+const cache=()=>ls.lp_cache=JSON.stringify({B,cfg,W});
+async function load(){try{const w0=loaded,b0=JSON.stringify(B),c0=JSON.stringify(cfg);B=await db("lp_bookmarks?select=*&order=created_at.desc");const s=await db("lp_settings?select=data");if(s[0]?.data){const d=s[0].data,r=renew(d);cfg={...cfg,...r};if(r!==d)saveCfg();if(cfg.looks){looks={...LD,...cfg.looks};try{ls.little_space_looks=JSON.stringify(looks)}catch{}}else if(ls.little_space_looks){cfg.looks={...looks};saveCfg()}}loaded=true;loadErr="";cache();theme();initTag();if(!w0||b0!==JSON.stringify(B)||c0!==JSON.stringify(cfg))draw();if(B.length>2&&!ls.lp_tip){ls.lp_tip=1;toast("Tip: press and hold an icon for its menu.")}loadW()}catch(e){loaded=true;loadErr=B.length?"":(navigator.onLine?e.message:"You're offline and nothing is saved on this device yet.");if(loadErr||!B.length)draw();toast(navigator.onLine?e.message:"Offline. Showing saved bookmarks.")}}
 let sv;const saveCfg=()=>{cache();clearTimeout(sv);sv=setTimeout(()=>db("lp_settings?on_conflict=user_id",{m:"POST",b:{data:cfg},p:"resolution=merge-duplicates,return=minimal"}).catch(e=>toast(e.message)),600)};
 
 /* ---- grid size (saved in your settings JSON, no DB change) ---- */
-function applyGrid(){const r=document.documentElement.style,T=gv("tile");r.setProperty("--gc",gv("cols")?`repeat(${gv("cols")},1fr)`:`repeat(auto-fill,minmax(${T+16}px,1fr))`);r.setProperty("--tile",T+"px");r.setProperty("--gap",gv("gap")+"px");r.setProperty("--rad",gv("rad")+"%");r.setProperty("--fs",gv("fs")+"px");r.setProperty("--lc",gv("lines")||1);r.setProperty("--ff",FF[gv("ff")]);document.body.classList.toggle("nonames",gv("lines")===0);document.body.classList.toggle("showhost",!!gv("host"))}
+function applyGrid(){const r=document.documentElement.style,T=gv("tile");r.setProperty("--gc",gv("cols")?`repeat(${gv("cols")},minmax(0,1fr))`:`repeat(auto-fill,minmax(${T+16}px,1fr))`);r.setProperty("--tile",T+"px");r.setProperty("--gap",gv("gap")+"px");r.setProperty("--rad",gv("rad")+"%");r.setProperty("--fs",gv("fs")+"px");r.setProperty("--lc",gv("lines")||1);r.setProperty("--ff",FF[gv("ff")]);document.body.classList.toggle("nonames",gv("lines")===0);document.body.classList.toggle("showhost",!!gv("host"))}
 /* ---- theme ---- */
 const mq=matchMedia("(prefers-color-scheme:dark)");
 const dk=()=>cfg.theme==="dark"||(cfg.theme!=="light"&&mq.matches);
@@ -692,46 +846,54 @@ function theme(){const d=document.documentElement,b=document.body,dark=dk(),L=lo
  v("--bd",dark?"rgba(255,255,255,.12)":"rgba(79,67,50,.11)");v("--sep",dark?"rgba(255,255,255,.12)":"rgba(79,67,50,.12)");
  v("--tx",dark?"#f1eee6":"#302d28");v("--mu",dark?"#b0b4a7":"#7b7266");
  v("--motion-duration",`${4.5-lv/100*3.5}s`);v("--motion-intensity",String(lv/100));
- b.dataset.motion=lv===0?"off":L.motion;b.dataset.bgfx=L.bgfx;b.dataset.density=L.density;b.dataset.depth=L.depth;b.dataset.shape=L.shape;b.dataset.ictone=L.ictone;b.dataset.width=L.width;b.dataset.fab=L.fab;b.dataset.tabs=L.tabs;b.dataset.counts=L.counts;b.dataset.heads=L.heads;b.dataset.lw=L.lw;b.dataset.pin=L.pin;b.dataset.ring=L.ring;b.dataset.hdr=L.hdr;b.dataset.tsize=L.tsize;b.dataset.tanim=L.tanim;b.dataset.tsw=L.tsw;v("--esp",String(100/(Number(L.speed)||100)));d.dataset.rm=L.rm;const rn=document.getElementById("rmNote");if(rn)rn.hidden=!(matchMedia("(prefers-reduced-motion:reduce)").matches&&L.rm!=="ignore");
+ b.dataset.motion=lv===0?"off":L.motion;b.dataset.bgfx=L.bgfx;b.dataset.density=L.density;b.dataset.depth=L.depth;b.dataset.shape=L.shape;b.dataset.ictone=L.ictone;b.dataset.width=L.width;b.dataset.fab=L.fab;b.dataset.tabs=L.tabs;b.dataset.counts=L.counts;b.dataset.heads=L.heads;b.dataset.lw=L.lw;b.dataset.pin=L.pin;b.dataset.ring=L.ring;b.dataset.hdr=L.hdr;b.dataset.tsize=L.tsize;b.dataset.tanim=L.tanim;b.dataset.tsw=L.tsw;v("--esp",String(100/(Number(L.speed)||100)));d.dataset.rm=L.rm;const rn=document.getElementById("rmNote");const rmOn=matchMedia("(prefers-reduced-motion:reduce)").matches&&L.rm!=="ignore";if(rn)rn.hidden=!rmOn;const rb=document.getElementById("rmBanner");if(rb)rb.hidden=!rmOn;
  document.querySelector("meta[name=theme-color]").content=bg;applyGrid();
  for(const id in LK){const el=document.getElementById(id);if(el)el.value=L[LK[id]]}}
 mq.addEventListener("change",theme);
-for(const id in LK){const el=$("#"+id);el.oninput=el.onchange=()=>{const k=LK[id];looks[k]=(k==="level"||k==="speed")?+el.value:el.value;if(id==="lookPreset"&&PRESETS[el.value])[looks.accent,looks.bg,looks.surface]=PRESETS[el.value];else if(/^custom/.test(id))looks.preset="custom";theme();saveLooks();if(["motionStyle","motionLevel","motionSpeed","tabSwitch","tabAnim","motionSystem"].includes(id))playAnim()}}
+for(const id in LK){const el=$("#"+id);el.oninput=el.onchange=()=>{const k=LK[id];looks[k]=(k==="level"||k==="speed")?+el.value:el.value;if(id==="lookPreset"&&PRESETS[el.value])[looks.accent,looks.bg,looks.surface]=PRESETS[el.value];else if(/^custom/.test(id))looks.preset="custom";theme();saveLooks();if(["motionStyle","motionLevel","motionSpeed","tabSwitch","tabAnim","motionSystem"].includes(id))playAnim(id==="tabSwitch"?"tab":"")}}
 $("#resetLooks").onclick=()=>{looks={...LD};theme();saveLooks()};
 
 /* ---- render ---- */
-const allTags=()=>{const m={};B.forEach(b=>(b.tags||[]).forEach(t=>m[t]=(m[t]||0)+1));return Object.entries(m).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]))};
+/* Categories are stored as one tag starting with "@" (no database change needed). */
+const isC=t=>t[0]==="@",catOf=b=>((b.tags||[]).find(isC)||"").slice(1);
+const allTagsX=()=>{const m={};B.forEach(b=>(b.tags||[]).forEach(t=>m[t]=(m[t]||0)+1));return Object.entries(m).sort((a,b)=>(isC(b[0])-isC(a[0]))||b[1]-a[1]||a[0].localeCompare(b[0]))};
+const allTags=()=>allTagsX().filter(x=>!isC(x[0])),allCats=()=>allTagsX().filter(x=>isC(x[0]));
+const catTag=v=>{v=(v||"").trim().replace(/^@+/,"").replace(/,/g," ").trim().slice(0,30);if(!v)return[];const ex=allCats().find(x=>x[0].slice(1).toLowerCase()===v.toLowerCase());return["@"+(ex?ex[0].slice(1):v)]};
+function chipsC(s,i){const cur=catTag($(i).value)[0]||"";$(s).innerHTML=allCats().slice(0,14).map(([t])=>`<button type="button" class="chip s ${t===cur?"on":""}" data-s="${esc(t.slice(1))}">${esc(t.slice(1))}</button>`).join("")}
+const csug=()=>chipsC("#csug","#fc");
 const hue=s=>{let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))%360;return h};
 function icErr(i){const d=i.parentNode;d.classList.remove("f");d.style.background=i.dataset.g;d.textContent=i.dataset.fb}
 const openLink=u=>{cfg.open==="same"?(location.href=u):window.open(u,"_blank","noopener,noreferrer")};
 function icon(b){const h=hue(b.title||"?"),l=((b.title||"").match(/[A-Za-z0-9]/)||["?"])[0].toUpperCase(),g=`linear-gradient(160deg,hsl(${h} calc(78% * var(--isat,1)) 62%),hsl(${(h+30)%360} calc(80% * var(--isat,1)) 48%))`,fb=b.emoji?esc(b.emoji):l;if(!b.icon_url&&b.emoji)return `<div class="ic" style="background:${g}">${fb}</div>`;const src=b.icon_url||`https://www.google.com/s2/favicons?domain=${encodeURIComponent(host(b.url))}&sz=128`;return `<div class="${b.icon_url?"ic":"ic f"}"><img src="${esc(src)}" alt="" loading="lazy" referrerpolicy="no-referrer" data-fb="${esc(fb)}" data-g="${esc(g)}" onerror="icErr(this)"></div>`}
 function card(b,i=0){return `<a class="card${sel?.has(b.id)?" sel":""}" style="--i:${i}" draggable="false" href="${esc(b.url)}" ${cfg.open==="same"?"":'target="_blank" '}rel="noopener noreferrer" data-id="${b.id}">${icon(b)}${b.pinned?'<i class="pin"></i>':""}<div class="col"><div class="t">${esc(b.title)}</div><div class="h">${esc(host(b.url))}</div></div><button class="more" data-edit="${b.id}" aria-label="Edit ${esc(b.title)}">⋯</button></a>`}
 function sorted(a){const f={manual:(x,y)=>(x.position||0)-(y.position||0)||y.created_at.localeCompare(x.created_at),recent:(x,y)=>y.created_at.localeCompare(x.created_at),popular:(x,y)=>(y.open_count||0)-(x.open_count||0)||x.title.localeCompare(y.title),az:(x,y)=>x.title.localeCompare(y.title)}[cfg.sort]||(()=>0);return a.slice().sort(f)}
-function visible(){const q=$("#q").value.trim().toLowerCase();return B.filter(b=>(tag==="all"||(tag==="★"?b.pinned:(b.tags||[]).includes(tag)))&&(!q||b.title.toLowerCase().includes(q)||b.url.toLowerCase().includes(q)||(b.tags||[]).some(t=>t.includes(q))))}
+function visible(){const q=$("#q").value.trim().toLowerCase();return B.filter(b=>(tag==="all"||(tag==="★"?b.pinned:(b.tags||[]).includes(tag)))&&(!q||b.title.toLowerCase().includes(q)||b.url.toLowerCase().includes(q)||(b.tags||[]).some(t=>t.toLowerCase().includes(q))))}
 let userPicked=false;
-function initTag(){if(userPicked)return;const tg=allTags().map(x=>x[0]),pins=B.some(b=>b.pinned);tag=(cfg.start==="last"&&ls.lp_lasttag&&(ls.lp_lasttag==="all"||(ls.lp_lasttag==="★"&&pins)||tg.includes(ls.lp_lasttag))?ls.lp_lasttag:null)||tordKeys().find(k=>k==="all"||(k==="★"&&pins)||tg.includes(k))||"all"}
-function tordKeys(){const tg=allTags().map(x=>x[0]);return[...new Set([...(cfg.tord||[]),"all","★",...tg])].filter(k=>k==="all"||k==="★"||tg.includes(k))}
-function draw(){
- const tg=allTags(),pins=B.some(b=>b.pinned);
+function initTag(){if(userPicked)return;const tg=allTagsX().map(x=>x[0]),pins=B.some(b=>b.pinned);tag=(cfg.start==="last"&&ls.lp_lasttag&&(ls.lp_lasttag==="all"||(ls.lp_lasttag==="★"&&pins)||tg.includes(ls.lp_lasttag))?ls.lp_lasttag:null)||tordKeys().find(k=>k==="all"||(k==="★"&&pins)||tg.includes(k))||"all"}
+function tordKeys(){const tg=allTagsX().map(x=>x[0]);return[...new Set([...(cfg.tord||[]),"all","★",...tg])].filter(k=>k==="all"||k==="★"||tg.includes(k))}
+function draw(){modesUI();if(mode==="watch"){drawW();return}
+ const tg=allTagsX(),pins=B.some(b=>b.pinned);
  if(tag!=="all"&&tag!=="★"&&!tg.some(t=>t[0]===tag))tag="all";
- const tb=$("#tags"),sl=tb.scrollLeft;const chips=new Map([["all",`<button class="chip ${tag==="all"?"on":""}" data-tag="all">All<b>${B.length}</b></button>`]]);if(pins)chips.set("★",`<button class="chip ${tag==="★"?"on":""}" data-tag="★">★ Pinned</button>`);tg.forEach(([t,n])=>chips.set(t,`<button class="chip ${tag===t?"on":""}" data-tag="${esc(t)}">${esc(t)}<b>${n}</b></button>`));
+ const tb=$("#tags"),sl=tb.scrollLeft;const chips=new Map([["all",`<button class="chip ${tag==="all"?"on":""}" data-tag="all">All<b>${B.length}</b></button>`]]);if(pins)chips.set("★",`<button class="chip ${tag==="★"?"on":""}" data-tag="★">★ Pinned</button>`);tg.forEach(([t,n])=>chips.set(t,`<button class="chip${isC(t)?" cat":""} ${tag===t?"on":""}" data-tag="${esc(t)}">${esc(isC(t)?t.slice(1):t)}<b>${n}</b></button>`));
  tb.innerHTML=B.length?tordKeys().filter(k=>chips.has(k)).map(k=>chips.get(k)).join(""):"";tb.scrollLeft=sl;tabWatch(tb);
  const m=$("#main");m.className=(cfg.view==="list"?"list ":"")+(canDrag()?"manual":"")+(sel?" selecting":"");
  if(C.url.startsWith("YOUR_")){m.innerHTML='<div class="empty"><h3>Connect your database</h3>Add your Supabase project URL and key to start saving bookmarks.<br><button class="cta" data-setup>Set up</button></div>';return}
  if(!loaded&&!B.length){m.innerHTML='<div class="grid">'+'<div class="sk"></div>'.repeat(15)+"</div>";return}
  const v=sorted(visible());$("#cnt").textContent=B.length?v.length+"/"+B.length:"";
- if(!v.length){m.innerHTML=B.length?'<div class="empty"><h3>No matches</h3>Try a different word or choose another tag.</div>':'<div class="empty"><h3>Your launchpad is empty</h3>Add a link with ＋, or import bookmarks from your browser in Settings.</div>';return}
- const top=tag==="all"&&!$("#q").value&&v.some(b=>b.pinned);
- m.innerHTML=top?`<h2>Pinned</h2><div class="grid">${v.filter(b=>b.pinned).map(card).join("")}</div><h2>All bookmarks</h2><div class="grid">${v.filter(b=>!b.pinned).map(card).join("")}</div>`:`<div class="grid">${v.map(card).join("")}</div>`;
+ if(!v.length){if(!B.length&&loadErr){m.innerHTML='<div class="empty"><h3>Couldn\'t load bookmarks</h3>'+esc(loadErr)+'<br><button class="cta" data-retry>Try again</button></div>';return}m.innerHTML=B.length?'<div class="empty"><h3>No matches</h3>Try a different word or choose another tag.</div>':'<div class="empty"><h3>Your launchpad is empty</h3>Add a link with ＋, or import bookmarks from your browser in Settings.</div>';return}
+ const top=tag==="all"&&!$("#q").value&&v.some(b=>b.pinned),cn=tordKeys().filter(k=>isC(k)).map(k=>k.slice(1)),grp=tag==="all"&&!$("#q").value.trim()&&cfg.group!==false&&cn.length>0,G=a=>`<div class="grid">${a.map(card).join("")}</div>`,grouped=()=>{const by={};v.filter(b=>!(top&&b.pinned)).forEach(b=>{const c=catOf(b);(by[c]=by[c]||[]).push(b)});let h=top?`<h2 class="cg">Pinned</h2>${G(v.filter(b=>b.pinned))}`:"";[...cn,""].forEach(c=>{const a=by[c];if(a&&a.length)h+=`<h2 class="cg">${c?esc(c):"Other"}<small>${a.length}</small></h2>${G(a)}`});return h};
+ m.innerHTML=grp?grouped():top?`<h2>Pinned</h2><div class="grid">${v.filter(b=>b.pinned).map(card).join("")}</div><h2>All bookmarks</h2><div class="grid">${v.filter(b=>!b.pinned).map(card).join("")}</div>`:`<div class="grid">${v.map(card).join("")}</div>`;
  if(anim){anim=false;const dir=swDir;swDir=0;if(dir){void m.offsetWidth;m.style.setProperty("--sd",dir);m.classList.add("sw")}m.classList.add("intro");setTimeout(()=>m.classList.remove("intro","sw"),2000)}
 }
 
 /* ---- add / edit ---- */
 function sug(){const cur=parse($("#fg").value);$("#sug").innerHTML=allTags().slice(0,14).map(([t])=>`<button type="button" class="chip s ${cur.includes(t)?"on":""}" data-s="${esc(t)}">${esc(t)}</button>`).join("")}
-function openForm(id=null){if($("#dlg").open)return;editing=id;const b=B.find(x=>x.id===id);$("#dt").textContent=b?"Edit bookmark":"Add bookmark";$("#fu").value=b?.url||"";$("#ft").value=b?.title||"";$("#fg").value=(b?.tags||(tag!=="all"&&tag!=="★"?[tag]:[])).join(", ");$("#fp").checked=!!b?.pinned;tmpImg=b?.icon_url?.startsWith("data:")?b.icon_url:"";$("#fim").value="";$("#fi").value=tmpImg?"":(b?.icon_url||"");$("#fe").value=b?.emoji||"";$("#del").hidden=!b;$("#err").textContent="";sug();pv();$("#dlg").showModal();if(!b)$("#fu").focus()}
-$("#f").onsubmit=async e=>{e.preventDefault();const btn=e.submitter;btn.disabled=true;try{const url=norm($("#fu").value),title=$("#ft").value.trim()||host(url),tags=parse($("#fg").value),pinned=$("#fp").checked,icon_url=tmpImg||($("#fi").value.trim()?norm($("#fi").value):null),emoji=$("#fe").value.trim().slice(0,8)||null;if(editing){const r=await db(`lp_bookmarks?id=eq.${editing}`,{m:"PATCH",b:{url,title,tags,pinned,icon_url,emoji,updated_at:new Date().toISOString()}});B=B.map(x=>x.id===editing?(r[0]||x):x)}else{const r=await db("lp_bookmarks",{m:"POST",b:{url,title,tags,pinned,icon_url,emoji,position:B.length?Math.min(...B.map(x=>x.position||0))-1:0}});B.unshift(r[0])}cache();draw();$("#dlg").close();toast("Saved")}catch(er){$("#err").textContent=/duplicate|23505/.test(er.message)?"You already saved this link.":er.message}btn.disabled=false};
+function openForm(id=null){if($("#dlg").open)return;editing=id;const b=B.find(x=>x.id===id);$("#dt").textContent=b?"Edit bookmark":"Add bookmark";$("#fu").value=b?.url||"";$("#ft").value=b?.title||"";$("#fg").value=(b?.tags||(tag!=="all"&&tag!=="★"&&!isC(tag)?[tag]:[])).filter(t=>!isC(t)).join(", ");$("#fc").value=b?catOf(b):(isC(tag)?tag.slice(1):"");csug();$("#fp").checked=!!b?.pinned;tmpImg=b?.icon_url?.startsWith("data:")?b.icon_url:"";$("#fim").value="";$("#fi").value=tmpImg?"":(b?.icon_url||"");$("#fe").value=b?.emoji||"";$("#del").hidden=!b;$("#err").textContent="";sug();pv();$("#dlg").showModal();if(!b)$("#fu").focus()}
+$("#f").onsubmit=async e=>{e.preventDefault();const btn=e.submitter;btn.disabled=true;try{const url=norm($("#fu").value),title=$("#ft").value.trim()||host(url),tags=parse($("#fg").value).filter(t=>!isC(t)).concat(catTag($("#fc").value)),pinned=$("#fp").checked,icon_url=tmpImg||($("#fi").value.trim()?norm($("#fi").value):null),emoji=$("#fe").value.trim().slice(0,8)||null;if(editing){const r=await db(`lp_bookmarks?id=eq.${editing}`,{m:"PATCH",b:{url,title,tags,pinned,icon_url,emoji,updated_at:new Date().toISOString()}});B=B.map(x=>x.id===editing?(r[0]||x):x)}else{const r=await db("lp_bookmarks",{m:"POST",b:{url,title,tags,pinned,icon_url,emoji,position:B.length?Math.min(...B.map(x=>x.position||0))-1:0}});B.unshift(r[0])}cache();draw();$("#dlg").close();toast("Saved")}catch(er){$("#err").textContent=/duplicate|23505/.test(er.message)?"You already saved this link.":er.message}btn.disabled=false};
 $("#del").onclick=async()=>{if(!confirm("Delete this bookmark?"))return;try{await db(`lp_bookmarks?id=eq.${editing}`,{m:"DELETE",p:"return=minimal"});B=B.filter(x=>x.id!==editing);cache();draw();$("#dlg").close();toast("Deleted")}catch(e){$("#err").textContent=e.message}};
 $("#fg").oninput=sug;
+$("#fc").oninput=csug;
+$("#csug").onclick=e=>{const t=e.target.dataset.s;if(t===undefined)return;$("#fc").value=catTag($("#fc").value)[0]==="@"+t?"":t;csug()};
 $("#sug").onclick=e=>{const t=e.target.dataset.s;if(!t)return;const c=parse($("#fg").value);$("#fg").value=(c.includes(t)?c.filter(x=>x!==t):[...c,t]).join(", ");sug()};
 
 /* ---- live icon preview in the add/edit sheet ---- */
@@ -743,7 +905,7 @@ $("#rimg").onclick=()=>{tmpImg="";$("#fim").value="";pv()};
 /* ---- swipe left/right to change tag ---- */
 let sx=0,sy=0,sok=false;
 document.addEventListener("touchstart",e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY;sok=!e.target.closest("#tags,dialog,input,select,.top")},{passive:true});
-document.addEventListener("touchend",e=>{if(!sok||dg?.on||justDragged)return;const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)<70||Math.abs(dx)<Math.abs(dy)*1.6)return;const ks=[...document.querySelectorAll("#tags .chip")].map(b=>b.dataset.tag),i=ks.indexOf(tag)+(dx<0?1:-1);if(i<0||i>=ks.length)return;setTag(ks[i])});
+document.addEventListener("touchend",e=>{if(!sok||dg?.on||justDragged||mode==="watch")return;const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)<70||Math.abs(dx)<Math.abs(dy)*1.6)return;const ks=[...document.querySelectorAll("#tags .chip")].map(b=>b.dataset.tag),i=ks.indexOf(tag)+(dx<0?1:-1);if(i<0||i>=ks.length)return;setTag(ks[i])});
 /* ---- drag to reorder (mouse: drag; touch: press and hold) ---- */
 let dg=null,justDragged=false;
 const canDrag=()=>tag==="all"&&!sel&&!$("#q").value.trim();
@@ -761,9 +923,9 @@ async function commit(c){const ids=[...c.parentElement.children].map(k=>k.datase
 
 /* ---- open tracking ---- */
 function opened(id){const b=B.find(x=>x.id===id);if(!b)return;b.open_count=(b.open_count||0)+1;b.last_opened_at=new Date().toISOString();cache();db(`lp_bookmarks?id=eq.${id}`,{m:"PATCH",b:{open_count:b.open_count,last_opened_at:b.last_opened_at},p:"return=minimal"}).catch(()=>{})}
-$("#main").onclick=e=>{if(justDragged){e.preventDefault();return}if(sel){e.preventDefault();const c=e.target.closest(".card");if(c)tog(c.dataset.id);return}const ed=e.target.closest("[data-edit]");if(ed){e.preventDefault();menu(ed.dataset.edit,ed.closest(".card"));return}const c=e.target.closest(".card");if(c)opened(c.dataset.id)};
-$("#tags").onclick=e=>{const t=e.target.closest("[data-tag]");if(t){navigator.vibrate?.(8);setTag(t.dataset.tag)}};
-$("#q").oninput=draw;
+$("#main").onclick=e=>{if(mode==="watch"){wClick(e);return}if(justDragged){e.preventDefault();return}if(sel){e.preventDefault();const c=e.target.closest(".card");if(c)tog(c.dataset.id);return}const ed=e.target.closest("[data-edit]");if(ed){e.preventDefault();menu(ed.dataset.edit,ed.closest(".card"));return}const c=e.target.closest(".card");if(c)opened(c.dataset.id)};
+$("#tags").onclick=e=>{const f=e.target.closest("[data-wf]");if(f){navigator.vibrate?.(8);wf=f.dataset.wf;draw();return}const t=e.target.closest("[data-tag]");if(t){navigator.vibrate?.(8);setTag(t.dataset.tag)}};
+let qt;$("#q").oninput=()=>{clearTimeout(qt);qt=setTimeout(draw,120)};
 
 /* ---- hold / right-click menu ---- */
 const mn=document.createElement("div");mn.id="mn";mn.hidden=true;mn.innerHTML='<div class="mnp"></div>';document.body.appendChild(mn);
@@ -782,9 +944,59 @@ function menu(id,el){const b=B.find(x=>x.id===id);if(!b)return;const p=mn.firstC
   else if(a==="copy"){try{await navigator.clipboard.writeText(b.url);toast("Link copied")}catch{toast("Couldn't copy the link")}}
   else if(a==="pin"){const v=!b.pinned;b.pinned=v;cache();draw();try{await db(`lp_bookmarks?id=eq.${id}`,{m:"PATCH",b:{pinned:v},p:"return=minimal"})}catch(er){b.pinned=!v;cache();draw();toast(er.message)}}
   else if(a==="del"){if(!confirm("Delete this bookmark?"))return;try{await db(`lp_bookmarks?id=eq.${id}`,{m:"DELETE",p:"return=minimal"});B=B.filter(x=>x.id!==id);cache();draw();toast("Deleted")}catch(er){toast(er.message)}}}}
+/* ---- Watchlist: links to come back to, with notes on why and how they help ---- */
+const WMSG="The watchlist needs a one-time database update. Open Settings, Database connection, copy the setup SQL and run it in Supabase.";
+const missingW=e=>/lp_watchlist|schema cache|does not exist|relation|\(404\)/i.test(e.message||"");
+const ago=t=>{const d=(Date.now()-new Date(t))/864e5;return d<1?"today":d<2?"yesterday":d<30?Math.floor(d)+" days ago":new Date(t).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"})};
+function modesUI(){document.querySelectorAll("#modes [data-mode]").forEach(b=>{const on=b.dataset.mode===mode;b.classList.toggle("on",on);b.setAttribute("aria-selected",on)});const c=W.filter(w=>!w.done).length;$("#wc").textContent=c||"";const w=mode==="watch";$("#q").placeholder=w?"Search watchlist":"Search bookmarks";$("#q").setAttribute("aria-label",w?"Search watchlist":"Search bookmarks");$("#add").setAttribute("aria-label",w?"Add to watchlist":"Add bookmark")}
+function setMode(m){if(m===mode)return;if(sel)selMode(false);mode=m;try{ls.lp_mode=m}catch{}$("#q").value="";swDir=m==="watch"?1:-1;anim=true;draw();scrollTo(0,0)}
+$("#modes").onclick=e=>{const b=e.target.closest("[data-mode]");if(b)setMode(b.dataset.mode)};
+async function loadW(manual){try{W=await db("lp_watchlist?select=*&order=created_at.desc");wErr=""}catch(e){wErr=missingW(e)?"setup":(navigator.onLine?e.message:"")}wBusy=false;cache();if(manual&&!wErr)toast("Watchlist loaded");mode==="watch"?draw():modesUI()}
+function wvis(){const q=$("#q").value.trim().toLowerCase();return W.filter(w=>(wf==="all"||(wf==="todo"?!w.done:w.done))&&(!q||[w.title,w.url,w.why,w.benefit].some(x=>(x||"").toLowerCase().includes(q)))).sort((a,b)=>(a.done-b.done)||b.created_at.localeCompare(a.created_at))}
+function wrow(w,i){const u=esc(w.url);return `<article class="wrow${w.done?" done":""}" style="--i:${i}" data-id="${w.id}"><a class="wic" href="${u}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">${icon({url:w.url,title:w.title})}</a><div class="wbody"><a class="wt" href="${u}" target="_blank" rel="noopener noreferrer">${esc(w.title)}</a><div class="wh">${esc(host(w.url))} · ${ago(w.created_at)}</div>${w.why?`<div class="wn"><b>Why I saved it</b><p>${esc(w.why)}</p></div>`:""}${w.benefit?`<div class="wn"><b>How it helps me</b><p>${esc(w.benefit)}</p></div>`:""}</div><div class="wact"><button class="wchk" data-wdone="${w.id}" aria-pressed="${!!w.done}" aria-label="${w.done?"Move back to watch":"Mark as done"}"></button><button class="wmore" data-wmenu="${w.id}" aria-label="More actions for ${esc(w.title)}">⋯</button></div></article>`}
+function drawW(){const m=$("#main"),tb=$("#tags"),n=W.length,td=W.filter(w=>!w.done).length;
+ tb.innerHTML=n?[["all","All",n],["todo","To watch",td],["done","Done",n-td]].map(([k,l,c])=>`<button class="chip ${wf===k?"on":""}" data-wf="${k}">${l}<b>${c}</b></button>`).join(""):"";tabWatch(tb);
+ m.className="wl";
+ if(C.url.startsWith("YOUR_")){m.innerHTML='<div class="empty"><h3>Connect your database</h3>Add your Supabase project URL and key to use the watchlist.<br><button class="cta" data-setup>Set up</button></div>';return}
+ const v=wvis();$("#cnt").textContent=n?v.length+"/"+n:"";
+ if(!n&&wErr==="setup"){m.innerHTML='<div class="empty"><h3>One-time setup needed</h3>The watchlist needs a new table in your database. Copy the setup SQL, run it once in Supabase (SQL Editor), then come back.<br><button class="cta" data-wsql>Copy setup SQL</button><br><button class="btn" data-wretry style="margin:12px auto 0;max-width:210px">I ran it, check again</button></div>';return}
+ if(!n&&wErr){m.innerHTML=`<div class="empty"><h3>Couldn't load watchlist</h3>${esc(wErr)}<br><button class="cta" data-wretry>Try again</button></div>`;return}
+ if(!n&&S&&wBusy){m.innerHTML='<div class="wsk"></div>'.repeat(3);return}
+ if(!n){m.innerHTML='<div class="empty"><h3>Your watchlist is empty</h3>Save links you want to come back to, and note why you saved them and how they will help you.<br><button class="cta" data-wadd>Add your first link</button></div>';return}
+ if(!v.length){m.innerHTML='<div class="empty"><h3>No matches</h3>Try a different word or filter.</div>';return}
+ m.innerHTML=v.map(wrow).join("");
+ if(anim){anim=false;const dir=swDir;swDir=0;if(dir){void m.offsetWidth;m.style.setProperty("--sd",dir);m.classList.add("sw")}m.classList.add("intro");setTimeout(()=>m.classList.remove("intro","sw"),2000)}}
+function wClick(e){const t=e.target;let b;
+ if(b=t.closest("[data-wdone]")){e.preventDefault();wToggle(b.dataset.wdone)}
+ else if(b=t.closest("[data-wmenu]")){e.preventDefault();wmenu(b.dataset.wmenu,b)}
+ else if(t.closest("[data-wadd]"))openW();
+ else if(t.closest("[data-wsql]"))copySQL();
+ else if(t.closest("[data-wretry]")){wBusy=true;wErr="";draw();loadW(true)}}
+function copySQL(){copyText(SQL,"Setup SQL copied. Run it in Supabase, SQL Editor.","Database setup SQL")}
+async function wToggle(id){const w=W.find(x=>x.id===id);if(!w)return;const v=!w.done;w.done=v;cache();draw();try{await db(`lp_watchlist?id=eq.${id}`,{m:"PATCH",b:{done:v,updated_at:new Date().toISOString()},p:"return=minimal"})}catch(er){w.done=!v;cache();draw();toast(er.message)}}
+async function wDelete(id){if(!confirm("Remove this from your watchlist?"))return;try{await db(`lp_watchlist?id=eq.${id}`,{m:"DELETE",p:"return=minimal"});W=W.filter(x=>x.id!==id);cache();draw();toast("Removed")}catch(er){toast(er.message)}}
+function wmenu(id,el){const w=W.find(x=>x.id===id);if(!w)return;const p=mn.firstChild;navigator.vibrate?.(12);
+ p.innerHTML=`<div class="mnh"><b>${esc(w.title)}</b><small>${esc(host(w.url))}</small></div><button data-a="open">Open link</button><button data-a="done">${w.done?"Move back to watch":"Mark as done"}</button><button data-a="copy">Copy link</button><button data-a="edit">Edit notes</button><button data-a="del" class="x">Delete</button>`;
+ mna=false;mn.hidden=false;const r=el.getBoundingClientRect(),pw=p.offsetWidth,ph=p.offsetHeight,L=Math.max(10,Math.min(innerWidth-pw-10,r.right-pw));let T=r.bottom+6,up=false;if(T+ph>innerHeight-10){T=Math.max(10,r.top-6-ph);up=true}
+ p.style.cssText=`left:${L}px;top:${T}px;transform-origin:${r.right-L}px ${up?"100%":"0"}`;
+ p.onclick=async e=>{const a=e.target.dataset.a;if(!a)return;mnx();
+  if(a==="open")openLink(w.url);else if(a==="done")wToggle(id);else if(a==="edit")openW(id);
+  else if(a==="copy"){try{await navigator.clipboard.writeText(w.url);toast("Link copied")}catch{toast("Couldn't copy the link")}}
+  else if(a==="del")wDelete(id)}}
+function openW(id=null){if($("#wdlg").open)return;if(C.url.startsWith("YOUR_"))return openSetup();if(!S)return openSync();wEd=id;const w=W.find(x=>x.id===id);$("#wdt").textContent=w?"Edit watchlist item":"Add to watchlist";$("#wu").value=w?.url||"";$("#wt").value=w?.title||"";$("#ww").value=w?.why||"";$("#wb").value=w?.benefit||"";$("#wdel").hidden=!w;$("#werr").textContent="";$("#wdlg").showModal();if(!w)$("#wu").focus()}
+$("#wx").onclick=()=>$("#wdlg").close();
+$("#wdel").onclick=()=>{$("#wdlg").close();wDelete(wEd)};
+$("#wf").onsubmit=async e=>{e.preventDefault();const btn=e.submitter;btn.disabled=true;try{const url=norm($("#wu").value),title=$("#wt").value.trim()||host(url),why=$("#ww").value.trim(),benefit=$("#wb").value.trim();
+ if(wEd){const r=await db(`lp_watchlist?id=eq.${wEd}`,{m:"PATCH",b:{url,title,why,benefit,updated_at:new Date().toISOString()}});W=W.map(x=>x.id===wEd?((r&&r[0])||{...x,url,title,why,benefit}):x)}
+ else{const r=await db("lp_watchlist",{m:"POST",b:{url,title,why,benefit}});if(!r||!r[0])throw Error("Couldn't save. Please try again.");W.unshift(r[0])}
+ wErr="";cache();draw();$("#wdlg").close();toast("Saved to watchlist")}
+ catch(er){$("#werr").textContent=/duplicate|23505/.test(er.message)?"This link is already in your watchlist.":missingW(er)?WMSG:er.message}
+ btn.disabled=false};
+$("#kx").onclick=()=>$("#kdlg").close();
+$("#kcp").onclick=()=>{const t=$("#kta");t.focus();t.select();t.setSelectionRange(0,t.value.length);try{if(document.execCommand("copy"))toast("Copied")}catch{}};
 /* ---- select several ---- */
-const bar=document.createElement("div");bar.id="sb";bar.hidden=true;bar.innerHTML='<span id="sn"></span><button data-a="all">Select all</button><button data-a="tag">Tag</button><button data-a="del" class="x">Delete</button><button data-a="done">Done</button>';document.body.appendChild(bar);
-function selUI(){$("#sn").textContent=sel?sel.size+" selected":"";bar.querySelector("[data-a=del]").disabled=!sel||!sel.size;bar.querySelector("[data-a=tag]").disabled=!sel||!sel.size}
+const bar=document.createElement("div");bar.id="sb";bar.hidden=true;bar.innerHTML='<span id="sn"></span><button data-a="all">All</button><button data-a="move">Move</button><button data-a="tag">Tag</button><button data-a="del" class="x">Delete</button><button data-a="done">Done</button>';document.body.appendChild(bar);
+function selUI(){$("#sn").textContent=sel?sel.size+" selected":"";bar.querySelector("[data-a=del]").disabled=!sel||!sel.size;bar.querySelector("[data-a=tag]").disabled=!sel||!sel.size;bar.querySelector("[data-a=move]").disabled=!sel||!sel.size}
 function selMode(on,id){sel=on?new Set(id?[id]:[]):null;bar.hidden=!on;$("#add").hidden=on;selUI();draw()}
 function tog(id){sel.has(id)?sel.delete(id):sel.add(id);document.querySelectorAll(`.card[data-id="${id}"]`).forEach(c=>c.classList.toggle("sel",sel.has(id)));selUI()}
 bar.onclick=async e=>{const a=e.target.dataset.a;if(a==="done")selMode(false);else if(a==="all"){const v=visible(),all=v.every(b=>sel.has(b.id));v.forEach(b=>all?sel.delete(b.id):sel.add(b.id));draw();selUI()}else if(a==="del"&&sel.size){if(!confirm(`Delete ${sel.size} bookmark${sel.size>1?"s":""}? This can't be undone.`))return;const ids=[...sel];try{for(let i=0;i<ids.length;i+=50)await db(`lp_bookmarks?id=in.(${ids.slice(i,i+50).join(",")})`,{m:"DELETE",p:"return=minimal"});B=B.filter(b=>!sel.has(b.id));cache();toast("Deleted");selMode(false)}catch(er){toast(er.message);load()}}};
@@ -792,12 +1004,21 @@ bar.onclick=async e=>{const a=e.target.dataset.a;if(a==="done")selMode(false);el
 let rm=new Set();
 function openTag(){if(!sel||!sel.size)return;rm=new Set();$("#tt").textContent=`Tag ${sel.size} bookmark${sel.size>1?"s":""}`;$("#tg").value="";$("#terr").textContent="";tsug();rsug();$("#tdlg").showModal();$("#tg").focus()}
 function tsug(){const cur=parse($("#tg").value);$("#tsug").innerHTML=allTags().filter(([t])=>!cur.includes(t)).slice(0,12).map(([t])=>`<button type="button" class="chip s" data-t="${esc(t)}">${esc(t)}</button>`).join("")}
-function rsug(){const m={};[...sel].forEach(id=>(B.find(x=>x.id===id)?.tags||[]).forEach(t=>m[t]=(m[t]||0)+1));const e=Object.entries(m).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));$("#rml").hidden=!e.length;$("#rsug").innerHTML=e.map(([t,n])=>`<button type="button" class="chip s${rm.has(t)?" on":""}" data-r="${esc(t)}">${esc(t)}<b>${n}</b></button>`).join("")}
-bar.addEventListener("click",e=>{if(e.target.dataset.a==="tag")openTag()});
+function rsug(){const m={};[...sel].forEach(id=>(B.find(x=>x.id===id)?.tags||[]).forEach(t=>t[0]!=="@"&&(m[t]=(m[t]||0)+1)));const e=Object.entries(m).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));$("#rml").hidden=!e.length;$("#rsug").innerHTML=e.map(([t,n])=>`<button type="button" class="chip s${rm.has(t)?" on":""}" data-r="${esc(t)}">${esc(t)}<b>${n}</b></button>`).join("")}
+bar.addEventListener("click",e=>{if(e.target.dataset.a==="tag")openTag();else if(e.target.dataset.a==="move")openMove()});
 $("#tg").oninput=tsug;
 $("#tsug").onclick=e=>{const t=e.target.closest("[data-t]");if(!t)return;const v=$("#tg").value.trim().replace(/,+$/,"");$("#tg").value=(v?v+", ":"")+t.dataset.t;tsug();$("#tg").focus()};
 $("#rsug").onclick=e=>{const t=e.target.closest("[data-r]");if(!t)return;const k=t.dataset.r;rm.has(k)?rm.delete(k):rm.add(k);rsug()};
 $("#x5").onclick=()=>$("#tdlg").close();
+function openMove(){if(!sel||!sel.size)return;$("#mt").textContent=`Move ${sel.size} bookmark${sel.size>1?"s":""}`;$("#mc").value="";$("#merr").textContent="";chipsC("#msug","#mc");$("#mdlg").showModal();$("#mc").focus()}
+$("#mc").oninput=()=>chipsC("#msug","#mc");
+$("#msug").onclick=e=>{const t=e.target.dataset.s;if(t===undefined)return;$("#mc").value=catTag($("#mc").value)[0]==="@"+t?"":t;chipsC("#msug","#mc")};
+$("#x7").onclick=()=>$("#mdlg").close();
+$("#mf").onsubmit=async e=>{e.preventDefault();const btn=e.submitter;btn.disabled=true;$("#merr").textContent="";const ct=catTag($("#mc").value),jobs=[...sel].map(id=>B.find(x=>x.id===id)).filter(Boolean).map(b=>({b,tags:[...(b.tags||[]).filter(t=>!isC(t)),...ct]})).filter(j=>j.tags.join()!==(j.b.tags||[]).join());
+ try{for(let i=0;i<jobs.length;i+=8)await Promise.all(jobs.slice(i,i+8).map(j=>db(`lp_bookmarks?id=eq.${j.b.id}`,{m:"PATCH",b:{tags:j.tags,updated_at:new Date().toISOString()},p:"return=minimal"})));
+  jobs.forEach(j=>j.b.tags=j.tags);const n=sel.size;if(isC(tag)&&!B.some(b=>(b.tags||[]).includes(tag)))tag="all";cache();$("#mdlg").close();toast(ct.length?`Moved ${n} to ${ct[0].slice(1)}`:`Removed category from ${n}`);selMode(false)}
+ catch(er){$("#merr").textContent=er.message==="Failed to fetch"?"No connection. Try again.":er.message;load()}
+ btn.disabled=false};
 $("#tf").onsubmit=async e=>{e.preventDefault();const add=parse($("#tg").value);if(!add.length&&!rm.size){$("#terr").textContent="Add a tag, or tap a tag to remove.";return}
  const btn=e.submitter;btn.disabled=true;$("#terr").textContent="";
  const jobs=[...sel].map(id=>B.find(x=>x.id===id)).filter(Boolean).map(b=>({b,tags:[...new Set([...(b.tags||[]).filter(t=>!rm.has(t)||add.includes(t)),...add])].slice(0,12)})).filter(j=>j.tags.join()!==(j.b.tags||[]).join());
@@ -808,7 +1029,7 @@ $("#tf").onsubmit=async e=>{e.preventDefault();const add=parse($("#tg").value);i
 
 /* ---- delete a tag everywhere: long-press (phone) or right-click (computer) a tag chip ---- */
 let lpT,lpd=false;const tagsEl=$("#tags"),realTag=c=>c&&!["all","★"].includes(c.dataset.tag);
-async function delTag(t){const hit=B.filter(b=>(b.tags||[]).includes(t));if(!hit.length)return;if(!confirm(`Delete the tag "${t}" from ${hit.length} bookmark${hit.length>1?"s":""}? The bookmarks themselves stay.`))return;
+async function delTag(t){const hit=B.filter(b=>(b.tags||[]).includes(t));if(!hit.length)return;if(!confirm(`Delete ${t[0]==="@"?'the category "'+t.slice(1)+'"':'the tag "'+t+'"'} from ${hit.length} bookmark${hit.length>1?"s":""}? The bookmarks themselves stay.`))return;
  try{for(let i=0;i<hit.length;i+=8)await Promise.all(hit.slice(i,i+8).map(b=>db(`lp_bookmarks?id=eq.${b.id}`,{m:"PATCH",b:{tags:b.tags.filter(x=>x!==t),updated_at:new Date().toISOString()},p:"return=minimal"})));
   hit.forEach(b=>b.tags=b.tags.filter(x=>x!==t));if(tag===t)tag="all";cache();draw();toast("Tag deleted")}catch(er){toast(er.message);load()}}
 tagsEl.addEventListener("pointerdown",e=>{lpd=false;const c=e.target.closest("[data-tag]");if(!realTag(c))return;clearTimeout(lpT);lpT=setTimeout(()=>{lpd=true;navigator.vibrate?.(12);delTag(c.dataset.tag)},600)});
@@ -826,8 +1047,12 @@ function setTag(n){const ks=[...document.querySelectorAll("#tags .chip")].map(b=
 /* ---- preview: fade the dialog away, replay content + tab animations, bring it back ---- */
 let pvT,pvT2;
 function replayChips(){const tb=$("#tags");tb.querySelectorAll(".chip").forEach(c=>c.classList.remove("vis"));requestAnimationFrame(()=>requestAnimationFrame(()=>tabWatch(tb)))}
-function playAnim(){const d=$("#sdlg");clearTimeout(pvT);clearTimeout(pvT2);d.classList.add("peek");pvT=setTimeout(()=>{swDir=1;anim=true;draw();replayChips()},280);pvT2=setTimeout(()=>d.classList.remove("peek"),2300)}
-$("#playAnim").onclick=playAnim;
+function playAnim(mode){swDir=mode==="tab"?1:0;anim=true;draw();replayChips()}
+function pvOpen(){$("#sdlg").close();pvb.hidden=false;setTimeout(playAnim,150)}
+const pvb=document.createElement("div");pvb.id="pvb";pvb.hidden=true;pvb.innerHTML='<span>Preview</span><button data-a="re">▶ Replay</button><button data-a="back">Back to settings</button>';document.body.appendChild(pvb);
+pvb.onclick=e=>{const a=e.target.dataset.a;if(a==="re")playAnim();else if(a==="back"){pvb.hidden=true;settingsUI();$("#sdlg").showModal()}};
+$("#playAnim").onclick=pvOpen;
+$("#rmPlay").onclick=()=>{looks.rm="ignore";theme();saveLooks();playAnim()};
 /* ---- tabs: animate chips as they scroll into view ---- */
 let tabObs=null,tabLast=0;
 function tabWatch(tb){if(!window.IntersectionObserver)return;tabObs&&tabObs.disconnect();tabObs=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle("vis",e.intersectionRatio>=.4)),{root:tb,threshold:[0,.4,1]});const tr=tb.getBoundingClientRect();tb.querySelectorAll(".chip").forEach(c=>{const r=c.getBoundingClientRect(),w=Math.max(0,Math.min(r.right,tr.right)-Math.max(r.left,tr.left));c.classList.toggle("vis",w>=r.width*.4);tabObs.observe(c)})}
@@ -840,33 +1065,85 @@ const FF=["'Bricolage Grotesque',system-ui,sans-serif","-apple-system,BlinkMacSy
 const CT=[["theme","Theme","sel",[["auto","Auto"],["light","Light"],["dark","Dark"]]],["view","Layout","sel",[["grid","Grid"],["list","List"]]],["sort","Sort by","sel",[["manual","Custom"],["recent","Newest"],["popular","Most used"],["az","A–Z"]]],["cols","Columns","sel",[[0,"Auto"],[2,2],[3,3],[4,4],[5,5],[6,6],[8,8]]],["tile","Icon size","rng",44,96],["gap","Spacing","rng",8,40],["rad","Corners","rng",0,50],["fs","Text size","rng",10,18],["lines","Text lines","sel",[[0,"Hidden"],[1,"1 line"],[2,"2 lines"],[3,"3 lines"]]],["ff","Font","sel",[[1,"Apple system"],[0,"Bricolage"],[2,"Serif"],[3,"Mono"]]],["host","Website under name","sel",[[0,"Hidden"],[1,"Shown"]]],["open","Open links","sel",[["new","New tab"],["same","Same tab"]]],["start","Open on","sel",[["first","First tab"],["last","Last used tab"]]]];
 $("#ctl").innerHTML=CT.map(([k,n,t,a,b])=>`<div><label for="c-${k}">${n}${t==="rng"?` <b id="v-${k}"></b>`:""}</label>`+(t==="sel"?`<select id="c-${k}">${a.map(o=>`<option value="${o[0]}">${o[1]}</option>`).join("")}</select>`:t==="rng"?`<input id="c-${k}" type="range" min="${a}" max="${b}">`:`<input id="c-${k}" type="color">`)+"</div>").join("");
 document.querySelectorAll("#ctl>div").forEach(el=>{if(/c-(open|start)$/.test(el.querySelector("select,input").id))$("#ctl2").appendChild(el)});
-function settingsUI(){for(const[k]of CT){const v=k==="ac"?(cfg.ac||(dk()?"#0a84ff":"#007aff")):(k in D?gv(k):cfg[k]);$("#c-"+k).value=v;const o=$("#v-"+k);if(o)o.textContent=v}}
+function settingsUI(){for(const[k]of CT){const v=k==="ac"?(cfg.ac||(dk()?"#0a84ff":"#007aff")):(k in D?gv(k):cfg[k]);$("#c-"+k).value=v;const o=$("#v-"+k);if(o)o.textContent=v}quickUI()}
 for(const[k]of CT)$("#c-"+k).oninput=e=>{const v=e.target.value;cfg[k]=typeof D[k]==="number"?+v:v;if(k==="theme"||k==="mood"||k==="ac")theme();applyGrid();if(k==="view"||k==="sort"||k==="open")draw();settingsUI();saveCfg()};
 $("#rst").onclick=()=>{for(const k of[...Object.keys(D),"ac","mood"])delete cfg[k];theme();settingsUI();saveCfg();toast("Layout reset")};
-$("#cfg").onclick=()=>{settingsUI();$("#sdlg").showModal()};
+const QSW=$("#swatches"),QTH=$("#themeSeg");
+QSW.innerHTML=Object.keys(PRESETS).map(k=>`<button type="button" data-p="${k}" aria-label="${k} colors" style="--c:${PRESETS[k][0]}"></button>`).join("");
+QTH.innerHTML=[["auto","Auto"],["light","Light"],["dark","Dark"]].map(([v,n])=>`<button type="button" data-v="${v}">${n}</button>`).join("");
+function markQ(){quickUI();QSW.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.p===looks.preset));mark("themeSeg",cfg.theme||"auto")}
+QSW.onclick=e=>{const k=e.target.dataset.p;if(!k)return;looks.preset=k;[looks.accent,looks.bg,looks.surface]=PRESETS[k];theme();saveLooks();markQ()};
+QTH.onclick=e=>{const v=e.target.dataset.v;if(!v)return;cfg.theme=v;theme();saveCfg();settingsUI();markQ()};
+/* ---- simple settings: the few options most people want ---- */
+const QK=[["view","Layout",[["grid","Grid"],["list","List"]],()=>cfg.view==="list"?"list":"grid",v=>{cfg.view=v;draw()}],
+["size","Icon size",[["48","Small"],["60","Medium"],["76","Large"]],()=>String([48,60,76].reduce((a,b)=>Math.abs(b-gv("tile"))<Math.abs(a-gv("tile"))?b:a)),v=>{cfg.tile=+v}],
+["names","Names",[["show","Show"],["hide","Hide"]],()=>gv("lines")===0?"hide":"show",v=>{cfg.lines=v==="hide"?0:2}],
+["space","Spacing",[["compact","Tight"],["comfortable","Normal"],["airy","Roomy"]],()=>looks.density,v=>{looks.density=v;saveLooks()}],
+["group","Home screen",[["on","By category"],["off","One list"]],()=>cfg.group===false?"off":"on",v=>{cfg.group=v==="on";draw()}],
+["open","Open links in",[["new","New tab"],["same","Same tab"]],()=>gv("open"),v=>{cfg.open=v;draw()}]];
+$("#qk").innerHTML=QK.map(([k,n,o])=>`<div class="qrow"><span>${n}</span><div class="seg" data-q="${k}">${o.map(([v,l])=>`<button type="button" data-v="${v}">${l}</button>`).join("")}</div></div>`).join("");
+function quickUI(){QK.forEach(([k,,,g])=>{const v=g();$("#qk").querySelectorAll(`[data-q="${k}"] button`).forEach(b=>b.classList.toggle("on",b.dataset.v===v))})}
+$("#qk").onclick=e=>{const b=e.target.closest("button[data-v]");if(!b)return;const q=QK.find(x=>x[0]===b.parentElement.dataset.q);q[4](b.dataset.v);theme();saveCfg();settingsUI()};
+/* ---- resizable settings sheet: drag the handle up/down (drag very low to close) ---- */
+const sd=$("#sdlg"),grab=$("#grab");let gy=0,gh=0,gd=false;
+const sheetH=h=>{sd.style.maxHeight="none";sd.style.height=Math.max(150,Math.min(innerHeight*.92,h))+"px"};
+const sheetSave=()=>{try{ls.lp_sheet=Math.round(sd.getBoundingClientRect().height)}catch{}};
+grab.addEventListener("pointerdown",e=>{gd=true;gy=e.clientY;gh=sd.getBoundingClientRect().height;grab.setPointerCapture(e.pointerId);e.preventDefault()});
+grab.addEventListener("pointermove",e=>{if(gd)sheetH(gh+(gy-e.clientY))});
+const sheetEnd=()=>{if(!gd)return;gd=false;if(sd.getBoundingClientRect().height<175){sd.close();sd.style.height=sd.style.maxHeight="";return}sheetSave()};
+grab.addEventListener("pointerup",sheetEnd);grab.addEventListener("pointercancel",sheetEnd);
+grab.addEventListener("dblclick",()=>{sd.style.height=sd.style.maxHeight="";try{delete ls.lp_sheet}catch{}});
+grab.addEventListener("keydown",e=>{if(e.key!=="ArrowUp"&&e.key!=="ArrowDown")return;e.preventDefault();sheetH(sd.getBoundingClientRect().height+(e.key==="ArrowUp"?40:-40));sheetSave()});
+$("#cfg").onclick=()=>{settingsUI();markQ();if(+ls.lp_sheet)sheetH(+ls.lp_sheet);sd.showModal()};
 $("#x2").onclick=()=>$("#sdlg").close();$("#x1").onclick=()=>$("#dlg").close();
 for(const d of document.querySelectorAll("dialog"))d.addEventListener("click",e=>{if(e.target===d)d.close()});
-$("#add").onclick=()=>C.url.startsWith("YOUR_")?openSetup():!S?openSync():openForm();
-$("#exp").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(B.map(({title,url,tags,pinned,icon_url,emoji})=>({title,url,tags,pinned,icon_url,emoji})),null,2)],{type:"application/json"}));a.download="launchpad-bookmarks.json";a.click();URL.revokeObjectURL(a.href)};
+$("#add").onclick=()=>C.url.startsWith("YOUR_")?openSetup():!S?openSync():mode==="watch"?openW():openForm();
+$("#exp").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({bookmarks:B.map(({title,url,tags,pinned,icon_url,emoji})=>({title,url,tags,pinned,icon_url,emoji})),watchlist:W.map(({title,url,why,benefit,done,created_at})=>({title,url,why,benefit,done,created_at}))},null,2)],{type:"application/json"}));a.download="launchpad-bookmarks.json";a.click();URL.revokeObjectURL(a.href)};
 $("#imp").onclick=()=>$("#file").click();
-$("#file").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;try{const d=new DOMParser().parseFromString(await f.text(),"text/html"),seen=new Set(),rows=[];d.querySelectorAll("a[href^=http]").forEach(a=>{if(seen.has(a.href))return;seen.add(a.href);const h=a.closest("dl")?.previousElementSibling;rows.push({url:a.href,title:(a.textContent.trim()||host(a.href)).slice(0,80),tags:h&&h.tagName==="H3"?[h.textContent.trim().toLowerCase().slice(0,30)]:[]})});if(!rows.length)throw Error("No bookmarks found in that file.");toast(`Importing ${rows.length}…`);for(let i=0;i<rows.length;i+=200)await db("lp_bookmarks?on_conflict=user_id,url",{m:"POST",b:rows.slice(i,i+200),p:"resolution=ignore-duplicates,return=minimal"});await load();$("#sdlg").close();toast("Import finished")}catch(er){toast(er.message)}};
+$("#file").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;try{const d=new DOMParser().parseFromString(await f.text(),"text/html"),seen=new Set(),rows=[];d.querySelectorAll("a[href^=http]").forEach(a=>{if(seen.has(a.href))return;seen.add(a.href);const h=a.closest("dl")?.previousElementSibling;rows.push({url:a.href,title:(a.textContent.trim()||host(a.href)).slice(0,80),tags:h&&h.tagName==="H3"&&h.textContent.trim()?["@"+h.textContent.trim().slice(0,30)]:[]})});if(!rows.length)throw Error("No bookmarks found in that file.");toast(`Importing ${rows.length}…`);for(let i=0;i<rows.length;i+=200)await db("lp_bookmarks?on_conflict=user_id,url",{m:"POST",b:rows.slice(i,i+200),p:"resolution=ignore-duplicates,return=minimal"});await load();$("#sdlg").close();toast("Import finished")}catch(er){toast(er.message)}};
 
 /* ---- connection setup (no code editing needed) ---- */
 const secret=k=>/^sb_secret_/.test(k)||(()=>{try{return JSON.parse(atob(k.split(".")[1].replace(/-/g,"+").replace(/_/g,"/"))).role==="service_role"}catch{return false}})();
 function openSetup(){if($("#cdlg").open)return;$("#cu").value=ls.lp_url||"";$("#ck").value=ls.lp_key||"";$("#cerr").textContent="";$("#cdlg").showModal()}
 $("#cf").onsubmit=async e=>{e.preventDefault();const b=e.submitter,old={...C},oS=S;b.disabled=true;try{const u=$("#cu").value.trim().replace(/\/+$/,"").replace(/\/(rest|auth)\/v1.*$/,""),k=$("#ck").value.trim();if(!/^https:\/\/[^\s/]+\.[^\s/]+$/.test(u))throw Error("The URL should look like https://abcd1234.supabase.co");if(secret(k))throw Error("That is the secret key. Use the publishable key instead.");if(k.length<20||/\s/.test(k))throw Error("Paste the full publishable key.");C.url=u;C.key=k;const r=await fetch(u+"/auth/v1/settings",{headers:{apikey:k}});if(!r.ok)throw Error("That URL or key doesn't match a Supabase project.");if(u!==old.url){S=null;delete ls.lp_session;delete ls.lp_code}ls.lp_url=u;ls.lp_key=k;$("#cdlg").close();toast("Connected");S?await load():openSync()}catch(er){C.url=old.url;C.key=old.key;S=oS;$("#cerr").textContent=er.message==="Failed to fetch"?"Couldn't reach that URL. Check it for typos.":er.message}b.disabled=false};
 $("#x3").onclick=()=>$("#cdlg").close();
-$("#csql").onclick=async()=>{try{await navigator.clipboard.writeText(SQL);toast("Setup SQL copied")}catch{toast("Couldn't copy the SQL")}};
-$("#cai").onclick=async()=>{const P=`You have access to my Supabase project. Do these steps for me:
-1. Run the SQL below once in the SQL Editor. It is safe to re-run.
-2. Go to Authentication, Sign In / Providers, Email. Keep email sign-up enabled and turn OFF "Confirm email", so sign-up returns a session right away.
-3. Check that the tables lp_bookmarks and lp_settings and the function lp_reorder now exist.
-4. Tell me my Project URL and my publishable key (starts with sb_publishable_). Never show the secret or service_role key.
+$("#csql").onclick=()=>copyText(SQL,"Setup SQL copied","Database setup SQL");
+$("#cai").onclick=async()=>{const P=`You have access to my Supabase project through your connected Supabase tools.
+
+Set up the database for my "Little Space" bookmarks app. Do the steps directly where your tools allow, instead of only giving me instructions.
+
+STEP 1 - Identify the project
+- List my available Supabase projects and use the one I name. If I have not named one, ask me which one is intended.
+- Never assume a project from another conversation is the right one.
+- Inspect the existing public schema first and preserve existing data.
+
+STEP 2 - Set up the database
+Run the SQL below against that project. It creates or updates public.lp_bookmarks, public.lp_settings, public.lp_watchlist and the function public.lp_reorder(uuid[]), plus indexes, grants and Row Level Security policies. It is safe to re-run. Review any destructive operation before running it.
+
+STEP 3 - Authentication
+- Keep email sign-up enabled.
+- This app creates hidden logins for its sync codes, so "Confirm email" must be OFF (Authentication, Sign In / Providers, Email). Ask me to confirm before changing it, explain that anyone can then sign up without verifying an email address, and change it only if your tools support it. If they do not, tell me exactly where to change it by hand.
+
+STEP 4 - Verify (show evidence, never assume)
+1. lp_bookmarks, lp_settings and lp_watchlist exist in the public schema, with their primary keys.
+2. Row Level Security is enabled on all three tables.
+3. The policies limit each user to their own rows.
+4. The function lp_reorder(uuid[]) exists.
+5. The authenticated role has the needed permissions.
+6. The PostgREST schema cache was reloaded.
+
+STEP 5 - Report back
+- Project name and reference, and the Project URL.
+- The publishable key (starts with sb_publishable_), if your tools can read it.
+- Status of the database setup, authentication and each verification.
+- Any manual steps or security warnings left.
+
+Never show the database password, the secret key, the service_role key, or any access or refresh token. If you cannot do something, say so instead of claiming it is done.
 
 SQL:
-${SQL}`;try{await navigator.clipboard.writeText(P);toast("AI prompt copied")}catch{toast("Couldn't copy the prompt")}};
+${SQL}`;copyText(P,"AI prompt copied","AI prompt for Supabase")};
 $("#conn").onclick=()=>{$("#sdlg").close();openSetup()};
-document.addEventListener("click",e=>{if(e.target.closest("[data-setup]"))openSetup()});
+document.addEventListener("click",e=>{if(e.target.closest("[data-setup]"))openSetup();else if(e.target.closest("[data-retry]")){loaded=false;loadErr="";draw();S?load():openSync()}});
 /* ---- sync code: the same code on every device = the same bookmarks (no email) ---- */
 const AL="ABCDEFGHJKLMNPQRSTUVWXYZ23456789",nc=v=>v.toUpperCase().replace(/[^A-Z0-9]/g,""),fc=c=>c.match(/.{4}/g).join("-");
 const sh=async v=>[...new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(v)))].map(x=>x.toString(16).padStart(2,"0")).join("");
@@ -883,16 +1160,16 @@ async function joinSync(c,make){
  B=[];await load()}
 const yerr=er=>$("#yerr").textContent=er.message==="Failed to fetch"?"No connection. Try again.":er.message;
 $("#sync").onclick=()=>{$("#sdlg").close();openSync()};$("#x4").onclick=()=>$("#ydlg").close();
-$("#ycopy").onclick=async()=>{try{await navigator.clipboard.writeText(fc(ls.lp_code));toast("Code copied")}catch{toast("Couldn't copy. Select the code and copy it.")}};
+$("#ycopy").onclick=async()=>{copyText(fc(ls.lp_code),"Code copied","Your sync code")};
 $("#yout").onclick=()=>{if(!confirm("Turn off sync on this device? Your bookmarks stay saved under your code."))return;for(const k of["lp_session","lp_code","lp_cache"])delete ls[k];location.reload()};
 $("#ynew").onclick=async e=>{const b=e.currentTarget;b.disabled=true;$("#yerr").textContent="";try{await joinSync([...crypto.getRandomValues(new Uint8Array(16))].map(x=>AL[x%32]).join(""),true);ySet();toast("Sync is on. Save your code.")}catch(er){yerr(er)}b.disabled=false};
 $("#yf").onsubmit=async e=>{e.preventDefault();const b=e.submitter,c=nc($("#yc").value);if(c.length!==16){$("#yerr").textContent="Enter the full 16-character code.";return}b.disabled=true;$("#yerr").textContent="";try{await joinSync(c,false);ySet();toast("Sync is on")}catch(er){yerr(er)}b.disabled=false};
 /* ---- keyboard ---- */
-addEventListener("keydown",e=>{const typing=/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName);if(e.key==="/"&&!typing&&!document.querySelector("dialog[open]")){e.preventDefault();$("#q").focus()}else if(e.key==="Enter"&&document.activeElement===$("#q")){const f=sorted(visible())[0];if(f){openLink(f.url);opened(f.id)}}else if(e.key==="Escape"&&document.activeElement===$("#q")){$("#q").value="";$("#q").blur();draw()}});
+addEventListener("keydown",e=>{const typing=/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName);if(e.key==="/"&&!typing&&!document.querySelector("dialog[open]")){e.preventDefault();$("#q").focus()}else if(e.key==="Enter"&&document.activeElement===$("#q")){const f=mode==="watch"?wvis()[0]:sorted(visible())[0];if(f){openLink(f.url);if(mode!=="watch")opened(f.id)}}else if(e.key==="Escape"&&document.activeElement===$("#q")){$("#q").value="";$("#q").blur();draw()}});
 addEventListener("online",()=>S&&load());
 
 /* ---- boot: paint cache instantly, then sync ---- */
-try{const c=JSON.parse(ls.lp_cache||"null");if(c){B=c.B||[];cfg={...cfg,...renew(c.cfg)};if(cfg.looks)looks={...LD,...cfg.looks};loaded=true}}catch{}
+try{const c=JSON.parse(ls.lp_cache||"null");if(c){B=c.B||[];W=c.W||[];wBusy=!W.length;cfg={...cfg,...renew(c.cfg)};if(cfg.looks)looks={...LD,...cfg.looks};loaded=true}}catch{}
 addEventListener("scroll",()=>$(".top").classList.toggle("sc",scrollY>6),{passive:true});theme();document.body.classList.add("boot");setTimeout(()=>document.body.classList.remove("boot"),1200);initTag();draw();
 if(C.url.startsWith("YOUR_"))setTimeout(openSetup,400);else if(S)load();else{loaded=true;draw();setTimeout(openSync,400)}
 
