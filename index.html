@@ -510,10 +510,15 @@ body[data-hdr=solid] .top{background:var(--sf);-webkit-backdrop-filter:none;back
 body[data-hdr=clear] .top{background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none}
 .rmb{display:flex;align-items:center;gap:10px;margin:6px 0 2px;padding:10px 12px;border-radius:14px;background:color-mix(in srgb,var(--ac) 14%,var(--sf));font-size:13px;line-height:1.35}.rmb[hidden]{display:none}.rmb span{flex:1}.rmb button{flex:none;padding:8px 12px;border-radius:99px;background:var(--ac);color:var(--on);font-weight:600;font-size:13px}
 /* ---- Watchlist ---- */
-.modes{display:flex;gap:4px;margin:10px var(--bp) 0;padding:3px;background:var(--fill);border-radius:14px}
-.modes button{flex:1;min-height:38px;border-radius:11px;font-size:14px;font-weight:600;color:var(--mu);display:flex;align-items:center;justify-content:center;gap:6px;transition:background .2s,color .2s}
-.modes button.on{background:var(--sf);color:var(--tx);box-shadow:0 1px 5px rgba(0,0,0,.14)}
-.modes b{font-weight:600;font-size:12px;opacity:.65}.modes b:empty{display:none}
+.mswitch{position:relative;display:flex;flex:none;padding:3px;gap:0;height:41px;background:var(--sf);border:1px solid var(--bd);border-radius:15px}
+.mswitch::before{content:"";position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:12px;background:var(--ac);box-shadow:0 2px 8px rgba(0,0,0,.18);transition:transform .35s var(--sp,cubic-bezier(.3,1.3,.5,1))}
+.mswitch[data-m=watch]::before{transform:translateX(100%)}
+.mswitch button{position:relative;z-index:1;width:36px;display:grid;place-items:center;border-radius:12px;color:var(--mu);transition:color .2s}
+.mswitch button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mswitch button.on{color:#fff}
+.mswitch b{position:absolute;top:-6px;right:-5px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--tx);color:var(--bg);font-size:10px;font-weight:700;line-height:16px;text-align:center}
+.mswitch b:empty{display:none}
+@media(max-width:600px){.mswitch{height:41px}.mswitch button{width:34px}}
 .wl{display:flex;flex-direction:column;gap:10px;max-width:760px;margin:6px auto 0}
 .wrow{display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--sf);border:1px solid var(--bd);border-radius:18px;box-shadow:0 4px 14px rgba(43,49,36,.04);--tile:44px}
 .wrow.done{opacity:.6}.wrow.done .wt{text-decoration:line-through}
@@ -546,6 +551,51 @@ body[data-heads=hide] main h2.cg{display:block}
 .chip.cat.on::before{background:var(--on)}
 body[data-tabs=underline] #tags .chip.cat.on::before{background:var(--ac)}
 noscript .ns{padding:40px 20px;text-align:center;font-family:system-ui,sans-serif}
+
+/* ---- Icon-only search that expands on tap; no badge on the switch ---- */
+header .search{position:relative;flex:1 1 auto;max-width:44px;margin-left:auto;height:41px;padding:0;gap:0;justify-content:center;overflow:hidden;border-radius:15px;cursor:pointer;
+ background:color-mix(in srgb,var(--ac) 16%,var(--sf));border:1px solid color-mix(in srgb,var(--ac) 45%,var(--bd));
+ box-shadow:0 4px 12px color-mix(in srgb,var(--ac) 22%,transparent);transition:max-width .32s cubic-bezier(.3,1,.4,1),padding .2s,background .2s,box-shadow .2s}
+header .search svg{width:20px;height:20px;stroke:var(--ac);stroke-width:2.4}
+header .search input{position:absolute;inset:0;width:100%;opacity:0;cursor:pointer;padding:0}
+header .search input::placeholder{color:transparent}
+header .search small{display:none}
+header .search:focus-within,header .search:has(input:not(:placeholder-shown)){max-width:640px;padding:0 14px;gap:8px;justify-content:flex-start;cursor:text;background:var(--sf);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 24%,transparent)}
+header .search:focus-within input,header .search:has(input:not(:placeholder-shown)) input{position:static;opacity:1;cursor:text;flex:1;min-width:0;width:auto}
+header .search:focus-within small,header .search:has(input:not(:placeholder-shown)) small{display:block}
+#wc{display:none!important}
+
+/* ---- Switch with written labels ---- */
+.mswitch{display:grid;grid-auto-flow:column;grid-auto-columns:1fr}
+.mswitch button{width:auto;padding:0 14px;font-size:14px;font-weight:600;white-space:nowrap}
+@media(max-width:600px){.mswitch button{width:auto;padding:0 12px;font-size:13.5px}}
+
+/* ---- Plain search icon: no capsule, a little breathing room ---- */
+header .search{background:none;border:0;box-shadow:none;max-width:40px;margin-right:6px;border-radius:50%}
+header .search svg{width:22px;height:22px}
+header .search:focus-within,header .search:has(input:not(:placeholder-shown)){background:var(--fill);border:0;box-shadow:none;margin-right:0;border-radius:15px}
+
+/* ---- Search removed: switch sits at the right ---- */
+header .mswitch{margin-left:auto}
+
+/* ---- Category icons on settings sections ---- */
+.custom-section>summary{justify-content:flex-start}
+.custom-section>summary .ci{flex:none;width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--ac) 16%,var(--sf));color:var(--ac)}
+.custom-section>summary .ci svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.custom-section>summary span{margin-left:auto;text-align:right}
+#sdlg .custom-grid label:first-child{grid-column:auto}
+
+/* ---- Stylish dropdowns instead of switches ---- */
+#qk{display:grid;gap:10px;margin:0}
+.qrow{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:46px;padding:4px 4px 4px 14px;border-radius:16px;background:color-mix(in srgb,var(--fill) 70%,transparent)}
+.qrow>span{font-size:14px;font-weight:600;color:var(--tx)}
+.dd{position:relative;flex:none;min-width:132px}
+#sdlg select{-webkit-appearance:none;appearance:none;width:100%;height:40px;padding:0 34px 0 14px;border:1px solid var(--bd);border-radius:13px;font-size:14px;font-weight:600;color:var(--tx);cursor:pointer;
+ background-color:var(--sf);background-repeat:no-repeat;background-position:right 11px center;background-size:11px 17px;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Cpath d='M1.5 6 5 2.5 8.5 6M1.5 10 5 13.5 8.5 10' fill='none' stroke='%238a8f98' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+ box-shadow:0 1px 3px rgba(0,0,0,.06);transition:border-color .2s,box-shadow .2s}
+#sdlg select:focus-visible{outline:0;border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 22%,transparent)}
+.quick{gap:10px}
 </style>
 </head>
 <body>
@@ -553,10 +603,10 @@ noscript .ns{padding:40px 20px;text-align:center;font-family:system-ui,sans-seri
 <div class="top">
 <header>
  <div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5.5"/></svg></div>
- <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="Search bookmarks" autocomplete="off" aria-label="Search bookmarks"><small id="cnt"></small></label>
+ <div hidden><input id="q" type="search" tabindex="-1" aria-hidden="true"><small id="cnt"></small></div>
+ <div class="mswitch" id="modes" role="tablist" aria-label="Switch between bookmarks and saved" data-m="books"><button type="button" role="tab" data-mode="books">Bookmarks</button><button type="button" role="tab" data-mode="watch">Saved<b id="wc"></b></button></div>
  <button class="ib" id="cfg" aria-label="Settings"><svg viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></button>
 </header>
-<div class="modes" id="modes" role="tablist" aria-label="Section"><button type="button" role="tab" data-mode="books">Bookmarks</button><button type="button" role="tab" data-mode="watch">Watchlist<b id="wc"></b></button></div>
 <nav class="tabs" id="tags" aria-label="Filter by tag"></nav>
 </div>
 
@@ -627,17 +677,23 @@ noscript .ns{padding:40px 20px;text-align:center;font-family:system-ui,sans-seri
 <dialog id="sdlg"><div class="stop"><div class="grab" id="grab" role="separator" aria-orientation="horizontal" aria-label="Drag to resize settings" tabindex="0"></div>
  <div class="shead"><h3 tabindex="-1" autofocus>Settings</h3><button class="btn p" id="x2" type="button">Done</button></div></div>
  <div class="rmb" id="rmBanner" hidden><span>Your phone has "reduce motion" on, so animations are paused.</span><button type="button" id="rmPlay">Play anyway</button></div>
- <div class="quick"><div class="swt" id="swatches" role="group" aria-label="Color"></div><div class="seg" id="themeSeg" role="group" aria-label="Theme"></div></div>
- <div class="quick" id="qk"></div>
- <details class="custom-section" id="adv"><summary><b>More options</b><span>Fine-tune everything</span></summary>
- <details class="custom-section">
-  <summary><b>Display</b><span>Layout, size &amp; text</span></summary>
-  <div class="ctl" id="ctl"></div>
+ <div class="quick"><div class="swt" id="swatches" role="group" aria-label="Color"></div><div class="qrow" id="themeSeg"></div></div>
+ <details class="custom-section" open>
+  <summary><i class="ci"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></i><b>Pages</b><span>Layout, size &amp; header</span></summary>
+  <div class="quick" id="qk"></div>
+  <div class="ctl" id="ctl" style="margin-top:12px"></div>
+  <div class="custom-grid" style="margin-top:12px">
+   <label>Interface density<select id="density"><option value="comfortable">Comfortable</option><option value="compact">Compact</option><option value="airy">Airy</option></select></label>
+   <label>Page width<select id="layoutWidth"><option value="narrow">Narrow</option><option value="normal">Normal</option><option value="wide">Wide</option></select></label>
+   <label>Add button<select id="fabPos"><option value="right">Bottom right</option><option value="center">Bottom center</option><option value="left">Bottom left</option></select></label>
+   <label>Header<select id="headerStyle"><option value="blur">Frosted glass</option><option value="solid">Solid bar</option><option value="clear">Clear</option></select></label>
+   <label>Section titles<select id="sectionHeads"><option value="show">Show</option><option value="hide">Hide</option></select></label>
+  </div>
   <div class="custom-actions"><button class="btn" id="rst" type="button">Reset display</button></div>
  </details>
- <details class="custom-section" id="advancedLooks">
-  <summary><b>✨ Appearance</b><span>Colors, icons &amp; motion</span></summary>
-  <div class="custom-grid">
+ <details class="custom-section">
+  <summary><i class="ci"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18c1.7 0 2-1.3 1.2-2.2-.8-1 0-2.3 1.3-2.3H17a4 4 0 0 0 4-4 9 9 0 0 0-9-9.5z"/></svg></i><b>Colors</b><span>Presets, accent &amp; dark mode</span></summary>
+  <div class="custom-grid" id="advancedLooks">
    <label>Color preset<select id="lookPreset">
     <option value="cozy">Cozy Garden</option><option value="rose">Rosewater</option>
     <option value="ocean">Quiet Ocean</option><option value="mono">Soft Monochrome</option>
@@ -648,16 +704,23 @@ noscript .ns{padding:40px 20px;text-align:center;font-family:system-ui,sans-seri
    <label>Background tint<input id="customBg" type="color" value="#f5f1e9"></label>
    <label>Surface color<input id="customSurface" type="color" value="#fffdf8"></label>
    <label>Icon colors<select id="ictone"><option value="vivid">Vivid</option><option value="soft">Soft</option><option value="accent">Match accent</option><option value="mono">Monochrome</option></select></label>
-   <label>Icon shape<select id="iconShape"><option value="rounded">Rounded</option><option value="circle">Circle</option><option value="squircle">Squircle</option><option value="square">Soft square</option></select></label>
-   <label>Card depth<select id="cardDepth"><option value="soft">Soft shadow</option><option value="flat">Flat</option><option value="lifted">Lifted</option></select></label>
-   <label>Interface density<select id="density"><option value="comfortable">Comfortable</option><option value="compact">Compact</option><option value="airy">Airy</option></select></label>
-   <label>Page width<select id="layoutWidth"><option value="narrow">Narrow</option><option value="normal">Normal</option><option value="wide">Wide</option></select></label>
-   <label>Add button<select id="fabPos"><option value="right">Bottom right</option><option value="center">Bottom center</option><option value="left">Bottom left</option></select></label>
    <label>Dark mode style<select id="darkStyle"><option value="soft">Soft dark</option><option value="black">True black</option></select></label>
-   <label>Name weight<select id="labelWeight"><option value="regular">Regular</option><option value="medium">Medium</option><option value="bold">Bold</option></select></label>
-   <label>Pinned marker<select id="pinStyle"><option value="badge">Star badge</option><option value="ring">Accent ring</option><option value="hidden">Hidden</option></select></label>
+  </div>
+  <div class="custom-actions"><button type="button" class="btn" id="resetLooks">Reset appearance</button></div>
+ </details>
+ <details class="custom-section">
+  <summary><i class="ci"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></i><b>Icons &amp; cards</b><span>Shape, depth &amp; labels</span></summary>
+  <div class="custom-grid">
+   <label>Icon shape<select id="iconShape"><option value="rounded">Rounded</option><option value="circle">Circle</option><option value="squircle">Squircle</option><option value="square">Soft square</option></select></label>
    <label>Icon outline<select id="iconRing"><option value="soft">Soft</option><option value="none">None</option><option value="accent">Accent ring</option></select></label>
-   <label>Header<select id="headerStyle"><option value="blur">Frosted glass</option><option value="solid">Solid bar</option><option value="clear">Clear</option></select></label>
+   <label>Card depth<select id="cardDepth"><option value="soft">Soft shadow</option><option value="flat">Flat</option><option value="lifted">Lifted</option></select></label>
+   <label>Pinned marker<select id="pinStyle"><option value="badge">Star badge</option><option value="ring">Accent ring</option><option value="hidden">Hidden</option></select></label>
+   <label>Name weight<select id="labelWeight"><option value="regular">Regular</option><option value="medium">Medium</option><option value="bold">Bold</option></select></label>
+  </div>
+ </details>
+ <details class="custom-section">
+  <summary><i class="ci"><svg viewBox="0 0 24 24"><path d="M13 3 5 14h6l-1 7 8-11h-6z"/></svg></i><b>Animation</b><span>Motion &amp; effects</span></summary>
+  <div class="custom-grid">
    <label>Background effect<select id="bgEffect"><option value="aurora">Soft aurora</option><option value="glow">Ambient glow</option><option value="grain">Paper texture</option><option value="dots">Dot grid</option><option value="wash">Gradient wash</option><option value="plain">Plain</option></select></label>
    <label>Animation style<select id="motionStyle"><option value="soft">Soft &amp; subtle</option><option value="float">Floating</option><option value="spring">Bouncy</option><option value="glow">Glow &amp; shimmer</option><option value="breathe">Breathing</option><option value="cascade">Cascade</option><option value="zoom">Zoom in</option><option value="blur">Blur focus</option><option value="tilt">Tilt in</option><option value="off">Off</option></select></label>
    <label>Tab switch<select id="tabSwitch"><option value="slide">Slide</option><option value="fade">Fade up</option><option value="zoom">Zoom</option><option value="flip">Flip</option><option value="blur">Blur</option><option value="cards">Cards</option><option value="none">None</option></select></label>
@@ -666,25 +729,22 @@ noscript .ns{padding:40px 20px;text-align:center;font-family:system-ui,sans-seri
    <label style="grid-column:1/-1">Entrance speed<input id="motionSpeed" type="range" min="50" max="200" value="100"></label>
    <label style="grid-column:1/-1">When my phone has "reduce motion" on<select id="motionSystem"><option value="follow">Follow my phone</option><option value="ignore">Always play</option></select></label>
    <p class="hint" id="rmNote" hidden style="grid-column:1/-1;margin:0">Your phone has reduce motion turned on, so animations are paused. Set the option above to "Always play" to see them.</p>
-   <p class="hint" style="grid-column:1/-1;margin:0">Tap "Preview on page" to close this panel and see your choices live. Use Replay, switch tabs or scroll the tab bar to test, then tap Back to settings.</p>
   </div>
-  <div class="custom-actions"><button type="button" class="btn" id="playAnim">▶ Preview on page</button><button type="button" class="btn" id="resetLooks">Reset appearance</button></div>
-  <p class="hint">Appearance is visual only. It syncs with your other devices and never changes your bookmarks.</p>
+  <div class="custom-actions"><button type="button" class="btn" id="playAnim">▶ Preview on page</button></div>
+  <p class="hint">Preview closes this panel so you can watch live, then tap Back to settings.</p>
  </details>
  <details class="custom-section">
-  <summary><b>Tabs &amp; behavior</b><span>Tag bar, links, startup</span></summary>
+  <summary><i class="ci"><svg viewBox="0 0 24 24"><path d="M3 8h7l2 3h9v9H3z"/></svg></i><b>Tabs &amp; behavior</b><span>Tag bar, links, startup</span></summary>
   <div class="custom-grid">
    <label>Tab style<select id="tabStyle"><option value="pills">Pills</option><option value="underline">Underline</option><option value="minimal">Minimal</option></select></label>
    <label>Tab counts<select id="tabCounts"><option value="show">Show</option><option value="hide">Hide</option></select></label>
    <label>Tab size<select id="tabSize"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select></label>
-   <label>Section titles<select id="sectionHeads"><option value="show">Show</option><option value="hide">Hide</option></select></label>
   </div>
   <div class="ctl" id="ctl2" style="margin-top:12px"></div>
   <button class="btn" id="tord" type="button" style="width:100%;margin-top:12px">Reorder tabs</button>
  </details>
- </details>
  <details class="custom-section">
-  <summary><b>Data &amp; sync</b><span>Backup, import, devices</span></summary>
+  <summary><i class="ci"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></i><b>Data &amp; sync</b><span>Backup, import, devices</span></summary>
   <div class="row col1" style="margin-top:0">
    <button class="btn p" id="sync">Sync across devices</button>
    <button class="btn" id="conn">Database connection</button>
@@ -948,7 +1008,7 @@ function menu(id,el){const b=B.find(x=>x.id===id);if(!b)return;const p=mn.firstC
 const WMSG="The watchlist needs a one-time database update. Open Settings, Database connection, copy the setup SQL and run it in Supabase.";
 const missingW=e=>/lp_watchlist|schema cache|does not exist|relation|\(404\)/i.test(e.message||"");
 const ago=t=>{const d=(Date.now()-new Date(t))/864e5;return d<1?"today":d<2?"yesterday":d<30?Math.floor(d)+" days ago":new Date(t).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"})};
-function modesUI(){document.querySelectorAll("#modes [data-mode]").forEach(b=>{const on=b.dataset.mode===mode;b.classList.toggle("on",on);b.setAttribute("aria-selected",on)});const c=W.filter(w=>!w.done).length;$("#wc").textContent=c||"";const w=mode==="watch";$("#q").placeholder=w?"Search watchlist":"Search bookmarks";$("#q").setAttribute("aria-label",w?"Search watchlist":"Search bookmarks");$("#add").setAttribute("aria-label",w?"Add to watchlist":"Add bookmark")}
+function modesUI(){$("#modes").dataset.m=mode;document.querySelectorAll("#modes [data-mode]").forEach(b=>{const on=b.dataset.mode===mode;b.classList.toggle("on",on);b.setAttribute("aria-selected",on)});const c=W.filter(w=>!w.done).length;$("#wc").textContent=c||"";const w=mode==="watch";$("#q").placeholder=w?"Search watchlist":"Search bookmarks";$("#q").setAttribute("aria-label",w?"Search watchlist":"Search bookmarks");$("#add").setAttribute("aria-label",w?"Add to watchlist":"Add bookmark")}
 function setMode(m){if(m===mode)return;if(sel)selMode(false);mode=m;try{ls.lp_mode=m}catch{}$("#q").value="";swDir=m==="watch"?1:-1;anim=true;draw();scrollTo(0,0)}
 $("#modes").onclick=e=>{const b=e.target.closest("[data-mode]");if(b)setMode(b.dataset.mode)};
 async function loadW(manual){try{W=await db("lp_watchlist?select=*&order=created_at.desc");wErr=""}catch(e){wErr=missingW(e)?"setup":(navigator.onLine?e.message:"")}wBusy=false;cache();if(manual&&!wErr)toast("Watchlist loaded");mode==="watch"?draw():modesUI()}
@@ -1070,10 +1130,10 @@ for(const[k]of CT)$("#c-"+k).oninput=e=>{const v=e.target.value;cfg[k]=typeof D[
 $("#rst").onclick=()=>{for(const k of[...Object.keys(D),"ac","mood"])delete cfg[k];theme();settingsUI();saveCfg();toast("Layout reset")};
 const QSW=$("#swatches"),QTH=$("#themeSeg");
 QSW.innerHTML=Object.keys(PRESETS).map(k=>`<button type="button" data-p="${k}" aria-label="${k} colors" style="--c:${PRESETS[k][0]}"></button>`).join("");
-QTH.innerHTML=[["auto","Auto"],["light","Light"],["dark","Dark"]].map(([v,n])=>`<button type="button" data-v="${v}">${n}</button>`).join("");
-function markQ(){quickUI();QSW.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.p===looks.preset));mark("themeSeg",cfg.theme||"auto")}
+QTH.innerHTML='<span>Theme</span><div class="dd"><select id="themeSel" aria-label="Theme">'+[["auto","Auto"],["light","Light"],["dark","Dark"]].map(([v,n])=>`<option value="${v}">${n}</option>`).join("")+'</select></div>';
+function markQ(){quickUI();QSW.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.p===looks.preset));$("#themeSel").value=cfg.theme||"auto"}
 QSW.onclick=e=>{const k=e.target.dataset.p;if(!k)return;looks.preset=k;[looks.accent,looks.bg,looks.surface]=PRESETS[k];theme();saveLooks();markQ()};
-QTH.onclick=e=>{const v=e.target.dataset.v;if(!v)return;cfg.theme=v;theme();saveCfg();settingsUI();markQ()};
+QTH.onchange=e=>{const v=e.target.value;if(!v)return;cfg.theme=v;theme();saveCfg();settingsUI();markQ()};
 /* ---- simple settings: the few options most people want ---- */
 const QK=[["view","Layout",[["grid","Grid"],["list","List"]],()=>cfg.view==="list"?"list":"grid",v=>{cfg.view=v;draw()}],
 ["size","Icon size",[["48","Small"],["60","Medium"],["76","Large"]],()=>String([48,60,76].reduce((a,b)=>Math.abs(b-gv("tile"))<Math.abs(a-gv("tile"))?b:a)),v=>{cfg.tile=+v}],
@@ -1081,9 +1141,9 @@ const QK=[["view","Layout",[["grid","Grid"],["list","List"]],()=>cfg.view==="lis
 ["space","Spacing",[["compact","Tight"],["comfortable","Normal"],["airy","Roomy"]],()=>looks.density,v=>{looks.density=v;saveLooks()}],
 ["group","Home screen",[["on","By category"],["off","One list"]],()=>cfg.group===false?"off":"on",v=>{cfg.group=v==="on";draw()}],
 ["open","Open links in",[["new","New tab"],["same","Same tab"]],()=>gv("open"),v=>{cfg.open=v;draw()}]];
-$("#qk").innerHTML=QK.map(([k,n,o])=>`<div class="qrow"><span>${n}</span><div class="seg" data-q="${k}">${o.map(([v,l])=>`<button type="button" data-v="${v}">${l}</button>`).join("")}</div></div>`).join("");
-function quickUI(){QK.forEach(([k,,,g])=>{const v=g();$("#qk").querySelectorAll(`[data-q="${k}"] button`).forEach(b=>b.classList.toggle("on",b.dataset.v===v))})}
-$("#qk").onclick=e=>{const b=e.target.closest("button[data-v]");if(!b)return;const q=QK.find(x=>x[0]===b.parentElement.dataset.q);q[4](b.dataset.v);theme();saveCfg();settingsUI()};
+$("#qk").innerHTML=QK.map(([k,n,o])=>`<div class="qrow"><span>${n}</span><div class="dd"><select data-q="${k}" aria-label="${n}">${o.map(([v,l])=>`<option value="${v}">${l}</option>`).join("")}</select></div></div>`).join("");
+function quickUI(){QK.forEach(([k,,,g])=>{const v=g();{const el=$("#qk").querySelector(`select[data-q="${k}"]`);if(el)el.value=v}})}
+$("#qk").onchange=e=>{const el=e.target.closest("select[data-q]");if(!el)return;const q=QK.find(x=>x[0]===el.dataset.q);q[4](el.value);theme();saveCfg();settingsUI()};
 /* ---- resizable settings sheet: drag the handle up/down (drag very low to close) ---- */
 const sd=$("#sdlg"),grab=$("#grab");let gy=0,gh=0,gd=false;
 const sheetH=h=>{sd.style.maxHeight="none";sd.style.height=Math.max(150,Math.min(innerHeight*.92,h))+"px"};
@@ -1174,6 +1234,19 @@ addEventListener("scroll",()=>$(".top").classList.toggle("sc",scrollY>6),{passiv
 if(C.url.startsWith("YOUR_"))setTimeout(openSetup,400);else if(S)load();else{loaded=true;draw();setTimeout(openSync,400)}
 
 
+</script>
+<script>
+/* Line the outer icons up with the header and tab edges (icons sit centred in their columns, which left a gap) */
+(()=>{const main=document.getElementById("main");if(!main)return;let raf=0;
+function align(){raf=0;main.querySelectorAll(".grid").forEach(g=>{g.style.marginLeft=g.style.marginRight="";
+ const cs=getComputedStyle(g),cols=cs.gridTemplateColumns.split(" ").length;if(cols<2)return;
+ const ic=g.querySelector(".ic");if(!ic)return;
+ const W=g.offsetWidth,gap=parseFloat(cs.columnGap)||0,iw=ic.offsetWidth,d=(W-(cols-1)*gap)/cols-iw;if(!(d>0))return;
+ const m=Math.round(cols*d/(2*(cols-1))*10)/10;g.style.marginLeft=g.style.marginRight=-m+"px"})}
+const q=()=>{if(!raf)raf=requestAnimationFrame(align)};
+new MutationObserver(q).observe(main,{childList:true,subtree:true});
+new MutationObserver(q).observe(document.documentElement,{attributes:true,attributeFilter:["style"]});new MutationObserver(q).observe(document.body,{attributes:true});new ResizeObserver(q).observe(document.body);addEventListener("resize",q);
+document.addEventListener("transitionend",e=>{if(e.target===document.body)q()});q()})();
 </script>
 </body>
 </html>
