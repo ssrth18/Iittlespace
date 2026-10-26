@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <title>Little Space — Bookmarks</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23007aff'/%3E%3Ccircle cx='32' cy='32' r='12' fill='none' stroke='white' stroke-width='6'/%3E%3C/svg%3E">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bricolage+Grotesque:wght@400;500;600;800&family=Poppins:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bricolage+Grotesque:wght@400;500;600;800&family=Poppins:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&family=Outfit:wght@400;500;600;700&family=Sora:wght@400;500;600;700&family=Fraunces:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>:root{--bg:#f2f2f7;--sf:#fff;--sf2:rgba(118,118,128,.12);--fill:rgba(118,118,128,.12);--fill2:rgba(118,118,128,.2);--tx:#1d1d1f;--mu:#86868b;--ac:#007aff;--on:#fff;--rd:#ff3b30;--bd:rgba(60,60,67,.14);--sep:rgba(60,60,67,.16);--sh:0 .5px 1px rgba(0,0,0,.12),0 2px 6px rgba(0,0,0,.08),0 8px 18px -6px rgba(0,0,0,.18);--tile:56px;--rad:22%;--fs:12px;--lc:2;--gap:16px;--sp:cubic-bezier(.34,1.56,.64,1);color-scheme:light}
 [data-t=dark]{--bg:#000;--sf:#1c1c1e;--sf2:rgba(118,118,128,.24);--fill:rgba(118,118,128,.24);--fill2:rgba(118,118,128,.36);--tx:#f5f5f7;--mu:#98989f;--rd:#ff453a;--bd:rgba(84,84,88,.5);--sep:rgba(84,84,88,.55);--sh:0 .5px 1px rgba(0,0,0,.6),0 3px 10px rgba(0,0,0,.5);color-scheme:dark}
 [hidden]{display:none!important}
@@ -1108,9 +1108,67 @@ body[data-tabs=pills] #tags .chip{border-radius:12px}
 header .mswitch{display:inline-flex;align-items:stretch;grid-auto-columns:unset}
 header .mswitch button{flex:0 1 auto;display:flex;align-items:center;justify-content:center;padding:0 clamp(14px,calc(17px*var(--us,1)),20px)}
 header .mswitch::before,header .mswitch[data-m=watch]::before{left:3px;width:var(--pw,50%);transform:translateX(var(--px,0));transition:transform .35s var(--sp,cubic-bezier(.3,1.3,.5,1)),width .35s var(--sp,cubic-bezier(.3,1.3,.5,1))}
+/* ===== Fixes: pill flicker, wallpaper stability, tap latency ===== */
+header .mswitch::before{transition:none!important;visibility:hidden}
+header .mswitch.ready::before{visibility:visible;transition:transform .35s var(--sp),width .35s var(--sp)!important}
+header .mswitch:not(.ready) button.on{background:var(--ac);color:var(--on);border-radius:12px}
+html{overscroll-behavior-y:none}
+body::before{inset:auto;top:0;left:0;width:100%;height:100vh;height:100lvh;transform:translateZ(0)}
+#amb,#bub{inset:auto;top:0;left:0;width:100%;height:auto}
+.card,.wrow,.chip,.fab,.ib{touch-action:manipulation}
+.shufrow{display:grid;grid-template-columns:1fr 84px;gap:8px}
+#sdlg .shufrow .btn{min-height:44px;font-size:calc(14px*var(--ts,1))}
+#shuffle.spin{animation:shufPop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes shufPop{from{transform:scale(.94)}to{transform:none}}
+/* ===== Compact Motion tab ===== */
+#sdlg .f.w2:has(.bgnav){grid-column:auto}
+#sdlg .bgnav{grid-template-columns:30px 1fr 30px;gap:4px;margin-top:0}
+#sdlg .bgnav button{min-height:36px;border-radius:10px;font-size:calc(17px*min(var(--ts,1),1))}
+#sdlg .bgnav .bgname{padding:2px 8px;gap:4px}
+#sdlg .bgname b{font-size:calc(12.5px*min(var(--ts,1),1))}
+#sdlg .bgname::after{font-size:12px}
+#sdlg .fg>.mgh{margin-top:4px;padding-top:8px}
+#sdlg .f .btn{min-height:34px}
+#sdlg .shufrow .btn{min-height:38px}
+#sdlg .apanel[data-t=motion] .fg{gap:8px}
+/* ===== Compact browse pill ===== */
+#bgb{display:flex;align-items:center;gap:4px;width:max-content;max-width:calc(100vw - 24px);padding:5px;border-radius:99px;bottom:calc(14px + env(safe-area-inset-bottom))}
+#bgb .nm{flex:1 1 auto;min-width:96px;max-width:200px;padding:0 8px;text-align:center}
+#bgb .nm b{display:block;font-size:calc(14px*min(var(--ts,1),1.1));font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#bgb .nm b.pop{animation:nmIn .22s ease}
+@keyframes nmIn{from{opacity:0;transform:translateY(4px)}}
+#bgb .ic2,#bgb .ar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--fill);color:var(--tx);flex:none}
+#bgb .ar{display:none;font-size:20px;line-height:1}
+@media(hover:hover){#bgb .ar{display:grid}}
+#bgb.ns .ar{display:grid}
+#bgb .ic2 svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+#bgb .ic2.on{background:var(--ac);color:var(--on)}
+#bgb .ic2:active,#bgb .ar:active{background:var(--fill2)}
+#bgb .usebtn{height:38px;padding:0 18px;border-radius:99px;background:var(--ac);color:var(--on);font-weight:650;font-size:calc(14px*min(var(--ts,1),1.1));flex:none}
+#bgb{transition:opacity .22s ease,transform .25s ease}
+#bgb.dim{opacity:0;transform:translateY(12px);pointer-events:none}
+#bgb .nm{line-height:1.15}
+#bgb .nm small{display:block;margin-top:1px;font-size:calc(11px*min(var(--ts,1),1.1));font-weight:500;color:var(--mu);font-variant-numeric:tabular-nums}
+body.browsing.keeptop .top{opacity:1}
+body[data-bar=bottom].keeptop #bgb{bottom:calc(var(--barh,130px) + 12px)}
+body[data-bgfx=twilight]::before{background:linear-gradient(180deg,hsl(calc(var(--ah) + 200) 55% var(--bl2)/.42),hsl(calc(var(--ah) + 250) 60% var(--bl)/.34) 45%,hsl(calc(var(--ah) + 20) 85% var(--bl)/.38))}
+body[data-bgfx=silk]::before{background:repeating-linear-gradient(115deg,color-mix(in srgb,var(--ac) 14%,transparent) 0 46px,transparent 46px 120px),linear-gradient(180deg,color-mix(in srgb,var(--ac) 8%,transparent),transparent 60%)}
+body[data-bgfx=prism]::before{background:conic-gradient(from 210deg at 20% 15%,hsl(var(--ah) 80% var(--bl)/.32),hsl(calc(var(--ah) + 90) 80% var(--bl)/.28),hsl(calc(var(--ah) + 180) 80% var(--bl)/.3),hsl(calc(var(--ah) + 270) 80% var(--bl)/.28),hsl(var(--ah) 80% var(--bl)/.32))}
+.keep{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:8px}
+.keep>span{font-size:calc(11.5px*min(var(--ts,1),1));font-weight:600;color:var(--mu);margin-right:2px}
+.keep button{height:28px;padding:0 10px;border-radius:99px;background:var(--fill);color:var(--mu);font-size:calc(12px*min(var(--ts,1),1));font-weight:600}
+.keep button.on{background:var(--ac);color:var(--on)}
+.keep button.on::before{content:"✓ "}
+/* ===== Smaller add button ===== */
+.fab{width:calc(44px*var(--us,1))!important;height:calc(44px*var(--us,1))!important;border-radius:14px!important;right:calc(16px + env(safe-area-inset-right))!important;box-shadow:0 6px 14px color-mix(in srgb,var(--ac) 28%,transparent),inset 0 1px 0 rgba(255,255,255,.4)}
+.fab svg{width:20px!important;height:20px!important;stroke-width:2.4}
+body[data-fab=left] .fab{right:auto!important;left:calc(16px + env(safe-area-inset-left))!important}
+body[data-fab=center] .fab{right:auto!important;left:50%!important}
+body[data-bar=bottom] .fab{bottom:calc(var(--barh,130px) + 10px)}
 </style>
 </head>
 <body>
+<script>addEventListener("error",e=>{if(/ResizeObserver loop/i.test(e.message||"")){e.stopImmediatePropagation();e.preventDefault()}},true)</script>
 <noscript><p class="ns">Little Space needs JavaScript to run. Please enable it and reload.</p></noscript>
 <div class="top">
 <header>
@@ -1196,15 +1254,17 @@ header .mswitch::before,header .mswitch[data-m=watch]::before{left:3px;width:var
 <div class="f w2" data-seg><b>Icon shadow</b><select id="cardDepth"><option value="soft">Soft</option><option value="flat">Flat</option><option value="lifted">Lifted</option></select></div>
 <div class="f w2" data-seg><b>Pinned marker</b><select id="pinStyle"><option value="badge">Star</option><option value="ring">Ring</option><option value="hidden">None</option></select></div>
 </div></div>
- <div class="apanel" data-t="text" role="tabpanel" hidden><div class="fg"><div class="f"><b>App font</b><select id="c-ff"><option value="1">Apple / system</option><option value="4">Inter</option><option value="0">Bricolage</option><option value="5">Poppins</option><option value="6">Nunito</option><option value="7">DM Sans</option><option value="8">Space Grotesk</option><option value="10">Rounded</option><option value="11">Trebuchet</option><option value="12">Verdana</option><option value="2">Georgia (serif)</option><option value="9">Lora (serif)</option><option value="13">Palatino (serif)</option><option value="3">Mono</option></select></div><div class="f"><b>Headings</b><select id="c-hf"><option value="same">Same as app</option><option value="1">Apple / system</option><option value="4">Inter</option><option value="0">Bricolage</option><option value="5">Poppins</option><option value="6">Nunito</option><option value="7">DM Sans</option><option value="8">Space Grotesk</option><option value="10">Rounded</option><option value="11">Trebuchet</option><option value="12">Verdana</option><option value="2">Georgia (serif)</option><option value="9">Lora (serif)</option><option value="13">Palatino (serif)</option><option value="3">Mono</option></select></div><div class="f r"><b><span>App text size</span><output id="v-ts"></output></b><input id="c-ts" type="range" min="60" max="150" step="5"></div><div class="f r"><b><span>Name size</span><output id="v-fs"></output></b><input id="c-fs" type="range" min="9" max="22"></div><div class="f"><b>Names shown</b><select id="c-lines"><option value="0">Hidden</option><option value="1">1 line</option><option value="2">2 lines</option><option value="3">3 lines</option></select></div><div class="f" data-seg><b>Show website</b><select id="c-host"><option value="0">Hidden</option><option value="1">Shown</option></select></div><div class="f w2" data-seg><b>Name style</b><select id="labelWeight"><option value="regular">Regular</option><option value="medium">Medium</option><option value="bold">Bold</option></select></div></div></div>
+ <div class="apanel" data-t="text" role="tabpanel" hidden><div class="fg"><div class="f"><b>App font</b><select id="c-ff"><option value="1">Apple / system</option><option value="4">Inter</option><option value="0">Bricolage</option><option value="5">Poppins</option><option value="6">Nunito</option><option value="7">DM Sans</option><option value="8">Space Grotesk</option><option value="10">Rounded</option><option value="11">Trebuchet</option><option value="12">Verdana</option><option value="2">Georgia (serif)</option><option value="9">Lora (serif)</option><option value="13">Palatino (serif)</option><option value="14">Playfair (serif)</option><option value="15">Outfit</option><option value="16">Sora</option><option value="17">Fraunces (serif)</option><option value="3">Mono</option></select></div><div class="f"><b>Headings</b><select id="c-hf"><option value="same">Same as app</option><option value="1">Apple / system</option><option value="4">Inter</option><option value="0">Bricolage</option><option value="5">Poppins</option><option value="6">Nunito</option><option value="7">DM Sans</option><option value="8">Space Grotesk</option><option value="10">Rounded</option><option value="11">Trebuchet</option><option value="12">Verdana</option><option value="2">Georgia (serif)</option><option value="9">Lora (serif)</option><option value="13">Palatino (serif)</option><option value="14">Playfair (serif)</option><option value="15">Outfit</option><option value="16">Sora</option><option value="17">Fraunces (serif)</option><option value="3">Mono</option></select></div><div class="f r"><b><span>App text size</span><output id="v-ts"></output></b><input id="c-ts" type="range" min="60" max="150" step="5"></div><div class="f r"><b><span>Name size</span><output id="v-fs"></output></b><input id="c-fs" type="range" min="9" max="22"></div><div class="f"><b>Names shown</b><select id="c-lines"><option value="0">Hidden</option><option value="1">1 line</option><option value="2">2 lines</option><option value="3">3 lines</option></select></div><div class="f" data-seg><b>Show website</b><select id="c-host"><option value="0">Hidden</option><option value="1">Shown</option></select></div><div class="f w2" data-seg><b>Name style</b><select id="labelWeight"><option value="regular">Regular</option><option value="medium">Medium</option><option value="bold">Bold</option></select></div></div></div>
  <div class="apanel" data-t="motion" role="tabpanel" hidden><div class="rmb" id="rmBanner" hidden><span>Reduced motion is on, so animations are paused.</span><button type="button" id="rmPlay">Play anyway</button></div><div class="fg">
+<div class="f w2"><div class="shufrow"><button type="button" class="btn p" id="shuffle">🎲 Shuffle look</button><button type="button" class="btn" id="unshuffle" disabled>Undo</button></div><div class="keep" id="keepRow"></div></div>
 <div class="mgh">General</div>
 <div class="f r"><b><span>Intensity</span><output id="v-lvl"></output></b><input id="motionLevel" type="range" min="0" max="100"></div>
 <div class="f r"><b><span>Speed</span><output id="v-spd"></output></b><input id="motionSpeed" type="range" min="50" max="200" step="5"></div>
 <div class="mgh">Background</div>
-<div class="f w2"><b>Wallpaper</b><select id="bgEffect" hidden aria-hidden="true" tabindex="-1"><optgroup label="Accent"><option value="aurora">Aurora</option><option value="glow">Glow</option><option value="wash">Wash</option><option value="mesh">Mesh</option><option value="spotlight">Spotlight</option><option value="haze">Spectrum</option></optgroup><optgroup label="Colour"><option value="sunset">Sunset</option><option value="midnight">Midnight</option><option value="oceanbg">Ocean</option><option value="forestbg">Forest</option><option value="candy">Pastel</option></optgroup><optgroup label="Illustrations"><option value="sc-mountains">Mountain dusk</option><option value="sc-lake">Moonlit lake</option><option value="sc-neon">Neon sunset</option><option value="sc-dunes">Desert sunset</option><option value="sc-aurora">Northern lights</option><option value="sc-galaxy">Galaxy horizon</option><option value="sc-hills">Green hills</option><option value="sc-sea">Sunrise sea</option></optgroup><optgroup label="Patterns"><option value="grain">Paper</option><option value="dots">Dots</option><option value="grid">Grid</option><option value="lines">Lines</option><option value="waves">Waves</option><option value="starsbg">Stars</option></optgroup><option value="plain">None</option></select></div>
-<div class="f r w2"><b><span>Wallpaper opacity</span><output id="v-bgs"></output></b><input id="bgStrength" type="range" min="20" max="100" step="5"></div>
+<div class="f w2"><b>Wallpaper</b><select id="bgEffect" hidden aria-hidden="true" tabindex="-1"><optgroup label="Accent"><option value="aurora">Aurora</option><option value="glow">Glow</option><option value="wash">Wash</option><option value="mesh">Mesh</option><option value="spotlight">Spotlight</option><option value="haze">Spectrum</option></optgroup><optgroup label="Colour"><option value="sunset">Sunset</option><option value="midnight">Midnight</option><option value="oceanbg">Ocean</option><option value="forestbg">Forest</option><option value="candy">Pastel</option><option value="twilight">Twilight</option><option value="silk">Silk</option><option value="prism">Prism</option></optgroup><optgroup label="Illustrations"><option value="sc-mountains">Mountain dusk</option><option value="sc-lake">Moonlit lake</option><option value="sc-neon">Neon sunset</option><option value="sc-dunes">Desert sunset</option><option value="sc-aurora">Northern lights</option><option value="sc-galaxy">Galaxy horizon</option><option value="sc-hills">Green hills</option><option value="sc-sea">Sunrise sea</option></optgroup><optgroup label="Patterns"><option value="grain">Paper</option><option value="dots">Dots</option><option value="grid">Grid</option><option value="lines">Lines</option><option value="waves">Waves</option><option value="starsbg">Stars</option></optgroup><option value="plain">None</option></select></div>
+
 <div class="f w2"><b>Effects overlay</b><select id="ambient" hidden aria-hidden="true" tabindex="-1"><option value="off">None</option><optgroup label="Scenes"><option value="ocean">Ocean</option><option value="space">Space</option><option value="pond">Pond</option><option value="forest">Forest</option><option value="rain">Rain</option><option value="desert">Desert</option><option value="arctic">Arctic</option><option value="sakura">Sakura</option><option value="city">City</option><option value="seasons">Seasons</option></optgroup><optgroup label="Ambient"><option value="aurora">Aurora</option><option value="fireflies">Fireflies</option><option value="net">Network</option><option value="orbs">Orbs</option><option value="waves">Waves</option><option value="stars">Stars</option><option value="bubbles">Bubbles</option></optgroup></select></div>
+<div class="f r w2"><b><span>Wallpaper opacity</span><output id="v-bgs"></output></b><input id="bgStrength" type="range" min="20" max="100" step="5"></div>
 <div class="mgh">Icons</div>
 <div class="f"><b>Icon motion</b><select id="motionStyle"><option value="none">None</option><option value="alive">Float and shine</option><option value="bubbly">Bubbles</option><option value="float">Float</option><option value="breathe">Breathe</option><option value="jelly">Jelly</option><option value="drift">Drift</option><option value="orbit">Orbit</option><option value="sway">Sway</option><option value="hop">Hop</option><option value="glow">Glow</option><option value="shimmer">Shimmer</option><option value="pulse">Pulse</option></select></div>
 <div class="f"><b>Touch reaction</b><select id="iconReact"><option value="magnet">Magnetic</option><option value="repel">Repel</option><option value="depth">Tilt</option><option value="off">None</option></select></div>
@@ -1434,7 +1494,7 @@ document.addEventListener("touchend",e=>{if(!sok||dg?.on||justDragged||mode==="w
 /* ---- drag to reorder (mouse: drag; touch: press and hold) ---- */
 let dg=null,justDragged=false;
 const canDrag=()=>tag==="all"&&!sel&&!$("#q").value.trim();
-$("#main").addEventListener("pointerdown",e=>{const c=e.target.closest(".card");if(!c||sel||e.target.closest(".more")||(e.pointerType==="mouse"&&(e.button!==0||!canDrag())))return;dg={c,x:e.clientX,y:e.clientY,on:false,touch:e.pointerType!=="mouse",drag:canDrag()};if(dg.touch)dg.t=setTimeout(begin,480)});
+$("#main").addEventListener("pointerdown",e=>{const c=e.target.closest(".card");if(!c||sel||e.target.closest(".more")||(e.pointerType==="mouse"&&(e.button!==0||!canDrag())))return;dg={c,x:e.clientX,y:e.clientY,on:false,touch:e.pointerType!=="mouse",drag:canDrag()};if(dg.touch)dg.t=setTimeout(begin,420)});
 function begin(){if(!dg||dg.on)return;if(!dg.drag){const c0=dg.c,id=c0.dataset.id;dg=null;justDragged=true;setTimeout(()=>justDragged=false,300);navigator.vibrate?.(12);menu(id,c0);return}if(!dg.touch)dg.mv=1;dg.on=true;navigator.vibrate?.(12);const r=dg.c.getBoundingClientRect(),g=dg.c.cloneNode(true);g.classList.add("dragghost");g.style.cssText=`width:${r.width}px;left:${r.left}px;top:${r.top}px`;document.body.appendChild(g);Object.assign(dg,{g,ox:dg.x-r.left,oy:dg.y-r.top,px:dg.x,py:dg.y});dg.c.classList.add("lift");document.body.classList.add("dragging");tick()}
 function hit(){const t=document.elementFromPoint(dg.px,dg.py)?.closest(".card");if(t&&t!==dg.c&&t.parentElement===dg.c.parentElement){const k=[...t.parentElement.children];t.parentElement.insertBefore(dg.c,k.indexOf(dg.c)<k.indexOf(t)?t.nextSibling:t)}}
 function tick(){if(!dg?.on)return;if(dg.py<90)scrollBy(0,-14);else if(dg.py>innerHeight-90)scrollBy(0,14);hit();requestAnimationFrame(tick)}
@@ -1570,7 +1630,7 @@ $("#tags").addEventListener("scroll",e=>{const x=e.target.scrollLeft;if(Math.abs
 function mark(id,v){document.querySelectorAll(`#${id} button`).forEach(b=>b.classList.toggle("on",b.dataset.v===v))}
 /* ---- customize ---- */
 const D={ts:100,hf:"same",cols:0,tile:60,gap:18,rad:24,fs:12,lines:2,ff:0,host:0,open:"new",start:"first"},gv=k=>cfg[k]??D[k];
-const FF=["'Bricolage Grotesque',system-ui,sans-serif","-apple-system,BlinkMacSystemFont,'SF Pro Text',Inter,system-ui,sans-serif","Georgia,serif","ui-monospace,Menlo,monospace","Inter,system-ui,sans-serif","Poppins,system-ui,sans-serif","Nunito,system-ui,sans-serif","'DM Sans',system-ui,sans-serif","'Space Grotesk',system-ui,sans-serif","Lora,Georgia,serif","ui-rounded,'SF Pro Rounded',Nunito,system-ui,sans-serif","'Trebuchet MS',system-ui,sans-serif","Verdana,system-ui,sans-serif","'Palatino Linotype',Palatino,serif"];
+const FF=["'Bricolage Grotesque',system-ui,sans-serif","-apple-system,BlinkMacSystemFont,'SF Pro Text',Inter,system-ui,sans-serif","Georgia,serif","ui-monospace,Menlo,monospace","Inter,system-ui,sans-serif","Poppins,system-ui,sans-serif","Nunito,system-ui,sans-serif","'DM Sans',system-ui,sans-serif","'Space Grotesk',system-ui,sans-serif","Lora,Georgia,serif","ui-rounded,'SF Pro Rounded',Nunito,system-ui,sans-serif","'Trebuchet MS',system-ui,sans-serif","Verdana,system-ui,sans-serif","'Palatino Linotype',Palatino,serif","'Playfair Display',Georgia,serif","Outfit,system-ui,sans-serif","Sora,system-ui,sans-serif","Fraunces,Georgia,serif"];
 const CT=[["ts","App text size","rng",50,100],["hf","Headings","sel",[["same","Same"]]],["theme","Theme","sel",[["auto","Auto"],["light","Light"],["dark","Dark"]]],["view","Layout","sel",[["grid","Grid"],["list","List"]]],["sort","Sort by","sel",[["manual","Custom"],["recent","Newest"],["popular","Most used"],["az","A–Z"]]],["cols","Columns","sel",[[0,"Auto"],[2,2],[3,3],[4,4],[5,5],[6,6],[8,8]]],["tile","Icon size","rng",44,96],["gap","Spacing","rng",8,40],["rad","Corners","rng",0,50],["fs","Text size","rng",10,18],["lines","Text lines","sel",[[0,"Hidden"],[1,"1 line"],[2,"2 lines"],[3,"3 lines"]]],["ff","Font","sel",[[1,"Apple system"],[0,"Bricolage"],[2,"Serif"],[3,"Mono"]]],["host","Website under name","sel",[[0,"Hidden"],[1,"Shown"]]],["open","Open links","sel",[["new","New tab"],["same","Same tab"]]],["start","Open on","sel",[["first","First tab"],["last","Last used tab"]]]];
 function settingsUI(){const DF={theme:"auto",view:"grid",sort:"manual"};for(const[k]of CT){const v=k==="ac"?(cfg.ac||(dk()?"#0a84ff":"#007aff")):(k in D?gv(k):(cfg[k]??DF[k]));$("#c-"+k).value=v;const o=$("#v-"+k);if(o)o.textContent=v+(k==="ts"?"%":"")}quickUI()}
 for(const[k]of CT)$("#c-"+k).oninput=e=>{const v=e.target.value;cfg[k]=typeof D[k]==="number"?+v:v;if(k==="theme"||k==="mood"||k==="ac")theme();applyGrid();if(k==="view"||k==="sort"||k==="open")draw();settingsUI();saveCfg()};
@@ -1748,7 +1808,7 @@ document.addEventListener("touchcancel",rel);
 
 /* 4. Track header height so floating buttons sit above a bottom header */
 const bar=document.querySelector(".top"),setH=()=>document.documentElement.style.setProperty("--barh",bar.offsetHeight+"px");
-if(window.ResizeObserver)new ResizeObserver(setH).observe(bar);setH();
+if(window.ResizeObserver)new ResizeObserver(()=>requestAnimationFrame(setH)).observe(bar);setH();
 
 /* 5. Per-icon values for the new animations (distance from centre, random scatter) */
 const fxRun=()=>{
@@ -1779,7 +1839,7 @@ function readColor(){
   hue=h;sat=mx===mn?0:cl(d/(1-Math.abs(mx+mn-1))*100,0,100)}
 }
 const c=(dh,a,l)=>`hsla(${(hue+dh+360)%360},${Math.round(cl(sat+(sat<8?0:22),0,88))}%,${l??(dk?66:50)}%,${a})`;
-function size(){const d=Math.min(devicePixelRatio||1,1.5);W=innerWidth;H=innerHeight;cv.width=Math.round(W*d);cv.height=Math.round(H*d);cx.setTransform(d,0,0,d,0,0);init(mode)}
+function size(){const d=Math.min(devicePixelRatio||1,1.5),nw=innerWidth,nh=innerHeight,wide=nw!==W;W=nw;H=wide?nh:Math.max(H,nh);cv.width=Math.round(W*d);cv.height=Math.round(H*d);cv.style.height=H+"px";cx.setTransform(d,0,0,d,0,0);if(wide)init(mode)}
 function init(m){P=[];ss=null;SC=null;const A=W*H;
  if(m==="fireflies")for(let i=0,n=cl(Math.round(A/14000),18,70);i<n;i++)P.push({x:R(0,W),y:R(0,H),vx:0,vy:0,r:R(4,12),ph:R(0,TAU),sp:R(.5,1.3),h:R(-40,40)});
  else if(m==="stars")for(let i=0,n=cl(Math.round(A/5200),50,170);i<n;i++)P.push({x:R(0,W),y:R(0,H),z:R(.25,1),ph:R(0,TAU),tw:R(.6,1.6)});
@@ -1789,7 +1849,7 @@ function init(m){P=[];ss=null;SC=null;const A=W*H;
 }
 /* ===== Scenes: ocean world, lily pond, deep space ===== */
 const hs=(h,s,l,a)=>`hsla(${h},${s}%,${l}%,${a})`,KK=()=>cl(Math.min(W,H)/420,.75,1.5),
-FLR=()=>H-(document.body.dataset.bar==="bottom"?(parseFloat(de.style.getPropertyValue("--barh"))||110):0)-2,
+FLR=()=>H-(document.body.dataset.bar==="bottom"&&!document.body.classList.contains("browsing")?(parseFloat(de.style.getPropertyValue("--barh"))||110):0)-2,
 ink=a=>hs(225,25,dk?72:42,a);
 let SC=null,CK=1;
 function rr(x,y,w,h,r){cx.beginPath();cx.moveTo(x+r,y);cx.arcTo(x+w,y,x+w,y+h,r);cx.arcTo(x+w,y+h,x,y+h,r);cx.arcTo(x,y+h,x,y,r);cx.arcTo(x,y,x+w,y,r);cx.closePath()}
@@ -2227,7 +2287,7 @@ const cv=document.createElement("canvas");cv.id="bub";cv.setAttribute("aria-hidd
 const cx=cv.getContext("2d"),de=document.documentElement,TAU=Math.PI*2,R=(a,b)=>a+Math.random()*(b-a);
 let W=0,H=0,B=[],last=0,fr=0,drawn=false,rgb="98,116,91",dk=false;
 const rm=()=>matchMedia("(prefers-reduced-motion:reduce)").matches&&de.dataset.rm!=="ignore";
-function size(){const d=Math.min(devicePixelRatio||1,1.5);W=innerWidth;H=innerHeight;cv.width=Math.round(W*d);cv.height=Math.round(H*d);cx.setTransform(d,0,0,d,0,0)}
+function size(){const d=Math.min(devicePixelRatio||1,1.5),nw=innerWidth,nh=innerHeight,wide=nw!==W;W=nw;H=wide?nh:Math.max(H,nh);cv.width=Math.round(W*d);cv.height=Math.round(H*d);cv.style.height=H+"px";cx.setTransform(d,0,0,d,0,0)}
 function col(){const v=getComputedStyle(de).getPropertyValue("--ac").trim();dk=de.dataset.t==="dark";if(/^#[0-9a-f]{6}$/i.test(v)){const n=parseInt(v.slice(1),16);rgb=[n>>16,n>>8&255,n&255].join(",")}}
 const spawn=(x,y,r,burst)=>B.push({x,y,r,vy:burst?R(50,120):R(24,50),sw:R(5,15),ph:R(0,TAU),f:R(.6,1.2),t:0,life:burst?R(.9,1.6):R(2.4,4.2),pop:0});
 function frame(now){
@@ -2280,7 +2340,7 @@ const radPx=(cs,r)=>{const v=cs.borderTopLeftRadius||"0px",n=parseFloat(v)||0;re
 const bgNow=()=>getComputedStyle(de).getPropertyValue("--bg").trim()||"#fff";
 function go(url){if(cfg.open==="same"){location.href=url;return}const a=document.createElement("a");a.href=url;a.target="_blank";a.rel="noopener noreferrer";a.style.display="none";document.body.appendChild(a);a.click();a.remove()}
 function launch(ic,url,id,books,title){
- const r=ic.getBoundingClientRect(),cs=getComputedStyle(ic),f=ic.classList.contains("f"),g=mkGhost(ic,r,title),d=dur(500),end=bgNow();
+ const r=ic.getBoundingClientRect(),cs=getComputedStyle(ic),f=ic.classList.contains("f"),g=mkGhost(ic,r,title),d=dur(340),end=bgNow();
  ghost&&ghost.remove();ghost=g;
  const a=[{left:r.left+"px",top:r.top+"px",width:r.width+"px",height:r.height+"px",borderRadius:radPx(cs,r)+"px"},{left:"0px",top:"0px",width:innerWidth+"px",height:innerHeight+"px",borderRadius:"0px"}];
  if(f){a[0].backgroundColor="#fff";a[1].backgroundColor=end}
@@ -2292,7 +2352,7 @@ function launch(ic,url,id,books,title){
  chrome().forEach(el=>el.animate([{opacity:1},{opacity:0}],{duration:d*.5,fill:"forwards"}));
  L={sel:`[data-id="${id}"] .ic`,bgc:f?end:cs.backgroundColor,bgi:f?"none":cs.backgroundImage,f,rad:radPx(cs,r)+"px",end};
  clearTimeout(ft);ft=setTimeout(()=>{if(L)ret()},d*.92+900);
- setTimeout(()=>{if(books)opened(id);go(url)},d*.92)}
+ if(cfg.open==="same"){setTimeout(()=>{if(books)opened(id);go(url)},Math.min(d*.45,220))}else{if(books)opened(id);go(url)}}
 function ret(){if(!L)return;L=null;clearTimeout(ft);
  const g=ghost;ghost=null;if(g)g.remove();
  M.getAnimations().forEach(x=>x.cancel());M.style.transformOrigin="";
@@ -2337,10 +2397,10 @@ const $=q=>document.querySelector(q),b=document.body;
 const CFG={
  ambient:{t:"Effects overlay",eye:1},
  bgEffect:{t:"Wallpaper",eye:1},
- motionStyle:{t:"Icon motion"},
- iconReact:{t:"Touch reaction",hint:"Touch the icons to try it",noswipe:1},
- tabSwitch:{t:"Page transition",rp:()=>playAnim("tab")},
- tabAnim:{t:"Tab bar animation",rp:()=>replayChips()}};
+ motionStyle:{t:"Icon motion",keeptop:1},
+ iconReact:{t:"Touch reaction",keeptop:1,hint:"Touch the icons to try it",noswipe:1},
+ tabSwitch:{t:"Page transition",keeptop:1,rp:()=>playAnim("tab")},
+ tabAnim:{t:"Tab bar animation",keeptop:1,rp:()=>replayChips()}};
 const ids=Object.keys(CFG);
 for(const id of ids){const sel=$("#"+id),f=sel.closest(".f");f.classList.add("w2");sel.hidden=true;
  const nav=document.createElement("div");nav.className="bgnav";nav.dataset.for=id;
@@ -2356,25 +2416,28 @@ function step(id,d,save){const o=opts(id);apply(id,o[(idx(id)+d+o.length)%o.leng
 $("#sdlg").addEventListener("click",e=>{const n=e.target.closest(".bgnav[data-for]"),t=e.target.closest("button");if(!n||!t)return;const id=n.dataset.for;t.dataset.d?step(id,+t.dataset.d,true):open(id)});
 const ov=document.createElement("div");ov.id="bgo";ov.hidden=true;
 const bar=document.createElement("div");bar.id="bgb";bar.hidden=true;
-bar.innerHTML='<div class="r1"><button type="button" data-a="prev" aria-label="Previous">‹</button><div class="nm"><b></b><small></small></div><button type="button" data-a="next" aria-label="Next">›</button></div><div class="r2"><button type="button" class="btn" data-a="cancel">Cancel</button><button type="button" class="btn" data-a="third"></button><button type="button" class="btn p" data-a="use">Use this</button></div>';
+const EYE='<svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',RP='<svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.4-5.7M20 4v5h-5"/></svg>';
+bar.innerHTML='<button type="button" class="ic2" data-a="cancel" aria-label="Cancel"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button><button type="button" class="ar" data-a="prev" aria-label="Previous">‹</button><div class="nm"><b></b><small></small></div><button type="button" class="ar" data-a="next" aria-label="Next">›</button><button type="button" class="ic2" data-a="third"></button><button type="button" class="usebtn" data-a="use">Use</button>';
 b.append(ov,bar);
 const third=bar.querySelector("[data-a=third]");
 let cur=null,orig=null,on=false;
 function label(){const o=opts(cur),i=idx(cur),g=o[i].parentElement.tagName==="OPTGROUP"?o[i].parentElement.label:CFG[cur].t;
- bar.querySelector(".nm b").textContent=o[i].textContent;bar.querySelector(".nm small").textContent=(CFG[cur].hint||g)+" · "+(i+1)+" of "+o.length}
+ const nb=bar.querySelector(".nm b");nb.textContent=o[i].textContent;nb.classList.remove("pop");void nb.offsetWidth;nb.classList.add("pop");bar.querySelector(".nm small").textContent=(i+1)+" of "+o.length;bar.title=(CFG[cur].hint||g)}
 function open(id){cur=id;orig=looks[LK[id]];on=true;const c=CFG[id];
- third.hidden=!(c.eye||c.rp);third.textContent=c.eye?"Hide icons":"Replay";
- $("#sdlg").close();ov.hidden=false;bar.hidden=false;b.classList.add("browsing");label();if(c.rp)setTimeout(c.rp,350)}
+ third.hidden=!(c.eye||c.rp);third.innerHTML=c.eye?EYE:RP;third.classList.remove("on");third.setAttribute("aria-label",c.eye?"Hide icons":"Replay");bar.classList.toggle("ns",!!c.noswipe);
+ $("#sdlg").close();ov.hidden=false;bar.hidden=false;bar.classList.remove("dim");b.classList.add("browsing");b.classList.toggle("keeptop",!!c.keeptop);label();if(c.rp)setTimeout(c.rp,350)}
 function end(keep){on=false;if(keep)saveLooks();else if(orig!==null)apply(cur,orig,false);
- ov.hidden=true;bar.hidden=true;b.classList.remove("browsing","hideicons");settingsUI();$("#sdlg").showModal()}
+ ov.hidden=true;bar.hidden=true;b.classList.remove("browsing","hideicons","keeptop");settingsUI();$("#sdlg").showModal()}
 const go=d=>{step(cur,d,false);label()};
 bar.onclick=e=>{const t=e.target.closest("[data-a]");if(!t)return;const a=t.dataset.a;
  if(a==="prev")go(-1);else if(a==="next")go(1);
  else if(a==="cancel")end(false);else if(a==="use")end(true);
- else if(a==="third"){const c=CFG[cur];if(c.eye)t.textContent=b.classList.toggle("hideicons")?"Show icons":"Hide icons";else if(c.rp)c.rp()}};
-let x0=0;
+ else if(a==="third"){const c=CFG[cur];if(c.eye){const h=b.classList.toggle("hideicons");t.classList.toggle("on",h);t.setAttribute("aria-label",h?"Show icons":"Hide icons")}else if(c.rp)c.rp()}};
+let x0=0,dtm=0;const hideBar=()=>{clearTimeout(dtm);bar.classList.add("dim")},showBar=ms=>{clearTimeout(dtm);dtm=setTimeout(()=>bar.classList.remove("dim"),ms)};
 ov.addEventListener("touchstart",e=>{x0=e.touches[0].clientX},{passive:true});
-ov.addEventListener("touchend",e=>{if(!on||CFG[cur].noswipe)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>50)go(dx<0?1:-1)},{passive:true});
+ov.addEventListener("touchmove",e=>{if(on&&!CFG[cur].noswipe&&Math.abs(e.touches[0].clientX-x0)>14)hideBar()},{passive:true});
+ov.addEventListener("touchend",e=>{if(!on||CFG[cur].noswipe)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>50){go(dx<0?1:-1);showBar(1000)}else showBar(0)},{passive:true});
+ov.addEventListener("touchcancel",()=>showBar(300),{passive:true});
 addEventListener("keydown",e=>{if(!on)return;
  if(e.key==="ArrowRight"){e.preventDefault();go(1)}
  else if(e.key==="ArrowLeft"){e.preventDefault();go(-1)}
@@ -2392,11 +2455,90 @@ addEventListener("keydown",e=>{if(e.key==="Escape"&&h.classList.contains("search
 window.lpOpenSearch=openS})();
 </script>
 <script>
-(()=>{const sw=document.getElementById("modes");
-function fit(){const bs=sw.querySelectorAll("button");if(bs.length<2)return;const on=sw.dataset.m==="watch"?bs[1]:bs[0];if(!on.offsetWidth)return;sw.style.setProperty("--pw",on.offsetWidth+"px");sw.style.setProperty("--px",(on.offsetLeft-3)+"px")}
-if(window.ResizeObserver){const ro=new ResizeObserver(fit);ro.observe(sw);sw.querySelectorAll("button").forEach(b=>ro.observe(b))}
-new MutationObserver(fit).observe(sw,{attributes:true,attributeFilter:["data-m"]});
-addEventListener("resize",fit);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);fit()})();
+(()=>{const sw=document.getElementById("modes");let raf=0;
+function fit(){const bs=sw.querySelectorAll("button");if(bs.length<2)return;
+ const on=sw.dataset.m==="watch"?bs[1]:bs[0];if(!on.offsetWidth)return;
+ sw.style.setProperty("--pw",Math.round(on.offsetWidth)+"px");
+ sw.style.setProperty("--px",Math.round(on.offsetLeft-3)+"px")}
+const q=()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(fit)};
+if(window.ResizeObserver){const ro=new ResizeObserver(q);ro.observe(sw);sw.querySelectorAll("button").forEach(b=>ro.observe(b))}
+new MutationObserver(q).observe(sw,{attributes:true,attributeFilter:["data-m"]});
+addEventListener("resize",q);
+const ready=()=>{fit();requestAnimationFrame(()=>requestAnimationFrame(()=>sw.classList.add("ready")))};
+(document.fonts?document.fonts.ready:Promise.resolve()).then(ready);
+setTimeout(()=>{if(!sw.classList.contains("ready"))ready()},1500)})();
+</script>
+<script>
+/* ===== Shuffle: mood-based theme composer ===== */
+(()=>{
+const R=(a,b)=>a+Math.random()*(b-a),RI=(a,b)=>Math.round(R(a,b)),P=a=>a[Math.floor(Math.random()*a.length)];
+const hex=(h,s,l)=>{s/=100;l/=100;const k=n=>(n+h/30)%12,a=s*Math.min(l,1-l),f=n=>l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)));return"#"+[f(0),f(8),f(4)].map(x=>Math.round(x*255).toString(16).padStart(2,"0")).join("")};
+/* weighted pick: options sharing more tags with the mood are likelier; "wild" picks anything for a surprise */
+const W=(pool,tags,wild)=>{if(wild)return P(pool)[0];const w=pool.map(([v,...t])=>.35+3*t.filter(x=>tags.includes(x)).length);let r=Math.random()*w.reduce((a,b)=>a+b,0);for(let i=0;i<pool.length;i++){r-=w[i];if(r<=0)return pool[i][0]}return pool[0][0]};
+const BG=[["aurora","calm","soft","nature","cosmic"],["glow","soft","calm","elegant"],["wash","soft","calm","playful","cool"],["mesh","vivid","playful","cosmic","soft"],["spotlight","elegant","dark","cosmic","dramatic"],["haze","vivid","playful","dreamy"],["sunset","warm","vivid","dramatic","soft"],["midnight","dark","cosmic","vivid"],["oceanbg","cool","calm","nature"],["forestbg","nature","calm"],["candy","playful","soft","vivid"],["grain","elegant","calm","soft","minimal"],["dots","playful","retro","minimal"],["grid","retro","tech","minimal","dark"],["lines","minimal","elegant"],["waves","calm","cool"],["starsbg","cosmic","dark"],["twilight","dreamy","soft","dramatic","cosmic"],["silk","elegant","soft","minimal"],["prism","vivid","playful","dreamy","tech"],["sc-mountains","warm","nature","dramatic"],["sc-lake","dark","calm","nature"],["sc-neon","retro","vivid","dark"],["sc-dunes","warm","nature","dramatic"],["sc-aurora","dark","cosmic","nature"],["sc-galaxy","dark","cosmic","dreamy"],["sc-hills","calm","nature","soft"],["sc-sea","warm","calm","dreamy"],["plain","minimal"]];
+const SCENES=["ocean","space","pond","forest","rain","desert","arctic","sakura","city"];
+const AMB=[["off","minimal","elegant","calm"],["fireflies","nature","calm","dark","dreamy"],["stars","cosmic","dark","elegant"],["bubbles","playful","cool","soft"],["net","tech","dark","vivid"],["orbs","soft","vivid","cosmic","dreamy"],["waves","calm","cool"],["aurora","cosmic","nature","dark","dreamy"],["ocean","cool","calm","nature"],["space","cosmic","dark"],["pond","calm","nature","soft"],["forest","nature","calm"],["rain","calm","dark","soft","cool"],["desert","warm","nature"],["arctic","cool","calm"],["sakura","soft","playful","warm","dreamy"],["city","tech","dark","vivid"]];
+const MO=[["none","minimal","elegant"],["alive","soft","vivid","warm"],["bubbly","playful","cool"],["float","calm","soft","nature"],["breathe","calm","soft"],["jelly","playful"],["drift","calm","cosmic","dreamy"],["orbit","cosmic","tech"],["sway","nature","calm"],["hop","playful","retro"],["glow","elegant","dark","vivid","dreamy"],["shimmer","elegant","vivid","cosmic","dreamy"],["pulse","tech","retro","vivid"]];
+const RING=[["soft","minimal","calm","elegant"],["none","minimal"],["accent","calm","tech"],["double","elegant","retro"],["gradient","soft","vivid","dreamy"],["stitch","nature","warm","playful"],["halo","soft","calm","dreamy"],["glow","dark","cosmic","vivid"],["neon","dark","tech","retro","vivid"],["pulse","tech","playful","cool"],["lifted","warm","soft","elegant"],["spin","cosmic","tech","dark"],["aurora","cosmic","dreamy","dark"],["rainbow","playful","retro","vivid"],["holo","dreamy","vivid","cosmic"],["dash","tech","retro","minimal"],["gold","elegant","warm","dramatic"],["silver","elegant","cool","minimal"],["rose","soft","warm","dreamy","elegant"],["glassedge","cool","elegant","soft","tech"],["bevel","retro","playful","warm"],["frame","elegant","warm","minimal"],["pearl","soft","dreamy","elegant"],["candy","playful","soft"]];
+const TONE=[["vivid","vivid","playful","warm","retro"],["soft","calm","soft","nature","elegant"],["pastel","playful","soft","dreamy"],["mono","minimal","elegant","dark"],["accent","elegant","tech","cool","minimal"],["glass","dreamy","cool","tech","dark"]];
+const SHAPE=[["rounded","calm","soft","minimal","elegant"],["circle","playful","dreamy","soft","cool"],["squircle","tech","elegant","vivid","dreamy"],["square","retro","minimal","tech"]];
+const TSW=[["slide","calm","minimal"],["fade","calm","elegant","minimal","soft"],["zoom","tech","vivid"],["flip","soft","calm"],["blur","dreamy","cosmic","elegant"],["curtain","dramatic","elegant"],["rise","warm","soft","elegant"],["swirl","playful","dreamy"],["wave","cool","calm","playful","soft"],["ic-scatter","playful","vivid","cosmic"],["ic-vortex","cosmic","dramatic","vivid"],["ic-drop","playful","retro"],["ic-swing","retro","playful","warm"],["ic-flip3d","tech","retro","vivid"],["ic-pop","playful","vivid"],["ic-spring","playful","warm","soft"],["ic-cascade","elegant","calm","soft"],["ic-zoom","tech","vivid"],["ic-blur","dreamy","soft","elegant"],["ic-tilt","playful","warm"],["ic-soft","calm","soft","minimal","nature"]];
+const TAB=[["slide","calm","minimal","soft"],["pop","playful","vivid","retro"],["drop","dramatic","tech","playful"],["fade","elegant","dreamy","minimal"]];
+const RE=[["magnet","playful","calm","soft","vivid"],["repel","retro","tech","playful"],["depth","elegant","cosmic","dreamy","cool"],["off","minimal"]];
+const FF=[[6,"soft","playful","calm"],[9,"elegant","nature","calm"],[7,"calm","minimal","cool","tech"],[0,"playful","vivid","warm"],[5,"playful","vivid","warm"],[8,"tech","retro","dark","cosmic"],[4,"minimal","tech"],[10,"soft","playful","dreamy"],[14,"elegant","warm","dramatic"],[15,"minimal","cool","soft"],[16,"tech","cosmic","vivid","dreamy"],[17,"elegant","warm","playful","dreamy"],[2,"elegant"],[3,"tech","retro"]];
+const MOODS=[
+ {n:"Cozy",t:["calm","soft","nature","warm"],h:[[20,45],[90,150]],s:[30,50],d:.2,lv:[45,65]},
+ {n:"Ocean",t:["cool","calm","nature","soft"],h:[[185,215]],s:[50,70],d:.25,lv:[45,70]},
+ {n:"Neon",t:["vivid","tech","dark","retro"],h:[[270,335]],s:[70,92],d:.8,lv:[60,85]},
+ {n:"Cosmic",t:["cosmic","dark","elegant","dreamy"],h:[[235,280]],s:[55,80],d:.85,lv:[55,80]},
+ {n:"Sunset",t:["warm","vivid","soft","dramatic"],h:[[8,40],[320,350]],s:[65,85],d:.2,lv:[55,80]},
+ {n:"Candy",t:["playful","soft","vivid"],h:[[300,350],[170,190]],s:[55,80],d:.1,lv:[60,85]},
+ {n:"Forest",t:["nature","calm"],h:[[105,155]],s:[35,55],d:.35,lv:[45,65]},
+ {n:"Elegant",t:["elegant","minimal","warm","dramatic"],h:[[30,48],[330,350]],s:[35,60],d:.35,lv:[40,60],bold:1},
+ {n:"Minimal",t:["minimal","calm","elegant"],h:[[205,225]],s:[6,16],d:.4,lv:[30,55]},
+ {n:"Arcade",t:["retro","vivid","playful","tech"],h:[[290,330],[170,190],[40,55]],s:[70,92],d:.6,lv:[65,85],bold:1},
+ {n:"Dream",t:["dreamy","soft","playful","cosmic"],h:[[260,330]],s:[45,70],d:.3,lv:[50,75]},
+ {n:"Rain",t:["calm","dark","soft","cool"],h:[[200,225]],s:[18,35],d:.55,lv:[40,60]}];
+const G={colors:{n:"Colors",L:["preset","accent","bg","surface","dark"],C:["theme"]},backdrop:{n:"Backdrop",L:["bgfx","bgs","amb"],C:[]},icons:{n:"Icons",L:["motion","react","ictone","shape","ring","rw","depth","pin"],C:[]},text:{n:"Text",L:["lw"],C:["ff","hf","ts","fs","lines","host"]},motion:{n:"Motion",L:["tsw","tanim","tabs","level","speed"],C:[]}};
+let keep=new Set();try{keep=new Set(JSON.parse(localStorage.lp_keep||"[]"))}catch{}
+const kr=document.getElementById("keepRow");
+kr.innerHTML="<span>Keep</span>"+Object.keys(G).map(g=>`<button type="button" data-g="${g}" class="${keep.has(g)?"on":""}" aria-pressed="${keep.has(g)}">${G[g].n}</button>`).join("");
+kr.onclick=e=>{const b=e.target.closest("[data-g]");if(!b)return;const g=b.dataset.g;keep.has(g)?keep.delete(g):keep.add(g);b.classList.toggle("on",keep.has(g));b.setAttribute("aria-pressed",keep.has(g));try{localStorage.lp_keep=JSON.stringify([...keep])}catch{}};
+let lastN="",stack=[];
+const wl=(id,v)=>{const o=document.querySelector("#"+id+' option[value="'+v+'"]');return o?o.textContent:v};
+function compose(m){
+ const T=m.t,pk=pool=>W(pool,T,Math.random()<.14),L={},C={};
+ const [h0,h1]=P(m.h),h=Math.round(R(h0,h1)),sat=R(m.s[0],m.s[1]);
+ L.preset="custom";L.accent=hex(h,sat,R(38,50));L.bg=hex(h,Math.min(40,sat*.55),R(93,96));L.surface=hex(h,Math.min(55,sat*.8),R(98,99.5));
+ L.dark=P(["soft","soft","black"]);C.theme=Math.random()<m.d?"dark":"light";
+ L.bgfx=pk(BG);L.amb=pk(AMB);L.bgs=RI(70,100);
+ if(SCENES.includes(L.amb)&&L.bgfx.startsWith("sc-"))L.bgfx=W(BG.filter(x=>!x[0].startsWith("sc-")),T);
+ if(L.bgfx.startsWith("sc-")&&!["off","fireflies","stars","bubbles"].includes(L.amb))L.amb="off";
+ L.motion=pk(MO);L.react=pk(RE);L.ictone=pk(TONE);L.shape=pk(SHAPE);L.ring=pk(RING);
+ L.rw=P(["thin","medium","medium","bold"]);L.depth=P(["soft","soft","lifted","flat"]);L.pin=P(["badge","badge","ring"]);
+ if(L.motion==="bubbly"&&L.amb==="bubbles")L.amb="off";
+ if(L.ring==="neon"&&L.ictone==="glass")L.ictone="vivid";
+ C.ff=pk(FF);C.hf=Math.random()<.5?"same":pk(FF);L.lw=m.bold?"bold":P(["medium","medium","bold","regular"]);
+ C.ts=P([95,100,100,105,110]);C.fs=P([11,12,12,13]);C.lines=P([1,2,2]);C.host=Math.random()<.2?1:0;
+ L.tsw=pk(TSW);L.tanim=pk(TAB);L.tabs=P(["pills","pills","minimal","underline"]);L.level=RI(m.lv[0],m.lv[1]);L.speed=RI(85,125);
+ return{L,C}}
+const snapNow=()=>{const L={},C={};for(const g in G){G[g].L.forEach(k=>L[k]=looks[k]);G[g].C.forEach(k=>C[k]=cfg[k])}return{L,C}};
+function restore(sn){Object.assign(looks,sn.L);for(const k in sn.C){if(sn.C[k]===undefined)delete cfg[k];else cfg[k]=sn.C[k]}}
+function refresh(){theme();saveLooks();saveCfg();draw();settingsUI()}
+function shuffle(){
+ let m;do m=P(MOODS);while(m.n===lastN);lastN=m.n;
+ stack.push(snapNow());if(stack.length>12)stack.shift();
+ const {L,C}=compose(m);
+ for(const g in G){if(keep.has(g))continue;G[g].L.forEach(k=>looks[k]=L[k]);G[g].C.forEach(k=>cfg[k]=C[k])}
+ refresh();
+ document.getElementById("unshuffle").disabled=false;
+ const b=document.getElementById("shuffle");b.classList.remove("spin");void b.offsetWidth;b.classList.add("spin");
+ toast("Shuffled: "+m.n+" · "+wl("bgEffect",looks.bgfx));
+ setTimeout(()=>playAnim("tab"),60)}
+function undo(){const sn=stack.pop();if(!sn)return;restore(sn);refresh();document.getElementById("unshuffle").disabled=!stack.length;toast("Previous look restored")}
+document.getElementById("shuffle").onclick=shuffle;
+document.getElementById("unshuffle").onclick=undo;
+})();
 </script>
 </body>
 </html>
