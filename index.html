@@ -277,8 +277,6 @@ main>h2{font-size:calc(19px*var(--ts,1));margin-top:22px}
 .custom-actions .btn{font-size:calc(13px*var(--ts,1));padding:0 8px}
 body[data-density=compact]{--dens:.55}
 body[data-density=airy]{--dens:1.45}
-body[data-depth="flat"] .ic{box-shadow:none}
-body[data-depth="lifted"] .ic{box-shadow:0 9px 24px color-mix(in srgb,var(--ac) 22%,transparent),0 2px 5px rgba(0,0,0,.12)}
 body[data-shape="circle"] .ic{border-radius:50%!important}
 body[data-shape="squircle"] .ic{border-radius:32%!important}
 body[data-shape="square"] .ic{border-radius:12%!important}
@@ -880,7 +878,7 @@ body[data-ictone=pastel] .ic.f{background:hsl(var(--ih,200) 80% 91%)}
 body[data-ictone=pastel] .ic[style*="linear-gradient"]{filter:brightness(1.1)}
 body[data-ictone=accent] .ic.f{background:linear-gradient(160deg,color-mix(in srgb,var(--ac) 70%,#fff),var(--ac))!important;isolation:isolate}
 body[data-ictone=accent] .ic.f img{filter:grayscale(1) contrast(1.15);mix-blend-mode:multiply}
-body[data-ictone=glass] .ic.f{background:color-mix(in srgb,var(--sf) 38%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--tx) 16%,transparent),var(--sh)}
+body[data-ictone=glass] .ic.f{background:color-mix(in srgb,var(--sf) 38%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--tx) 16%,transparent),var(--ish)}
 body[data-ictone=glass] .ic[style*="linear-gradient"]{opacity:.82}
 /* ================= Mesmerizing outlines (driven by a few shared, animated values) ================= */
 @property --ra{syntax:"<angle>";inherits:true;initial-value:0deg}
@@ -905,10 +903,10 @@ body[data-ring=double] .ic::after{padding:1.5px}
 body[data-ring=glow] .ic{outline:1.5px solid var(--ac);outline-offset:1px;box-shadow:0 0 calc(8px + 16px*var(--rp)) calc(1px + 3px*var(--rp)) color-mix(in srgb,var(--ac) 72%,transparent)}
 body[data-ring=neon] .ic{outline:2px solid color-mix(in srgb,var(--ac) 55%,#fff);outline-offset:1px;--rbg:color-mix(in srgb,var(--ac) 35%,#fff);box-shadow:0 0 6px 1px color-mix(in srgb,var(--ac) 55%,#fff),0 0 calc(14px + 14px*var(--rp)) 2px color-mix(in srgb,var(--ac) 75%,transparent)}
 body[data-ring=neon] .ic::after{padding:1.5px}
-body[data-ring=pulse] .ic{box-shadow:0 0 0 calc(var(--rp)*16px) color-mix(in srgb,var(--ac) calc((1 - var(--rp))*65%),transparent),var(--sh)}
-body[data-ring=spin] .ic{--rbg:conic-gradient(from calc(var(--ra) + var(--i,0)*25deg),transparent 0 35%,color-mix(in srgb,var(--ac) 30%,transparent) 55%,var(--ac) 92%,color-mix(in srgb,var(--ac) 55%,#fff) 100%);box-shadow:0 0 14px color-mix(in srgb,var(--ac) 32%,transparent),var(--sh)}
-body[data-ring=aurora] .ic{--rbg:conic-gradient(from calc(var(--ra) + var(--i,0)*25deg),hsl(var(--ah) 90% 62%),hsl(calc(var(--ah) + 55) 90% 66%),hsl(calc(var(--ah) + 120) 90% 64%),hsl(calc(var(--ah) + 55) 90% 66%),hsl(var(--ah) 90% 62%));box-shadow:0 0 16px color-mix(in srgb,var(--ac) 35%,transparent),var(--sh)}
-body[data-ring=rainbow] .ic{--rbg:conic-gradient(from calc(var(--ra) + var(--i,0)*25deg),#ff3b30,#ff9500,#ffcc00,#34c759,#5ac8fa,#007aff,#af52de,#ff3b30);box-shadow:0 0 16px hsl(calc(var(--rh) + var(--i,0)*14) 95% 60%/.55),var(--sh)}
+body[data-ring=pulse] .ic{box-shadow:0 0 0 calc(var(--rp)*16px) color-mix(in srgb,var(--ac) calc((1 - var(--rp))*65%),transparent),var(--ish)}
+body[data-ring=spin] .ic{--rbg:conic-gradient(from calc(var(--ra) + var(--i,0)*25deg),transparent 0 35%,color-mix(in srgb,var(--ac) 30%,transparent) 55%,var(--ac) 92%,color-mix(in srgb,var(--ac) 55%,#fff) 100%);box-shadow:0 0 14px color-mix(in srgb,var(--ac) 32%,transparent),var(--ish)}
+body[data-ring=aurora] .ic{--rbg:conic-gradient(from calc(var(--ra) + var(--i,0)*25deg),hsl(var(--ah) 90% 62%),hsl(calc(var(--ah) + 55) 90% 66%),hsl(calc(var(--ah) + 120) 90% 64%),hsl(calc(var(--ah) + 55) 90% 66%),hsl(var(--ah) 90% 62%));box-shadow:0 0 16px color-mix(in srgb,var(--ac) 35%,transparent),var(--ish)}
+body[data-ring=rainbow] .ic{--rbg:conic-gradient(from calc(var(--ra) + var(--i,0)*25deg),#ff3b30,#ff9500,#ffcc00,#34c759,#5ac8fa,#007aff,#af52de,#ff3b30);box-shadow:0 0 16px hsl(calc(var(--rh) + var(--i,0)*14) 95% 60%/.55),var(--ish)}
 body[data-ring=dash] .ic{--rbg:repeating-conic-gradient(from calc(var(--ra)*-1),var(--ac) 0 11deg,transparent 11deg 24deg)}
 @media(prefers-reduced-motion:reduce){html:not([data-rm=ignore]) body[data-ring]{animation:none!important}}
 /* ================= More still backdrops ================= */
@@ -932,12 +930,12 @@ body[data-bgfx=starsbg]::before{background:radial-gradient(circle,color-mix(in s
 body:is([data-ring=halo],[data-ring=lifted],[data-ring=gradient],[data-ring=stitch],[data-ring=holo],[data-ring=gold],[data-ring=silver],[data-ring=rose],[data-ring=glassedge],[data-ring=bevel],[data-ring=frame],[data-ring=pearl],[data-ring=candy]) .ic{outline:none}
 body:is([data-ring=gradient],[data-ring=holo],[data-ring=gold],[data-ring=silver],[data-ring=rose],[data-ring=frame],[data-ring=candy]) .ic::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:var(--rw,3px);background:var(--rbg)!important;box-shadow:none!important;pointer-events:none;z-index:3;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}
 body[data-ring=holo]{animation:ringA calc(9s*var(--esp,1)) linear infinite}
-body[data-ring=gradient] .ic{--rbg:linear-gradient(135deg,hsl(var(--ah) 85% 62%),hsl(calc(var(--ah) + 70) 85% 66%));box-shadow:0 8px 18px -4px color-mix(in srgb,var(--ac) 40%,transparent),var(--sh)}
-body[data-ring=holo] .ic{--rbg:conic-gradient(from calc(var(--ra) + var(--i,0)*18deg),#ff9ad5,#ffd36b,#9dffb0,#7fe0ff,#b79bff,#ff9ad5);box-shadow:0 0 14px rgba(183,155,255,.4),var(--sh)}
-body[data-ring=gold] .ic{--rbg:conic-gradient(from 20deg,#fff3b0,#e0b030,#8a6508,#f7d774,#fff3b0,#c9971c,#7a5a06,#f7d774,#fff3b0);box-shadow:0 0 12px rgba(212,160,23,.38),var(--sh)}
-body[data-ring=silver] .ic{--rbg:conic-gradient(from 10deg,#fff,#b9c0c9,#6e7782,#e9edf2,#fff,#a6adb7,#5f6975,#e9edf2,#fff);box-shadow:0 0 10px rgba(170,182,200,.45),var(--sh)}
-body[data-ring=rose] .ic{--rbg:conic-gradient(from 40deg,#ffe3dc,#e8a598,#b76e6e,#f6c8bd,#ffe3dc,#d98e86,#9c5a5a,#f6c8bd,#ffe3dc);box-shadow:0 0 12px rgba(220,140,130,.4),var(--sh)}
-body[data-ring=candy] .ic{--rbg:repeating-conic-gradient(from 0deg,#ff7aa8 0 12deg,#fff 12deg 24deg);box-shadow:0 0 12px rgba(255,122,168,.35),var(--sh)}
+body[data-ring=gradient] .ic{--rbg:linear-gradient(135deg,hsl(var(--ah) 85% 62%),hsl(calc(var(--ah) + 70) 85% 66%));box-shadow:0 8px 18px -4px color-mix(in srgb,var(--ac) 40%,transparent),var(--ish)}
+body[data-ring=holo] .ic{--rbg:conic-gradient(from calc(var(--ra) + var(--i,0)*18deg),#ff9ad5,#ffd36b,#9dffb0,#7fe0ff,#b79bff,#ff9ad5);box-shadow:0 0 14px rgba(183,155,255,.4),var(--ish)}
+body[data-ring=gold] .ic{--rbg:conic-gradient(from 20deg,#fff3b0,#e0b030,#8a6508,#f7d774,#fff3b0,#c9971c,#7a5a06,#f7d774,#fff3b0);box-shadow:0 0 12px rgba(212,160,23,.38),var(--ish)}
+body[data-ring=silver] .ic{--rbg:conic-gradient(from 10deg,#fff,#b9c0c9,#6e7782,#e9edf2,#fff,#a6adb7,#5f6975,#e9edf2,#fff);box-shadow:0 0 10px rgba(170,182,200,.45),var(--ish)}
+body[data-ring=rose] .ic{--rbg:conic-gradient(from 40deg,#ffe3dc,#e8a598,#b76e6e,#f6c8bd,#ffe3dc,#d98e86,#9c5a5a,#f6c8bd,#ffe3dc);box-shadow:0 0 12px rgba(220,140,130,.4),var(--ish)}
+body[data-ring=candy] .ic{--rbg:repeating-conic-gradient(from 0deg,#ff7aa8 0 12deg,#fff 12deg 24deg);box-shadow:0 0 12px rgba(255,122,168,.35),var(--ish)}
 body[data-ring=frame] .ic{--rbg:color-mix(in srgb,var(--sf) 90%,#fff);box-shadow:0 0 0 1px rgba(0,0,0,.09),0 8px 18px rgba(0,0,0,.2)}
 body[data-ring=frame] .ic::after{padding:calc(var(--rw,3px) + 3px)}
 body[data-ring=halo] .ic{box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 34%,transparent),0 0 0 7px color-mix(in srgb,var(--ac) 16%,transparent),0 10px 24px color-mix(in srgb,var(--ac) 30%,transparent)}
@@ -946,7 +944,7 @@ body[data-ring=stitch] .ic{outline:var(--rw,3px) solid var(--ac);outline-offset:
 body[data-ring=stitch] .ic::after,body[data-ring=pearl] .ic::after{content:"";position:absolute;inset:4px;border-radius:inherit;background:none!important;box-shadow:none!important;pointer-events:none;z-index:3;filter:drop-shadow(0 0 1px rgba(0,0,0,.45))}
 body[data-ring=stitch] .ic::after{border:1.5px dashed rgba(255,255,255,.95)}
 body[data-ring=pearl] .ic::after{inset:2px;border:calc(var(--rw,3px) + 1px) dotted #fff8ee}
-body[data-ring=glassedge] .ic{box-shadow:0 0 0 1px color-mix(in srgb,var(--tx) 14%,transparent),var(--sh)}
+body[data-ring=glassedge] .ic{box-shadow:0 0 0 1px color-mix(in srgb,var(--tx) 14%,transparent),var(--ish)}
 body[data-ring=glassedge] .ic::after{content:"";position:absolute;inset:0;border-radius:inherit;background:none!important;pointer-events:none;z-index:3;box-shadow:inset 0 0 0 var(--rw,3px) rgba(255,255,255,.28),inset 0 0 0 1px rgba(255,255,255,.9),inset 0 8px 14px -8px rgba(255,255,255,.7)!important}
 body[data-ring=bevel] .ic{box-shadow:0 8px 16px rgba(0,0,0,.2),0 2px 3px rgba(0,0,0,.18)}
 body[data-ring=bevel] .ic::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:3;background:linear-gradient(160deg,rgba(255,255,255,.38),transparent 42%)!important;box-shadow:inset 0 2px 0 rgba(255,255,255,.75),inset 0 -3px 0 rgba(0,0,0,.2),inset 2px 0 0 rgba(255,255,255,.35),inset -2px 0 0 rgba(0,0,0,.1)!important}
@@ -1159,6 +1157,17 @@ body[data-fab=left] .fab{right:auto!important;left:calc(16px + env(safe-area-ins
 body[data-fab=center] .fab{right:auto!important;left:50%!important}
 body[data-bar=bottom] .fab{bottom:calc(var(--barh,130px) + 10px)}
 
+/* ---- Icon shadow: one variable drives every icon style ---- */
+body{--ish:0 6px 14px rgba(43,49,36,.18),0 1px 3px rgba(43,49,36,.12)}
+body[data-depth=flat]{--ish:0 0 0 0 transparent}
+body[data-depth=lifted]{--ish:0 14px 28px -4px color-mix(in srgb,var(--ac) 42%,rgba(0,0,0,.3)),0 4px 8px rgba(0,0,0,.22)}
+body[data-depth=glow]{--ish:0 0 18px 2px color-mix(in srgb,var(--ac) 55%,transparent),0 4px 10px rgba(0,0,0,.14)}
+[data-t=dark] body{--ish:0 8px 18px rgba(0,0,0,.55),0 2px 4px rgba(0,0,0,.4)}
+[data-t=dark] body[data-depth=flat]{--ish:0 0 0 0 transparent}
+[data-t=dark] body[data-depth=lifted]{--ish:0 14px 28px -4px color-mix(in srgb,var(--ac) 45%,rgba(0,0,0,.6)),0 4px 8px rgba(0,0,0,.5)}
+[data-t=dark] body[data-depth=glow]{--ish:0 0 20px 2px color-mix(in srgb,var(--ac) 60%,transparent),0 4px 10px rgba(0,0,0,.4)}
+body .ic{box-shadow:var(--ish)}
+body[data-depth=flat] .card:hover .ic{box-shadow:none}
 /* ---- Page text colour (names, headings, saved notes) ---- */
 main{color:var(--ptx,var(--tx))}
 main .wt,main .empty h3{color:var(--ptx,var(--tx))}
@@ -1256,7 +1265,7 @@ body[data-bgfx=shaderwaves] #wgl{display:block}
 <div class="f w2"><b>Outline style</b><select id="iconRing"><optgroup label="Lines"><option value="soft">Soft</option><option value="none">None</option><option value="accent">Accent line</option><option value="double">Double line</option><option value="gradient">Gradient edge</option><option value="stitch">Stitched patch</option></optgroup><optgroup label="Glow"><option value="halo">Soft halo</option><option value="glow">Glow</option><option value="neon">Neon</option><option value="pulse">Ripple pulse</option><option value="lifted">Lifted glow</option></optgroup><optgroup label="Spinning"><option value="spin">Comet ring</option><option value="aurora">Aurora ring</option><option value="rainbow">Rainbow</option><option value="holo">Holographic</option><option value="dash">Dashed orbit</option></optgroup><optgroup label="Metal &amp; finish"><option value="gold">Gold foil</option><option value="silver">Silver chrome</option><option value="rose">Rose gold</option><option value="glassedge">Glass edge</option><option value="bevel">3D bevel</option><option value="frame">Photo frame</option><option value="pearl">Pearls</option><option value="candy">Candy stripe</option></optgroup></select></div>
 <div class="f w2" data-seg><b>Outline thickness</b><select id="ringW"><option value="thin">Thin</option><option value="medium">Medium</option><option value="bold">Bold</option></select></div>
 <div class="mgh">Depth &amp; markers</div>
-<div class="f w2" data-seg><b>Icon shadow</b><select id="cardDepth"><option value="soft">Soft</option><option value="flat">Flat</option><option value="lifted">Lifted</option></select></div>
+<div class="f w2" data-seg><b>Icon shadow</b><select id="cardDepth"><option value="flat">None</option><option value="soft">Soft</option><option value="lifted">Deep</option><option value="glow">Glow</option></select></div>
 <div class="f w2" data-seg><b>Pinned marker</b><select id="pinStyle"><option value="badge">Star</option><option value="ring">Ring</option><option value="hidden">None</option></select></div>
 </div></div>
  <div class="apanel" data-t="text" role="tabpanel" hidden><div class="fg"><div class="f"><b>App font</b><select id="c-ff"><option value="1">Apple / system</option><option value="4">Inter</option><option value="0">Bricolage</option><option value="5">Poppins</option><option value="6">Nunito</option><option value="7">DM Sans</option><option value="8">Space Grotesk</option><option value="10">Rounded</option><option value="11">Trebuchet</option><option value="12">Verdana</option><option value="2">Georgia (serif)</option><option value="9">Lora (serif)</option><option value="13">Palatino (serif)</option><option value="14">Playfair (serif)</option><option value="15">Outfit</option><option value="16">Sora</option><option value="17">Fraunces (serif)</option><option value="3">Mono</option></select></div><div class="f"><b>Headings</b><select id="c-hf"><option value="same">Same as app</option><option value="1">Apple / system</option><option value="4">Inter</option><option value="0">Bricolage</option><option value="5">Poppins</option><option value="6">Nunito</option><option value="7">DM Sans</option><option value="8">Space Grotesk</option><option value="10">Rounded</option><option value="11">Trebuchet</option><option value="12">Verdana</option><option value="2">Georgia (serif)</option><option value="9">Lora (serif)</option><option value="13">Palatino (serif)</option><option value="14">Playfair (serif)</option><option value="15">Outfit</option><option value="16">Sora</option><option value="17">Fraunces (serif)</option><option value="3">Mono</option></select></div><div class="f r"><b><span>App text size</span><output id="v-ts"></output></b><input id="c-ts" type="range" min="60" max="150" step="5"></div><div class="f r"><b><span>Name size</span><output id="v-fs"></output></b><input id="c-fs" type="range" min="9" max="22"></div><div class="f"><b>Names shown</b><select id="c-lines"><option value="0">Hidden</option><option value="1">1 line</option><option value="2">2 lines</option><option value="3">3 lines</option></select></div><div class="f" data-seg><b>Show website</b><select id="c-host"><option value="0">Hidden</option><option value="1">Shown</option></select></div><div class="f w2" data-seg><b>Text colour</b><select id="txtMode"><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option><option value="custom">Custom</option></select></div><div class="f w2"><b>Custom text colour</b><div class="cols3"><label class="cl" style="grid-column:1/-1"><input id="txtColor" type="color" value="#ffffff"><span>Tap to pick any colour</span></label></div></div><div class="f w2" data-seg><b>Name style</b><select id="labelWeight"><option value="regular">Regular</option><option value="medium">Medium</option><option value="bold">Bold</option></select></div></div></div>
